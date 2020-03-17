@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="随机选取并测试  随机选中生成元的概率 判断元素是否为生成元  方法 1 方法 2   另一种方法  前文所提到的几种离散对数密码系统都需要我们找到一个 \(\mathbb{F}_p^\times\) 的生成元，或者至少一个具有足够高的阶的元素。本章所考虑的就是寻找（或者说是判断）生成元的方法。随机选取并测试随机选中生成元的概率前文给出过，若 \(p\) 是一个素数，则 \(\mathbb{F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="随机选取并测试  随机选中生成元的概率 判断元素是否为生成元  方法 1 方法 2   另一种方法  前文所提到的几种离散对数密码系统都需要我们找到一个 \(\mathbb{F}_p^\times\) 的生成元，或者至少一个具有足够高的阶的元素。本章所考虑的就是寻找（或者说是判断）生成元的方法。随机选取并测试随机选中生成元的概率前文给出过，若 \(p\) 是一个素数，则 \(\mathbb{F">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.573Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元">
+<meta name="twitter:description" content="随机选取并测试  随机选中生成元的概率 判断元素是否为生成元  方法 1 方法 2   另一种方法  前文所提到的几种离散对数密码系统都需要我们找到一个 \(\mathbb{F}_p^\times\) 的生成元，或者至少一个具有足够高的阶的元素。本章所考虑的就是寻找（或者说是判断）生成元的方法。随机选取并测试随机选中生成元的概率前文给出过，若 \(p\) 是一个素数，则 \(\mathbb{F">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-10-Attacks-on-DL-Cryptosystems/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&text=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&is_video=false&description=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&name=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#随机选取并测试"><span class="toc-number">1.</span> <span class="toc-text">随机选取并测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#随机选中生成元的概率"><span class="toc-number">1.1.</span> <span class="toc-text">随机选中生成元的概率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#判断元素是否为生成元"><span class="toc-number">1.2.</span> <span class="toc-text">判断元素是否为生成元</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">方法 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-2"><span class="toc-number">1.2.2.</span> <span class="toc-text">方法 2</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#另一种方法"><span class="toc-number">2.</span> <span class="toc-text">另一种方法</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-22T20:05:39.000Z" itemprop="datePublished">2019-03-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#随机选取并测试">随机选取并测试</a>
+<ul>
+<li><a href="#随机选中生成元的概率">随机选中生成元的概率</a></li>
+<li><a href="#判断元素是否为生成元">判断元素是否为生成元</a>
+<ul>
+<li><a href="#方法-1">方法 1</a></li>
+<li><a href="#方法-2">方法 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#另一种方法">另一种方法</a></li>
+</ul>
+</div><p>前文所提到的几种离散对数密码系统都需要我们找到一个 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 的生成元，或者至少一个具有足够高的阶的元素。本章所考虑的就是寻找（或者说是判断）生成元的方法。</p><h1 id="随机选取并测试">随机选取并测试</h1><h2 id="随机选中生成元的概率">随机选中生成元的概率</h2><p>前文给出过，若 <span class="math inline">\(p\)</span> 是一个素数，则 <span class="math inline">\(\mathbb{F}_p := \mathbb{Z}/p\mathbb{Z}\)</span> 是一个有 <span class="math inline">\(p\)</span> 个元素的域（因此 <span class="math inline">\(\mathbb{F}_p\)</span> 是一个有限域）。另外根据定理 2.3，<span class="math inline">\(\mathbb{F}_p^\times\)</span> 是一定有生成元的。</p><div class="thm">
+<p>因为 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 是一个阶为 <span class="math inline">\(p-1\)</span> 的循环群，因此其有 <span class="math inline">\(\phi(p-1)\)</span> 个生成元。</p>
+</div><p>事实上，上述定理对于任何有限域 <span class="math inline">\(F\)</span> 都成立：<span class="math inline">\(F^\times\)</span> 是一个循环群并且有 <span class="math inline">\(\phi(q-1)\)</span> 个生成元，其中 <span class="math inline">\(q = \big| F \big|\)</span> 是 <span class="math inline">\(F\)</span> 中元素的数量。</p><p>由于 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 有 <span class="math inline">\(\phi(p-1)\)</span> 个生成群，因此对于随机选取的元素 <span class="math inline">\(a \in \mathbb{F}_p^\times\)</span> 来说其为生成元的概率为</p><p><span class="math display">\[
+P = \frac{\phi(p-1)}{p-1} = \prod_{q \mid (p-1)} (1 - \frac{1}{q})
+\]</span></p><p>因此如果设计时我们应避免选取使得 <span class="math inline">\(p-1\)</span> 有太多个的素因数 <span class="math inline">\(q\)</span> 的素数 <span class="math inline">\(p\)</span>。因为那样的话将有</p><p><span class="math display">\[
+\prod_{q \mid (p-1)} (1 - \frac{1}{r}) \to 0
+\]</span></p><p>特别地，若 <span class="math inline">\(p = 2q+1\)</span>，其中 <span class="math inline">\(q\)</span> 是素数，那么有前述概率 <span class="math inline">\(P = \frac{1}{2}(1-\frac{1}{q}) \approx \frac{1}{2}\)</span> 由于这样的素数 <span class="math inline">\(p\)</span> 对于 SPH 攻击来说是安全的，因此称其为 &quot;safe prime&quot;。另外可以证明，对于这样的 &quot;safe prime&quot; 来说 <span class="math inline">\(-4\)</span> 总是生成元。</p><h2 id="判断元素是否为生成元">判断元素是否为生成元</h2><p>那么，给定 <span class="math inline">\(a \in \mathbb{F}_p^\times\)</span>，我们如何判断其是不是生成元？</p><h3 id="方法-1">方法 1</h3><p>一个很朴素的方法是，对于所有整数 <span class="math inline">\(n\)</span>, <span class="math inline">\(1 \le n &lt; p-1\)</span>，测试是否在 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 中有 <span class="math inline">\(a^n \ne 1\)</span>。即使我们利用了 <span class="math inline">\(a^n = a^{n-1} \cdot a\)</span> 的方式迭代，该方法的时间复杂度也为 <span class="math inline">\(\Theta(p\log^2p)\)</span>，即指数复杂度。</p><h3 id="方法-2">方法 2</h3><p>更好的方法是，对于所有素数 <span class="math inline">\(q \mid (p-1)\)</span>，测试是否有 <span class="math inline">\(a^{(p-1)/q} \ne 1\)</span>。</p><div class="lem">
+<p>若 <span class="math inline">\(G = \mathbb{F}_p^\times\)</span> 是一个 <span class="math inline">\(n\)</span> 阶循环群，那么 <span class="math inline">\(x \in G\)</span> 是一个生成元，当且仅当 对所有素数 <span class="math inline">\(q \mid (p-1)\)</span>， 皆有 <span class="math inline">\(x^{n/q} \ne 1\)</span>.</p>
+</div><div class="proof">
+<p>(<span class="math inline">\(\Rightarrow\)</span>) 若 <span class="math inline">\(x\)</span> 是一个生成元，那么 <span class="math inline">\(ord(x) = n\)</span>。于是有 <span class="math inline">\(x^{n/q} \ne 1\)</span>.</p>
+<p>(<span class="math inline">\(\Leftarrow\)</span>) 因为对所有素数 <span class="math inline">\(q \mid (p-1)\)</span>， 皆有 <span class="math inline">\(x^{n/q} \ne 1\)</span>, 设 $d = ord(x)，那么根据 P3 有 <span class="math inline">\(d \mid n = dk, k \in \mathbb{Z}\)</span>。假设 <span class="math inline">\(k \ne 1\)</span>，那么 <span class="math inline">\(\exists q \mid k\)</span> 并且有 <span class="math inline">\(\frac{n}{q} = d \frac{k}{q}\)</span>。于是 <span class="math inline">\(x^{n/q} = x^{\frac{dk}{q}} = 1\)</span>。那么则不可能有 <span class="math inline">\(k \ne 1\)</span>。因此 <span class="math inline">\(d = 1 \implies x \text{ 是生成元}\)</span></p>
+</div><p>计算 <span class="math inline">\(a^{(p-1)/q}\)</span> 的复杂度为 <span class="math inline">\(\Theta(\log(\frac{p-1}{q}\log^2p)) = \Theta(\log^3p\)</span>。而 <span class="math inline">\(p-1\)</span> 的素因数的个数 <span class="math inline">\(\#\{q \mid (p-1)\} \le \log_2p\)</span>，由于 <span class="math display">\[
+p-1 = p_1^{e_1} \cdots p_r^{e_r} \ge p_1 \cdots p_r \ge 2^r
+\]</span> 其中找到 <span class="math inline">\(q \mid (p-1)\)</span> 的时间复杂度为 <span class="math display">\[
+\Theta(f(p-1)) := \Theta(\exp(\sqrt{(1+\epsilon) \log p \log \log p}))
+\]</span> 因此判断 <span class="math inline">\(a\)</span> 是否为生成元的复杂度为 <span class="math display">\[
+\Theta(r(f(p-1)+\log^3p))
+\]</span> 注意这是一个次指数复杂度。</p><p>另外该方法也可推广用作计算任何元素的阶。</p><h1 id="另一种方法">另一种方法</h1><p>逐次考察 <span class="math inline">\(2, 3, 5, 6, 7, \cdots\)</span>（略过平方数），并使用 GRH （广义黎曼猜想）测试元素是否为生成元。该方法可在对数时间内找到生成元。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#随机选取并测试"><span class="toc-number">1.</span> <span class="toc-text">随机选取并测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#随机选中生成元的概率"><span class="toc-number">1.1.</span> <span class="toc-text">随机选中生成元的概率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#判断元素是否为生成元"><span class="toc-number">1.2.</span> <span class="toc-text">判断元素是否为生成元</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">方法 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-2"><span class="toc-number">1.2.2.</span> <span class="toc-text">方法 2</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#另一种方法"><span class="toc-number">2.</span> <span class="toc-text">另一种方法</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&text=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&is_video=false&description=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&title=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/&name=数论与群论密码学-11-$\mathbb{F}_p^\times$ 的生成元&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

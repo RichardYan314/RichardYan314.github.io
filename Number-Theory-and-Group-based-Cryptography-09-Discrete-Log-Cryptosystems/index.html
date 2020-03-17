@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="离散对数密码系统 Diffie-Hellman 密钥交换 Massey-Omura 密码系统 ElGamal 密码系统 数字签名标准（Digital Signature Standard, DSS）  离散对数密码系统离散对数密码系统建立在以下原则上：设 \(G\) 为某个抽象乘法群。 寻找一个 \(G\) 在计算机中的实现，其符合： 1. 有可高效快速计算 \(a^n\) 的算法。 2. 计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-09-离散对数密码系统">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="离散对数密码系统 Diffie-Hellman 密钥交换 Massey-Omura 密码系统 ElGamal 密码系统 数字签名标准（Digital Signature Standard, DSS）  离散对数密码系统离散对数密码系统建立在以下原则上：设 \(G\) 为某个抽象乘法群。 寻找一个 \(G\) 在计算机中的实现，其符合： 1. 有可高效快速计算 \(a^n\) 的算法。 2. 计">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-09-离散对数密码系统">
+<meta name="twitter:description" content="离散对数密码系统 Diffie-Hellman 密钥交换 Massey-Omura 密码系统 ElGamal 密码系统 数字签名标准（Digital Signature Standard, DSS）  离散对数密码系统离散对数密码系统建立在以下原则上：设 \(G\) 为某个抽象乘法群。 寻找一个 \(G\) 在计算机中的实现，其符合： 1. 有可高效快速计算 \(a^n\) 的算法。 2. 计">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-09-离散对数密码系统</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-10-Attacks-on-DL-Cryptosystems/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&text=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&is_video=false&description=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-09-离散对数密码系统&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&name=数论与群论密码学-09-离散对数密码系统&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#离散对数密码系统"><span class="toc-number">1.</span> <span class="toc-text">离散对数密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#diffie-hellman-密钥交换"><span class="toc-number">2.</span> <span class="toc-text">Diffie-Hellman 密钥交换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#massey-omura-密码系统"><span class="toc-number">3.</span> <span class="toc-text">Massey-Omura 密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#elgamal-密码系统"><span class="toc-number">4.</span> <span class="toc-text">ElGamal 密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数字签名标准digital-signature-standard-dss"><span class="toc-number">5.</span> <span class="toc-text">数字签名标准（Digital Signature Standard, DSS）</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-09-离散对数密码系统
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-17T00:52:06.000Z" itemprop="datePublished">2019-03-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#离散对数密码系统">离散对数密码系统</a></li>
+<li><a href="#diffie-hellman-密钥交换">Diffie-Hellman 密钥交换</a></li>
+<li><a href="#massey-omura-密码系统">Massey-Omura 密码系统</a></li>
+<li><a href="#elgamal-密码系统">ElGamal 密码系统</a></li>
+<li><a href="#数字签名标准digital-signature-standard-dss">数字签名标准（Digital Signature Standard, DSS）</a></li>
+</ul>
+</div><h1 id="离散对数密码系统">离散对数密码系统</h1><p>离散对数密码系统建立在以下原则上：</p><p>设 <span class="math inline">\(G\)</span> 为某个抽象乘法群。<br>
+寻找一个 <span class="math inline">\(G\)</span> 在计算机中的实现，其符合：<br>
+1. 有可高效快速计算 <span class="math inline">\(a^n\)</span> 的算法。<br>
+2. 计算 <span class="math inline">\(log_a(b)\)</span> 在技术上要复杂许多，并且不可在合理的时间完成。</p><p>以下给出数个离散对数密码系统。</p><h1 id="diffie-hellman-密钥交换">Diffie-Hellman 密钥交换</h1><p>严格来说，该系统并非一个密码系统。它仅为通信双方 <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> 协商确立一个不可为第三方所知的密钥 <a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a>。</p><p>后文记 <span class="math inline">\(g \in \mathbb{F}_p^\times\)</span> 为一具有较高的阶 <span class="math inline">\(p\)</span> 的元素。</p><p>通信协议如下：<br>
+1. <span class="math inline">\(A\)</span> 随机选取一数 <span class="math inline">\(a\)</span>，计算 <span class="math inline">\(P_A = g^a\)</span> 做为其公钥，并将其发送至 <span class="math inline">\(B\)</span>。<br>
+2. <span class="math inline">\(B\)</span> 完成类似的步骤，称其公钥为 <span class="math inline">\(P_B\)</span>。<br>
+3. <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> 分别计算 <span class="math inline">\(P_B^a = P_A^b = g^{ab} = S_{AB}\)</span>。这便是 <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> 所分享的密钥。</p><p>注意：<br>
+1. 若我们可以在 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 中求解以 <span class="math inline">\(g\)</span> 为底的离散对数问题（DLP），则 <span class="math inline">\(S_{AB}\)</span> 是可计算的。因为我们可分别由 <span class="math inline">\(P_A\)</span>, <span class="math inline">\(P_B\)</span> 求得 <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>，而底数 <span class="math inline">\(g\)</span> 也是公开的。<br>
+2. 所谓 Diffie-Hellman 问题（DHP）指的是，如上述从 <span class="math inline">\(g\)</span>, <span class="math inline">\(P_A\)</span>, <span class="math inline">\(P_B\)</span> 中计算 <span class="math inline">\(S_{AB}\)</span>。<br>
+3. 根据 Diffie-Hellman 假设（DHA），DHP 不可在合理的时间内做出解答。<br>
+4. 有强烈的证据表明，求解 DHP 等价于求解 DLP。即：DHP 与 DLP 是一样难的。</p><h1 id="massey-omura-密码系统">Massey-Omura 密码系统</h1><p>同 RSA 密码系统一样，Massey-Omura 密码系统建立的也是一个单向的信道。该系统的明文及密文空间皆为 <span class="math inline">\(m\in\mathbb{F}_p^\times = (\mathbb{Z}/p\mathbb{Z})^\times\)</span>.</p><p>以下为 Massey-Omura 密码系统的协议：</p><ol type="1">
+<li><span class="math inline">\(A\)</span> 选择满足 <span class="math inline">\(gcd(e_A, p-1) = 1\)</span> 的数 <span class="math inline">\(e_A\)</span>，并计算符合 <span class="math inline">\(d_Ae_A \equiv 1 \pmod{p-1}\)</span> 的 <span class="math inline">\(d_A\)</span>.<br>
+</li>
+<li>类似地，<span class="math inline">\(B\)</span> 选择/计算 <span class="math inline">\(e_B, d_B\)</span>.<br>
+以上各数皆由 <span class="math inline">\(A\)</span> 或 <span class="math inline">\(B\)</span> 所保密。</li>
+<li><span class="math inline">\(A\)</span> 发送至 <span class="math inline">\(B\)</span> 数 <span class="math inline">\(M := m^{e_A}\)</span>.<br>
+</li>
+<li><span class="math inline">\(B\)</span> 发送至 <span class="math inline">\(A\)</span> 数 <span class="math inline">\(M&apos; := \underbrace{(m^{e_A})^{e_B}}_{M^{e_B}}\)</span>.<br>
+</li>
+<li><span class="math inline">\(A\)</span> 发送至 <span class="math inline">\(B\)</span> 数 <span class="math inline">\(M&apos;&apos; := M&apos;^{d_A} = m^{e_b}\)</span>.<br>
+</li>
+<li><span class="math inline">\(B\)</span> 计算 <span class="math inline">\((M&apos;&apos;)^{d_B} = m\)</span>.</li>
+</ol><p>其中</p><p><span class="math display">\[
+\begin{aligned}
+(M&apos;&apos;)^{d_B}
+&amp;= (M&apos;^{d_A})^{d_B} \\
+&amp;= (m^{e_Ae_Bd_A})^{d_B} \\
+&amp;= (m^{e_B})^{d_B} \\
+&amp;= (m^{e_B})^{d_B} \\
+&amp;= m
+\end{aligned}
+\]</span></p><p>第二至三行的根据是：如果 <span class="math inline">\((e_Ad_A) = n \equiv 1 \pmod{p-1}\)</span>，那么在 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 中 <span class="math inline">\(x^n = x\)</span>.</p><p>仿照我们在 RSA 密码系统中做的比喻，我们可以这么理解 Massey-Omura 密码系统：当 <span class="math inline">\(A\)</span> 向 <span class="math inline">\(B\)</span> 发送信息时，<span class="math inline">\(A\)</span> 先往信息上加一把锁，锁的钥匙只有 <span class="math inline">\(A\)</span> 自己持有。 <span class="math inline">\(B\)</span> 收到消息时，由于他并解不开 <span class="math inline">\(A\)</span> 设下的锁，于是 <span class="math inline">\(B\)</span> 往信息上加上自己的锁并把共有上了两把锁的信息发还给 <span class="math inline">\(A\)</span>。此时 <span class="math inline">\(A\)</span> 解开自己的锁后将信息再次发送给 <span class="math inline">\(B\)</span>。这时的信息上只有 <span class="math inline">\(B\)</span> 的锁了，而 <span class="math inline">\(B\)</span> 可以解开自己设下的锁而得到信息。注意全过程中信息上至少有一把锁，保证了任何监听信道的第三方都无法解开信息。</p><p>注意：<br>
+1. 在 RSA 中，<span class="math inline">\(A\)</span> 是被动接收方，例如银行，其公开其公钥并愿意接收任何人发送的信息。而在 Massey-Omura 中，<span class="math inline">\(A\)</span> 是主动发信方，因此需要事先通过别的方法确认收信的 <span class="math inline">\(B\)</span> 真的是 <span class="math inline">\(A\)</span> 期望的送达对象。<br>
+2. DLP 应该对于 <span class="math inline">\((m, m^{e_A})\)</span> 不可解。</p><h1 id="elgamal-密码系统">ElGamal 密码系统</h1><p>设 <span class="math inline">\(p\)</span> 为素数，于是 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 形成一个域，并且有 <span class="math inline">\(g\in\mathbb{F}_p^\times\)</span> 为一个有高阶的数。</p><p>以下为 ElGamal 密码系统的协议：<br>
+1. <span class="math inline">\(B\)</span> 秘密地选择数 <span class="math inline">\(b\)</span>, <span class="math inline">\(0 &lt; b &lt; p-1\)</span>，并计算 <span class="math inline">\(g_B = g^b\)</span>。于是 <span class="math inline">\(B\)</span> 将 <span class="math inline">\((p, g, g_B)\)</span> 作为其公钥公开。<br>
+2. <span class="math inline">\(A\)</span> 秘密地选择数 <span class="math inline">\(k\)</span>，并计算 <span class="math inline">\((M_1, M_2) := (g^k, mg_B^k)\)</span>，其中 <span class="math inline">\(m\)</span> 为信息明文。 <span class="math inline">\(A\)</span> 将该元组发送给 <span class="math inline">\(B\)</span>.<br>
+3. <span class="math inline">\(B\)</span> 计算 <span class="math inline">\(m = M_2M_1^{-b}\)</span>。</p><p>其中负指数的定义为 <span class="math inline">\(x^{-k} := x^{ord(x)-k} = x^{n-k}\)</span>，于是有 <span class="math inline">\(g_B^km(g^k)^{-b} = g^{bk}mg^{-bk} = m\)</span>，</p><p>注意，有猜想认为破解 ElGamal 密码系统和求解 DLP 是一样困难的。</p><h1 id="数字签名标准digital-signature-standard-dss">数字签名标准（Digital Signature Standard, DSS）</h1><p>DSS 又称作 数字签名算法（Digital Signature Algorithm, DSA）</p><p>目标：为 <span class="math inline">\(A\)</span> 向 <span class="math inline">\(B\)</span> 发送的消息 <span class="math inline">\(m\)</span> 签名，使得 <span class="math inline">\(B\)</span> 可以确认消息确实由 <span class="math inline">\(A\)</span> 发出并且未被篡改。</p><div class="def" name="哈希函数">
+<p>向长度为 <span class="math inline">\(k\)</span> 的消息 <span class="math inline">\(m\)</span> 上附上长度为 <span class="math inline">\(l\)</span> 的“指纹”，其中 <span class="math inline">\(l &lt;&lt; k\)</span>.</p>
+<p>函数 <span class="math inline">\(h: \Sigma^k \to \Sigma^l\)</span> 被称为哈希函数，如果有：<br>
+0. 对于任何 <span class="math inline">\(x\in\Sigma^k\)</span>, <span class="math inline">\(h(x)\)</span> 可以被轻易地计算。<br>
+1. <span class="math inline">\(k\)</span> 具有碰撞抗性，即很难找到两个数 <span class="math inline">\(x_1, x_2, x1 \ne x_2\)</span>，使得 <span class="math inline">\(h(x_1) = h(x_2)\)</span>.<br>
+2. <span class="math inline">\(k\)</span> 具有原像抗性，即给定 <span class="math inline">\(y\in\Sigma^l\)</span>，很难找到数 <span class="math inline">\(x\in\Sigma^k\)</span>，使得 <span class="math inline">\(h(x) = y\)</span>.</p>
+</div><p>协议：<br>
+1. <span class="math inline">\(A\)</span> 选择一个 160 比特的素数 <span class="math inline">\(q\)</span> （使用随机数生成器和素数检测算法）<br>
+2. <span class="math inline">\(A\)</span> 选择一个 512 至 1024 比特（<span class="math inline">\(512+64n, n\in[0, 8]\)</span>）的素数 <span class="math inline">\(p\)</span> 使其满足 <span class="math inline">\(p \equiv 1 \pmod q\)</span>，因此有 <span class="math inline">\(q \mid p-1\)</span>.<br>
+3. <span class="math inline">\(A\)</span> 选择阶为 <span class="math inline">\(q\)</span> 的元素 <span class="math inline">\(g\in\mathbb{F}_p^\times\)</span>。由于有 <span class="math inline">\(q \mid p-1 = \#\mathbb{F}_p^\times\)</span>，这样的元素一定存在。<br>
+方法为：随机生成数 <span class="math inline">\(g_0\)</span> 并计算 <span class="math inline">\(g_0^{(p-1)/q} = g\)</span>。若 <span class="math inline">\(g \ne 1\)</span> 那么根据 P3 <span class="math inline">\(g\)</span> 的阶为 <span class="math inline">\(ord(q)\)</span>，因为有 <span class="math inline">\((g_0^{\frac{p-1}{q}})^q = 1\)</span>.<br>
+4. <span class="math inline">\(A\)</span> 选择随机数 <span class="math inline">\(a\)</span> 使得 <span class="math inline">\(1 &lt; a &lt; q\)</span>，并计算 <span class="math inline">\(y = g^a\in\mathbb{F}_p^\times\)</span>。<br>
+5. <span class="math inline">\(A\)</span> 将 <span class="math inline">\((q, p, g, y)\)</span> 作为其公钥公开。<br>
+</p><p>签名协议:<br>
+若 <span class="math inline">\(A\)</span> 要为消息 <span class="math inline">\(m\in\mathbb{F}_p^\times\)</span> 签名，<br>
+1. <span class="math inline">\(A\)</span> 将一公开的哈希函数应用于 <span class="math inline">\(m\)</span>: <span class="math inline">\(h = h(m) \in [1, q]\)</span>.<br>
+2. <span class="math inline">\(A\)</span> 选择随机数 <span class="math inline">\(k \in [1, q]\)</span> 并计算 <span class="math display">\[
+g_1 = g^k \bmod p\\
+r = g_1 \bmod q
+\]</span> 3. <span class="math inline">\(A\)</span> 求解同余方程 <span class="math inline">\(sk \equiv h + ar \pmod q\)</span> 得到 <span class="math inline">\(s \in [0, q]\)</span>，于是有 <span class="math inline">\(k = s^{-1}(h+ar) \pmod q\)</span>.<br>
+4. <span class="math inline">\(A\)</span> 将 <span class="math inline">\((r, g)\)</span> 作为签名发送给 <span class="math inline">\(B\)</span>.</p><p>验证协议:<br>
+1. <span class="math inline">\(B\)</span> 将同样的哈希函数应用于收到的信息 <span class="math inline">\(m&apos;\)</span> : <span class="math inline">\(h&apos; = h(m&apos;) \in [1, q]\)</span>.<br>
+2. <span class="math inline">\(B\)</span> 计算 <span class="math display">\[
+u_1 \equiv s^{-1}h&apos; \pmod q\\
+u_2 \equiv s^{-1} r \pmod q\\
+g_1&apos; = g^{u_1}y^{u_1} \bmod p
+\]</span> 3. 若 <span class="math inline">\(g_1&apos; \equiv r \pmod q\)</span>，那么签名是有效的。</p><p>注意，若确实有 <span class="math inline">\(m&apos; = m\)</span>，应有 <span class="math inline">\(h&apos; = h\)</span>。那么 <span class="math display">\[
+u_1 \equiv s^{-1}h \pmod q\\
+u_2 \equiv s^{-1}r \pmod q
+\]</span> 于是有 <span class="math display">\[
+g_1&apos; = g^{u_1}y^{u_2} \bmod p = g^{s^{-1}h}y^{s^{-1}r} = g^{s^{-1}h}g^{as^{-1}r} = g^{s^{-1}h + s^{-1}ra} = g^k\\
+r \equiv g_1 \pmod q \equiv g_k \pmod q \equiv g_1&apos; \pmod q
+\]</span></p><p>其中哈希函数的意义在于确保消息没有被篡改。注意由于哈希函数是公开的，其本身并不能作为签名。</p><p>注意，DSS 的优势在于，即使签名仅有 160 比特，其安全性取决于在 <span class="math inline">\(\mathbb{F}_p^\times\)</span> (600 比特) 中求解 <span class="math inline">\(&lt;g&gt;\)</span> 的离散对数的困难程度。</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>当然，早些时候我们提到过的，密钥交换系统与密码系统在本质上其实是一样的</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+<li id="fn1-1" role="doc-endnote"><p>当然，早些时候我们提到过的，密钥交换系统与密码系统在本质上其实是一样的<a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#离散对数密码系统"><span class="toc-number">1.</span> <span class="toc-text">离散对数密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#diffie-hellman-密钥交换"><span class="toc-number">2.</span> <span class="toc-text">Diffie-Hellman 密钥交换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#massey-omura-密码系统"><span class="toc-number">3.</span> <span class="toc-text">Massey-Omura 密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#elgamal-密码系统"><span class="toc-number">4.</span> <span class="toc-text">ElGamal 密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数字签名标准digital-signature-standard-dss"><span class="toc-number">5.</span> <span class="toc-text">数字签名标准（Digital Signature Standard, DSS）</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&text=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&is_video=false&description=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-09-离散对数密码系统&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&title=数论与群论密码学-09-离散对数密码系统"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/&name=数论与群论密码学-09-离散对数密码系统&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

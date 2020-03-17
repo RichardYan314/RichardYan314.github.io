@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="正则表达式到有限自动状态机 有限自动状态机到正则表达式  状态消除 传递闭包 Brzozowski 代数方法  正则语言的封闭性  这一章给出两个重要的结论： 对于任何正则语言来说，存在识别其的有限状态自动机 存在识别该语言的有限状态自动机的语言为正则语言 正则表达式到有限自动状态机首先给出正式的正则表达式的定义。表达式 \(E\) 为正则表达式，当且仅当以下条件之一成立： \(E = \em">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机理论-04-正则语言与有限状态自动机">
+<meta property="og:url" content="https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="正则表达式到有限自动状态机 有限自动状态机到正则表达式  状态消除 传递闭包 Brzozowski 代数方法  正则语言的封闭性  这一章给出两个重要的结论： 对于任何正则语言来说，存在识别其的有限状态自动机 存在识别该语言的有限状态自动机的语言为正则语言 正则表达式到有限自动状态机首先给出正式的正则表达式的定义。表达式 \(E\) 为正则表达式，当且仅当以下条件之一成立： \(E = \em">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.565Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="形式语言与自动机理论-04-正则语言与有限状态自动机">
+<meta name="twitter:description" content="正则表达式到有限自动状态机 有限自动状态机到正则表达式  状态消除 传递闭包 Brzozowski 代数方法  正则语言的封闭性  这一章给出两个重要的结论： 对于任何正则语言来说，存在识别其的有限状态自动机 存在识别该语言的有限状态自动机的语言为正则语言 正则表达式到有限自动状态机首先给出正式的正则表达式的定义。表达式 \(E\) 为正则表达式，当且仅当以下条件之一成立： \(E = \em">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>形式语言与自动机理论-04-正则语言与有限状态自动机</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-05-Pumping-Lemma-for-Regular-Languages/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-03-Finite-State-Automata/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&text=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&is_video=false&description=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-04-正则语言与有限状态自动机&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&name=形式语言与自动机理论-04-正则语言与有限状态自动机&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#正则表达式到有限自动状态机"><span class="toc-number">1.</span> <span class="toc-text">正则表达式到有限自动状态机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#有限自动状态机到正则表达式"><span class="toc-number">2.</span> <span class="toc-text">有限自动状态机到正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#状态消除"><span class="toc-number">2.1.</span> <span class="toc-text">状态消除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传递闭包"><span class="toc-number">2.2.</span> <span class="toc-text">传递闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#brzozowski-代数方法"><span class="toc-number">2.3.</span> <span class="toc-text">Brzozowski 代数方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正则语言的封闭性"><span class="toc-number">3.</span> <span class="toc-text">正则语言的封闭性</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        形式语言与自动机理论-04-正则语言与有限状态自动机
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-21T11:34:54.000Z" itemprop="datePublished">2019-05-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#正则表达式到有限自动状态机">正则表达式到有限自动状态机</a></li>
+<li><a href="#有限自动状态机到正则表达式">有限自动状态机到正则表达式</a>
+<ul>
+<li><a href="#状态消除">状态消除</a></li>
+<li><a href="#传递闭包">传递闭包</a></li>
+<li><a href="#brzozowski-代数方法">Brzozowski 代数方法</a></li>
+</ul></li>
+<li><a href="#正则语言的封闭性">正则语言的封闭性</a></li>
+</ul>
+</div><p>这一章给出两个重要的结论：</p><ol type="1">
+<li><p>对于任何正则语言来说，存在识别其的有限状态自动机</p></li>
+<li><p>存在识别该语言的有限状态自动机的语言为正则语言</p></li>
+</ol><h1 id="正则表达式到有限自动状态机">正则表达式到有限自动状态机</h1><p>首先给出正式的正则表达式的定义。表达式 <span class="math inline">\(E\)</span> 为正则表达式，当且仅当以下条件之一成立：</p><ol type="1">
+<li><p><span class="math inline">\(E = \emptyset\)</span></p></li>
+<li><p><span class="math inline">\(E = \varepsilon\)</span></p></li>
+<li><p><span class="math inline">\(E = \alpha \quad (\alpha \in \Sigma)\)</span></p></li>
+</ol><p>假设 <span class="math inline">\(E_1, E_2\)</span> 为正则表达式，</p><ol start="4" type="1">
+<li><p><span class="math inline">\(E = E_1 + E_2\)</span></p></li>
+<li><p><span class="math inline">\(E = E_1 \cdot E_2\)</span></p></li>
+<li><p><span class="math inline">\(E = E_1^*\)</span></p></li>
+</ol><p>以上归纳地定义了正则表达式，由于根据此定义，以子表达式构成偏序关系并且此偏序关系是良基的。</p><p>于是给定任意正则表达式（及该表达式描述的正则语言），有如下算法构造性地证明存在识别该语言的有限状态自动机。</p><ol type="1">
+<li><p>自动机 <span class="math inline">\(\to \bigcirc \quad \circledcirc\)</span> 识别由 <span class="math inline">\(E = \emptyset\)</span> 描述的正则语言</p></li>
+<li><p>自动机 <span class="math inline">\(\to \bigcirc \stackrel{\varepsilon}{\to} \circledcirc\)</span> 识别由 <span class="math inline">\(E = \varepsilon\)</span> 描述的正则语言</p></li>
+<li><p>自动机 <span class="math inline">\(\to \bigcirc \stackrel{\alpha}{\to} \circledcirc\)</span> 识别由 <span class="math inline">\(E = \alpha \quad (\alpha \in \Sigma)\)</span> 描述的正则语言</p></li>
+</ol><p>注意到上述情况下，该算法构造出的自动机具有以下性质：</p><ol type="1">
+<li><p>有且仅有一个接受状态，并且该接受状态不为起始状态</p></li>
+<li><p>没有进入起始状态的转移</p></li>
+<li><p>没有离开终止状态的转移</p></li>
+</ol><p>于是对于其余的情况，假设 <span class="math inline">\(\varepsilon\)</span>-NFA <span class="math inline">\(M_{E_i}\)</span> 识别由正则表达式 <span class="math inline">\(E_i\)</span> 描述的语言（<span class="math inline">\(i = 1,2\)</span>），且任何 <span class="math inline">\(M_i\)</span> 皆具有以上性质，于是对于余下的情况，有：</p><ol start="4" type="1">
+<li><p>自动机 <span class="math inline">\(M_{E_1+E_2} = (Q_{E_1+E_2}, \Sigma, \delta_{E_1+E_2}, q_{0,E_1+E_2}, Q_{acc, E_1+E_2})\)</span> 识别语言 <span class="math inline">\(E_1 + E_2\)</span>，</p>
+<p>其中有</p>
+<p><span class="math display">\[
+ \begin{aligned}
+ Q_{E_1+E_2} &amp;= Q_{E_1} \uplus Q_{E_2} \uplus \{q_{0,E_1+E_2}, q_{acc, E_1+E_2}\} \\
+ Q_{acc, E_1+E_2} &amp;= \{q_{acc, E_1+E_2}\} \\
+ \delta_{E_1+E_2} &amp;= \delta_{E_1} \uplus \delta_{E_2} \uplus
+ \begin{Bmatrix}
+ (q_{0,E_1+E_2}, \varepsilon, q_{0,E_1}) \\
+ (q_{0,E_1+E_2}, \varepsilon, q_{0,E_2}) \\
+ (q_{acc,E_1}, \varepsilon, q_{acc,E_1+E_2}) \\
+ (q_{acc,E_2}, \varepsilon, q_{acc,E_1+E_2})
+ \end{Bmatrix}
+ \end{aligned}
+ \]</span></p>
+<p><a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a></p>
+<p>根据运算 <span class="math inline">\(\uplus\)</span> 的定义，不失一般性地，有 <span class="math inline">\(q_{0, E_1+E_2}, q_{acc, E_1+E_2} \not\in Q_{E_1}, Q_{E_2}\)</span></p></li>
+<li><p>自动机 <span class="math inline">\(M_{E_1 \cdot E_2} = (Q_{E_1 \cdot E_2}, \Sigma, \delta_{E_1 \cdot E_2}, q_{0,E_1 \cdot E_2}, Q_{acc, E_1 \cdot E_2})\)</span> 识别语言 <span class="math inline">\(E_1 \cdot E_2\)</span>，</p>
+<p>其中有</p>
+<p><span class="math display">\[
+ \begin{aligned}
+ Q_{E_1 \cdot E_2} &amp;= Q_{E_1} \uplus Q_{E_2} \\
+ Q_{acc, E_1 \cdot E_2} &amp;= \{q_{acc, E_2}\} = Q_{acc, E_2}\\
+ q_{0,E_1 \cdot E_2} &amp;= q_{0,E_1}\\
+ \text{令 } q_{acc, E_1} &amp;= q_{0, E_2} \\
+ \end{aligned}
+ \]</span></p>
+<p>其中最后一个构造等价于添加状态转移 <span class="math inline">\((q_{acc, E_1}, \varepsilon, q_{0, E_2})\)</span>.</p></li>
+<li><p>自动机 <span class="math inline">\(M_{E_1^*} = (Q_{E_1^*}, \Sigma, \delta_{E_1^*}, q_{0,E_1^*}, Q_{acc, E_1^*})\)</span> 识别语言 <span class="math inline">\(E_1^*\)</span>，</p>
+<p>其中有</p>
+<p><span class="math display">\[
+ \begin{aligned}
+ Q_{E_1^*} &amp;= Q_{E_1} \uplus \{q_{0,E_1^*}, q_{acc, E_1^*}\} \\
+ Q_{acc, E_1^*} &amp;= \{q_{acc, E_1^*}\} \\
+ \delta_{E_1^*} &amp;= \delta_{E_1} \uplus
+ \begin{Bmatrix}
+ (q_{0,E_1^*}, \varepsilon, q_{0,E_1}) \\
+ (q_{acc,E_1}, \varepsilon, q_{acc,E_1^*})
+ \end{Bmatrix}\\
+ \text{令 } q_{acc, E_1} &amp;= q_{0, E_1}
+ \end{aligned}
+ \]</span></p></li>
+</ol><p>根据结构归纳法可以证明，上述情况中构造出来的自动机皆满足前述条件，于是构造要求的假设成立。因此该算法构造性地证明，对于任何正则语言来说，存在识别其的有限状态自动机。</p><h1 id="有限自动状态机到正则表达式">有限自动状态机到正则表达式</h1><p>我们给出三种方法</p><h2 id="状态消除">状态消除</h2><p>我们对状态转移图做出拓展，允许以正则表达式标记转移。如此一来，符合先前定义的状态转移图依然是合法的，因为以字符 <span class="math inline">\(\sigma \in \Sigma\)</span> 标记的转移可被视为以正则表达式 <span class="math inline">\(\sigma\)</span> 标记的转移。</p><p>接下来根据前文给出的算法移除 <span class="math inline">\(\varepsilon\)</span>-转移，然后反复进行状态消除程序：</p><ol type="1">
+<li><p>消除没有从初始状态开始的路径的状态，消除没有路径到达任何一个接受状态的状态</p></li>
+<li><p>消除所有自循环，即对于所有 <span class="math inline">\(q \in Q\)</span>，若存在由正则表达式 <span class="math inline">\(E\)</span> 标记的转移 <span class="math inline">\((q, E, q) \in \delta\)</span>，不失一般性地假设 <span class="math inline">\(q&apos; \not\in Q\)</span>，修改这样的转移为 <span class="math inline">\((q, E^*, q&apos;)\)</span>。</p>
+<p>同时若有 <span class="math inline">\(q \in Q_{acc}\)</span>，令 <span class="math inline">\(q \not\in Q_{acc}\)</span>, <span class="math inline">\(q&apos; \in Q_{acc}\)</span>。</p>
+<p>并且若对于某些 <span class="math inline">\(q_{out} \in Q\)</span> （此时一定有 <span class="math inline">\(q_{out} \ne q\)</span>），存在由正则表达式 <span class="math inline">\(E\)</span> 标记的转移 <span class="math inline">\((q, E, q_{out}) \in \delta\)</span>，修改这样的转移为 <span class="math inline">\((q&apos;, E, q_{out})\)</span></p></li>
+<li><p>合并所有分支，即对于所有 <span class="math inline">\(q_1, q_2 \in Q\)</span>，替换所有由正则表达式 <span class="math inline">\(E_1, E_2\)</span> (<span class="math inline">\(E_1 \ne E_2\)</span>) 标记的转移 <span class="math inline">\((q_1, E_1, q_2), (q_1, E_2, q_2)\)</span> 为 <span class="math inline">\((q_1, E_1 + E_2)\)</span>.</p></li>
+<li><p>对于所有 <span class="math inline">\(q_1, q_2, q_3 \in Q\)</span>，若有 <span class="math inline">\(q_2 \in Q_{acc}\)</span>，及转移 <span class="math inline">\((q_1, E_1, q_2), (q_2, E_2, q_3)\)</span>，则构造状态 <span class="math inline">\(q_2&apos;\)</span> 并假设 <span class="math inline">\(q_2&apos; \not\in Q\)</span>，令 <span class="math inline">\(q_2&apos; \in Q_{acc}\)</span>, <span class="math inline">\(q_2 \not\in Q_{acc}\)</span>，构造转移 <span class="math inline">\((q_1, E_1, q_2&apos;)\)</span>.</p>
+<p>此时由于进行了第 2 步，于是不可能有 <span class="math inline">\(q_1, q_3 = q_2\)</span>，然而允许 <span class="math inline">\(q_1 = q_3\)</span>.</p></li>
+<li><p>对于所有 <span class="math inline">\(q_1, q_2, q_3 \in Q\)</span>，替换所有转移 <span class="math inline">\((q_1, E_1, q_2), (q_1, E_2, q_2)\)</span> 为 <span class="math inline">\((q_1, E_1E_2)\)</span>.</p>
+<p>类似上一步，不可能有 <span class="math inline">\(q_1, q_3 = q_2\)</span>，然而允许 <span class="math inline">\(q_1 = q_3\)</span>，同时根据上一步有 <span class="math inline">\(q_2 \not\in Q_{acc}\)</span>.</p></li>
+</ol><p>此时返回步骤 1 重复，直到在某一轮迭代中没有移除任何状态及转移。如此得到的状态转移图具有以下性质：</p><ol type="1">
+<li><p>步骤 5 保证了图里不存在长度多于 1 的路径</p></li>
+<li><p>步骤 2 及上一条性质保证了不存在循环</p></li>
+<li><p>步骤 3 保证了任何状态至多只有一个输入转移</p></li>
+<li><p>步骤 1 保证了图是 reachable 且 co-reachable 的，即没有多余的状态</p></li>
+</ol><p>如此得到的转移图将是深度为 1 的树，且有且仅有所有叶子节点为接受状态。于是将所有转移上的正则表达式以 <span class="math inline">\(+\)</span> 连接，则可得到描述给定状态机识别的语言的正则表达式。</p><p>注意，状态消除程序中每一步骤中可能会有多个匹配的结构。不同的顺序并不保证可以得到相同的正则表达式，然而这些表达式都是等价的。需要注意的是，每一个步骤中的操作应同步进行，即同时移除所有匹配的结构。</p><p>以上对状态消除程序的描述适合方便直观理解其原理的目的，然而并不精确。对于使用可变数据结构的程序来说，为达到上述注意中所要求的同步需要额外的工作。</p><h2 id="传递闭包">传递闭包</h2><p>该方法原理上与上一个方法类似，这里给出严谨的描述。</p><p>将 <span class="math inline">\(NFA\)</span> 的状态依一定次序编号为 <span class="math inline">\(\{q_1, \dots, q_n\}\)</span>，于是得到对状态转移图的矩阵描述 <span class="math inline">\(T_{n \times n}\)</span>:</p><p><span class="math display">\[
+T_{i, j} = 
+\begin{cases}
+\varepsilon, &amp;i = j \\
+\delta(i, j), &amp;\delta(i, j)! \\
+\text{未定义}, &amp;\text{除以上情况外}
+\end{cases}
+\]</span></p><p>定义 <span class="math inline">\(T^k_{i,j}\)</span> 从 <span class="math inline">\(q_i\)</span> 仅途径 <span class="math inline">\(\{q_1, \dots, q_k\}\)</span> 到达 <span class="math inline">\(q_j\)</span> 的路径得到的正则表达式。显然有 <span class="math inline">\(T^1 = T\)</span>。</p><p>于是依照如下递归关系求 <span class="math inline">\(T^n\)</span></p><p><span class="math display">\[
+T^k_{i,j} = T^{k-1}_{i,j} + T^{k-1} \cdot (T^{k-1}_{k,k})^* \cdot T^{k-1}_{k,j}
+\]</span></p><p><span class="math inline">\(T^n_{1,1}\)</span> 为所求正则表达式。</p><p>注意到以上表达式描述的是一个动态编程的模式，因此虽然描述上使用的是数学语言，其可轻易以编程实现。</p><h2 id="brzozowski-代数方法">Brzozowski 代数方法</h2><p>除此以外，Brzozowski, Janusz. (1964). Derivatives of Regular Expressions. J. ACM. 11. 481-494. 10.1145/321239.321249. 给出了代数上的方法。避开使用上述文献中正则表达式导数的概念，本文对 Brzozowski 代数方法描述如下。</p><p>记 <span class="math inline">\(M = (Q, \Sigma, \delta, q_0, Q_{acc})\)</span> 为不含 <span class="math inline">\(\varepsilon\)</span>-转移 的 NFA，对应于每一个 <span class="math inline">\(q_i \in Q\)</span> 的方程</p><p><span class="math display">\[
+Q_i = \sum_{\exists\sigma\in\Sigma, q_j \in Q. q_i \stackrel{\sigma}{\to}q_j} \sigma Q_j +
+\begin{cases}
+\{\varepsilon\}, &amp;q_i \in Q_{acc}\\
+\emptyset, &amp;\text{否则}
+\end{cases}
+\]</span></p><p>形成一个线性方程组。</p><p>使用 <span class="math inline">\(+\)</span>, <span class="math inline">\(\cdot\)</span> 的结合性， <span class="math inline">\(+\)</span> 对于 <span class="math inline">\(\cdot\)</span> 的分配性，以及 Arden 引理如下：</p><div class="lem" name="Arden">
+<p>设 <span class="math inline">\(L,U,V \subseteq \Sigma^*\)</span> 为正则语言，其中有 <span class="math inline">\(\varepsilon \not\in U\)</span>，那么有</p>
+<p><span class="math display">\[
+L = UL + V \iff L = U^*V
+\]</span></p>
+</div><p>解得 <span class="math inline">\(Q_0\)</span> 为描述状态机 <span class="math inline">\(M\)</span> 所识别语言的正则表达式。</p><h1 id="正则语言的封闭性">正则语言的封闭性</h1><p>由以上结论可以证明正则语言在布尔运算下的封闭性。</p><p>设 <span class="math inline">\(R\)</span>, <span class="math inline">\(S\)</span> 为正则语言，那么以下语言皆为正则语言：</p><ol type="1">
+<li><p><span class="math inline">\(R \cup S\)</span></p>
+<p>描述该语言的正则表达式为 <span class="math inline">\(R + S\)</span>.</p></li>
+<li><p><span class="math inline">\(\overline{R} = (\Sigma^* - R)\)</span></p>
+<p>给定识别语言 <span class="math inline">\(R\)</span> 的 DFA <span class="math inline">\(M_R\)</span>，可构造识别 <span class="math inline">\(\overline{R}\)</span> 的自动机依下述方法：</p>
+<p>补全 <span class="math inline">\(M\)</span> 的状态转移函数，即添加状态 <span class="math inline">\(q_{rej} \in Q_{\overline{R}}\)</span> 并定义所有未定义的转移至 <span class="math inline">\(q_{rej}\)</span>:</p>
+<p><span class="math display">\[
+ \delta_{\overline{R}}(q, \sigma) =
+ \begin{cases}
+ \delta_R(q, \sigma), &amp;\delta_R(q, \sigma)!\\
+ q_{rej}, &amp;\text{否则}
+ \end{cases}
+ \]</span></p>
+<p>然后对于所有 <span class="math inline">\(q \in Q_R\)</span>， 令 <span class="math inline">\(q \in Q_{acc, \overline{R}} \iff q \in Q/Q_{acc, R}\)</span> （即 <span class="math inline">\(q \in Q_{\overline{R}}/Q_{acc,\overline{R}} \iff q \in Q_{acc, R}\)</span>）。注意此时会有 <span class="math inline">\(q_{rej} \in Q_{acc, \overline{R}}\)</span>.</p>
+<p>于是以前述方法可从自动机 <span class="math inline">\(M_{\overline{R}}\)</span> 得到描述语言 <span class="math inline">\(\overline{R}\)</span> 的正则表达式。实践中，描述 <span class="math inline">\(R\)</span> 及 <span class="math inline">\(\overline{R}\)</span> 的正则表达式常常区别极大，并且对于有简短正则表达式描述的语言 <span class="math inline">\(R\)</span> 来说，描述 <span class="math inline">\(\overline{R}\)</span> 的正则表达式十分复杂的情况也是非常常见的。由此我们可以看出使用有限状态自动机描述正则语言在处理这样的问题时的优越性。</p></li>
+<li><p><span class="math inline">\(R \cap S\)</span></p>
+<p>可由双重否定率及德摩根律得到 <span class="math inline">\(R \cap S = \overline{\overline{R} \cup \overline{S}}\)</span> 并且依前述方法得到后者的正则表达式。</p>
+<p>类似上一点的评论，描述 <span class="math inline">\(R \cap S\)</span> 的正则表达式通常来说与 <span class="math inline">\(R\)</span>, <span class="math inline">\(S\)</span> 的正则表达式也不见得会有相似之处。这主要是由于识别 <span class="math inline">\(R \cap S\)</span> 的状态机根本上是通过不确定的方式并行运行分别识别 <span class="math inline">\(R\)</span>, <span class="math inline">\(S\)</span> 的两个自动机所导致。</p></li>
+</ol><p>由于 2 和 3 证明的正则性的的封闭性，我们没有必要拓展正则表达式至有表达补与交的能力 <a href="#fn2-1" class="footnote-ref" id="fnref2-1" role="doc-noteref"><sup>2</sup></a>，因此实践中常常利于位于更低级别系统中的排中律及合取介入率来识别给定正则语言的交及补。</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>定义中缀二元运算 <span class="math inline">\(A \uplus B := A \cup B\)</span>，并且不失一般性地，该运算保证断言 <span class="math inline">\(A \cap B = \emptyset\)</span> 成立。理解上可认为 <span class="math inline">\(A \uplus B \simeq A \times \{0\} \cup B \times \{1\} =: A \sqcup B\)</span></p>
+</div><div class="tippy-tooltip" id="tooltip2-1" style="display: none">
+<p>术语上称补与交运算对于已定义的运算来说不是正交的，即他们所表达的意义可由已有的运算定义出来</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+
+<li id="fn1-1" role="doc-endnote"><p>定义中缀二元运算 <span class="math inline">\(A \uplus B := A \cup B\)</span>，并且不失一般性地，该运算保证断言 <span class="math inline">\(A \cap B = \emptyset\)</span> 成立。理解上可认为 <span class="math inline">\(A \uplus B \simeq A \times \{0\} \cup B \times \{1\} =: A \sqcup B\)</span><a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li><li id="fn2-1" role="doc-endnote"><p>术语上称补与交运算对于已定义的运算来说不是正交的，即他们所表达的意义可由已有的运算定义出来<a href="#fnref2-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#正则表达式到有限自动状态机"><span class="toc-number">1.</span> <span class="toc-text">正则表达式到有限自动状态机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#有限自动状态机到正则表达式"><span class="toc-number">2.</span> <span class="toc-text">有限自动状态机到正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#状态消除"><span class="toc-number">2.1.</span> <span class="toc-text">状态消除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传递闭包"><span class="toc-number">2.2.</span> <span class="toc-text">传递闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#brzozowski-代数方法"><span class="toc-number">2.3.</span> <span class="toc-text">Brzozowski 代数方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正则语言的封闭性"><span class="toc-number">3.</span> <span class="toc-text">正则语言的封闭性</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&text=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&is_video=false&description=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-04-正则语言与有限状态自动机&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&title=形式语言与自动机理论-04-正则语言与有限状态自动机"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/&name=形式语言与自动机理论-04-正则语言与有限状态自动机&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

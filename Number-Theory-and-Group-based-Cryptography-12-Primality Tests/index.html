@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="测试 0: 朴素测试 测试 1: 费马测试 插曲：子群及拉格朗日定理 插曲：二次剩余 欧拉素性测试（Solovay–Strassen 方法） Miller-Rabin 素性测试  如前文所述，我们用到的许多公钥密码系统都需要我们找到大素数。而我们现在仅有的方法是反复随机生成足够大的数，并测试其是否是素数。因此我们实际上需要的是一个高效判定素数的方法。事实上，与其说我们将要给出的算法判断的是数的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-12-素数测试">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="测试 0: 朴素测试 测试 1: 费马测试 插曲：子群及拉格朗日定理 插曲：二次剩余 欧拉素性测试（Solovay–Strassen 方法） Miller-Rabin 素性测试  如前文所述，我们用到的许多公钥密码系统都需要我们找到大素数。而我们现在仅有的方法是反复随机生成足够大的数，并测试其是否是素数。因此我们实际上需要的是一个高效判定素数的方法。事实上，与其说我们将要给出的算法判断的是数的">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.573Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-12-素数测试">
+<meta name="twitter:description" content="测试 0: 朴素测试 测试 1: 费马测试 插曲：子群及拉格朗日定理 插曲：二次剩余 欧拉素性测试（Solovay–Strassen 方法） Miller-Rabin 素性测试  如前文所述，我们用到的许多公钥密码系统都需要我们找到大素数。而我们现在仅有的方法是反复随机生成足够大的数，并测试其是否是素数。因此我们实际上需要的是一个高效判定素数的方法。事实上，与其说我们将要给出的算法判断的是数的">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-12-素数测试</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Library-of-Ashurbanipal/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-11-Finding-Generators-of-Fpx/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&text=数论与群论密码学-12-素数测试"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&is_video=false&description=数论与群论密码学-12-素数测试"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-12-素数测试&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&name=数论与群论密码学-12-素数测试&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#测试-0-朴素测试"><span class="toc-number">1.</span> <span class="toc-text">测试 0: 朴素测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#测试-1-费马测试"><span class="toc-number">2.</span> <span class="toc-text">测试 1: 费马测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#插曲子群及拉格朗日定理"><span class="toc-number">3.</span> <span class="toc-text">插曲：子群及拉格朗日定理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#插曲二次剩余"><span class="toc-number">4.</span> <span class="toc-text">插曲：二次剩余</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#欧拉素性测试solovaystrassen-方法"><span class="toc-number">5.</span> <span class="toc-text">欧拉素性测试（Solovay–Strassen 方法）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#miller-rabin-素性测试"><span class="toc-number">6.</span> <span class="toc-text">Miller-Rabin 素性测试</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-12-素数测试
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-04-02T15:06:11.000Z" itemprop="datePublished">2019-04-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#测试-0-朴素测试">测试 0: 朴素测试</a></li>
+<li><a href="#测试-1-费马测试">测试 1: 费马测试</a></li>
+<li><a href="#插曲子群及拉格朗日定理">插曲：子群及拉格朗日定理</a></li>
+<li><a href="#插曲二次剩余">插曲：二次剩余</a></li>
+<li><a href="#欧拉素性测试solovaystrassen-方法">欧拉素性测试（Solovay–Strassen 方法）</a></li>
+<li><a href="#miller-rabin-素性测试">Miller-Rabin 素性测试</a></li>
+</ul>
+</div><p>如前文所述，我们用到的许多公钥密码系统都需要我们找到大素数。而我们现在仅有的方法是反复随机生成足够大的数，并测试其是否是素数。因此我们实际上需要的是一个高效判定素数的方法。事实上，与其说我们将要给出的算法判断的是数的素性，倒不如说他们判断的是数的“合性”：因为他们都是基于通过找出待测数的非平凡因子（1 及其自身）证明其非素数的。</p><p>虽然在 2002 年提出了存在多项式时间可算的素数判定算法，然而该算法实际上十分复杂而且非常低效。</p><p>后文我们假设 <span class="math inline">\(n\)</span> 为一正奇数。因为偶数可于常数时间内判断<a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a>，因此证明其是否为素数是平凡的。</p><p>我们需要注意到的是，除了下述的测试 0: 朴素判定以外，其余的方法都不保证通过测试的数为素数，而仅仅在概率上非常可能为素数。更详细地说，若数 <span class="math inline">\(n\)</span> 未通过素性测试，则其必定是合数。但是若其通过一次素性测试，其仅有一定可能为素数。而若其通过多次测试，则有非常大的可能为素数。</p><h1 id="测试-0-朴素测试">测试 0: 朴素测试</h1><p>测试是否对于某些随机的，或全部 <span class="math inline">\(m \le \sqrt{n}\)</span>，都有 <span class="math inline">\(m \not\mid n\)</span>。若 <span class="math inline">\(n\)</span> 不通过测试，则显然有 <span class="math inline">\(m \mid n\)</span> 且 <span class="math inline">\(n\)</span> 为合数。若 <span class="math inline">\(n\)</span> 对于所有 <span class="math inline">\(m\)</span> 皆通过，那么 <span class="math inline">\(n\)</span> 必定是素数。然而该方法为指数时间复杂度，因此其实并不可行。</p><p>该方法是唯一一个能保证 <span class="math inline">\(n\)</span> 为素数的算法。对于剩下的测试，我们仅能在一定概率内确定 <span class="math inline">\(n\)</span> 为素数。我们称通过这样测试的数为伪素数。</p><h1 id="测试-1-费马测试">测试 1: 费马测试</h1><p>回忆前文所给的费马定理：</p><div class="thm" name="费马">
+<p>若 <span class="math inline">\(n\)</span> 为素数，那么对于所有 <span class="math inline">\(b\)</span>，若 <span class="math inline">\(gcd(b, n) = 1\)</span>，则一定有 <span class="math inline">\(b^{n-1} \equiv 1 \pmod n\)</span>。</p>
+</div><div class="def">
+<p>一个奇合数 <span class="math inline">\(n\)</span> 被称作以 <span class="math inline">\(b\)</span> 为底的伪素数（<span class="math inline">\(psp_b\)</span>），若有</p>
+<p><span class="math display">\[
+b^{n-1} \equiv 1 \pmod n
+\tag {1}
+\]</span></p>
+</div><p>因此有费马测试如下：<br>
+取一随机数 <span class="math inline">\(b\)</span> 使得 <span class="math inline">\(1 &lt; b &lt; n\)</span>，并判断 <span class="math inline">\(n\)</span> 是否是 <span class="math inline">\(psp_b\)</span>。<br>
+若测试失败，则 <span class="math inline">\(n\)</span> 必定是合数。否则 <span class="math inline">\(n\)</span> 有可能是素数。</p><p>注意:<br>
+1. 若式 (1) 成立，则 <span class="math inline">\(gcd(b, n) = 1\)</span><br>
+2. 若 <span class="math inline">\(b_1 \equiv b_2 \pmod n\)</span>，则 <span class="math inline">\(psp_{b_1} \iff psp_{b_2}\)</span></p><p>接下来分析该算法的准确性。记 <span class="math display">\[
+\begin{aligned}
+\mathcal{P}_n
+&amp;= \{b \pmod n \mid \text{$n$ 是 $psp_b$}\} \\
+&amp;= \{b \pmod n \mid b^{n-1} \equiv 1 \pmod n\} \\
+&amp;\subseteq (\mathbb{Z}/n\mathbb{Z})^\times
+\end{aligned}
+\]</span></p><div class="thm" data-num="1">
+<ol type="a">
+<li><p>若 <span class="math inline">\(gcd(b, n) = 1\)</span>，则 <span class="math display">\[\text{$n$ 是 $psp_b$} \iff b \in \mathcal{P}_n \iff ord(b) \mid n-1\]</span></p></li>
+<li><p><span class="math inline">\(b_1, b_2 \in \mathcal{P}_n \implies b_1b_2, b_1b^{-2} \in \mathcal{P}_n\)</span><br>
+其中 <span class="math inline">\(b^{-2}\)</span> 定义在 <span class="math inline">\((\mathbb{Z}/n\mathbb{Z})^\times\)</span> 中。</p></li>
+<li><p>若 <span class="math inline">\(n\)</span> 对于某些 <span class="math inline">\(b \in (\mathbb{Z}/n\mathbb{Z})^\times\)</span> 不通过测试，那么其同样不通过至少一半的 <span class="math inline">\(b \in (\mathbb{Z}/n\mathbb{Z})^\times\)</span>： <span class="math display">\[\mathcal{P}_n \ne (\mathbb{Z}/n\mathbb{Z})^\times \implies \big| \mathcal{P}_n \big| \le \frac{1}{2} \phi(n)\]</span></p></li>
+</ol>
+</div><p>该定理是群论中一个更广泛的结论的特殊情况：</p><div class="cor">
+<p>若 <span class="math inline">\(\mathcal{P}_n \ne (\mathbb{Z}/n\mathbb{Z})^\times\)</span>（存在使得 <span class="math inline">\(n\)</span> 不通过测试的底）那么</p>
+<p><span class="math display">\[
+\newcommand{\prob}{\mathsf{Prob}}
+\prob(\text{$n$ 通过测试 $k$ 次}) \le \frac{1}{2^k}
+\]</span></p>
+<p>或者说，若 <span class="math inline">\(n\)</span> 通过 <span class="math inline">\(k\)</span> 次费马测试，那么</p>
+<p><span class="math display">\[
+\prob(\mathcal{P}_n = (\mathbb{Z}/n\mathbb{Z})^\times) \ge 1 - \frac{1}{2^k}
+\]</span></p>
+</div><p>那么，当什么时候会有 <span class="math inline">\(\mathcal{P}_n = (\mathbb{Z}/n\mathbb{Z})^\times\)</span> 呢？</p><p>注意，根据费马定理，若 <span class="math inline">\(n\)</span> 为素数，则确实有上述结果。<br>
+然而，存在其他符合此性质的数。</p><div class="def">
+<p>卡迈克尔数（Carmichale numbers）为使得 <span class="math inline">\(\mathcal{P}_n = (\mathbb{Z}/n\mathbb{Z})^\times\)</span> 的合数。</p>
+</div><p>因此，费马测试并不实际，因为我们还需要储存一个包括所有卡迈克尔数的列表。而有证明表示，存在无限个卡迈克尔数。</p><h1 id="插曲子群及拉格朗日定理">插曲：子群及拉格朗日定理</h1><div class="def">
+<p>若 <span class="math inline">\(H \subset G\)</span> 且 <span class="math inline">\(G\)</span> 为群，那么如果有 <span class="math inline">\(1 \in H\)</span> 且</p>
+<p><span class="math display">\[h_1, h_2 \in H \implies h_1h_2^{-1} \in H\]</span></p>
+<p>那么 <span class="math inline">\(H\)</span> 为群，且称 <span class="math inline">\(H\)</span> 为 <span class="math inline">\(G\)</span> 的子群。</p>
+</div><p>注意，若 <span class="math inline">\(H\)</span> 为 <span class="math inline">\(G\)</span> 的子群，根据以上弱化的定义，必然也有</p><p><span class="math display">\[h_1, h_2 \in H \implies h1^{-1} \in H \text{ 且 } h_1h_2 \in H\]</span></p><p>即上述定义足够保证 <span class="math inline">\(H\)</span> 对于乘法和逆封闭。</p><div class="ex">
+<p>若 <span class="math inline">\(x \in G\)</span>，那么 <span class="math inline">\(&lt;x&gt;\)</span> 是 <span class="math inline">\(G\)</span> 的子群。因为有 <span class="math display">\[x^n, x^m \in &lt;x&gt;, x^n\cdot(x^m)^{-1} = x^{n-m} \in &lt;x&gt;\]</span></p>
+</div><div class="ex">
+<p>若 <span class="math inline">\(G\)</span> 为阿贝尔群且 <span class="math inline">\(m \ge 1\)</span>，那么 <span class="math display">\[G[m] := \{x \in G \text{ 且 } x^m=1\}\]</span> 是 <span class="math inline">\(G\)</span> 的子群。</p>
+</div><div class="proof">
+<p>因为有 <span class="math inline">\(1^m = 1\)</span>，因此 <span class="math inline">\(1 \in G[m]\)</span>。于是若 <span class="math inline">\(x_1, x_2 \in G[m]\)</span>，那么根据定义有 <span class="math inline">\(x_1^m = 1 = x_2^m\)</span>。于是</p>
+<p><span class="math display">\[(x_1x_2^{-1})^m \stackrel{阿贝尔}{=} x_1^m(x_2^{-1})^m = 1 \cdot 1^{-1} = 1\]</span></p>
+<p>因此</p>
+<p><span class="math display">\[x_1x_2^{-1} \in G[m]\]</span></p>
+</div><p>注意，若 <span class="math inline">\(G = (\mathbb{Z}/n\mathbb{Z})^\times\)</span>，则 <span class="math display">\[\mathcal{P}_n \stackrel{定义}{=} \{b \in G : b^{n-1} = 1\} \stackrel{定义}{=} G[n-1]\]</span></p><div class="thm" data-num="2" name="拉格朗日">
+<p>若 <span class="math inline">\(H\)</span> 是有限群 <span class="math inline">\(G\)</span> 的有限子群，那么 <span class="math display">\[\#H \mid \#G\]</span></p>
+</div><div class="proof" name="定理1">
+<p>a). 性质 P1 适用于 <span class="math inline">\(b \in G = (\mathbb{Z}/n\mathbb{Z})^\times\)</span></p>
+<p>b). 因为 <span class="math inline">\(\mathcal{P}_n = G[n-1]\)</span> 而后者是 <span class="math inline">\(G\)</span> 的子群，因此符合性质。</p>
+<p>c). 依前所述定义有 <span class="math inline">\(\big| G \big| = \phi(n)\)</span>。因此根据定理 2 以及 b)，因为 <span class="math inline">\(\mathcal{P}_n\)</span> 是 <span class="math inline">\(G\)</span> 的子群，而两群基数可除，于是有</p>
+<p><span class="math display">\[K := \frac{\big| G \big|}{\big| \mathcal{P}_n \big|} \in \mathbb{N}^+\]</span></p>
+<p>于是若有 <span class="math inline">\(\mathcal{P}_n \ne (\mathbb{Z}/n\mathbb{Z})^\times\)</span>，那么 <span class="math inline">\(k \ne 1\)</span>。因此 <span class="math inline">\(k \ge 2\)</span>。所以有 <span class="math inline">\(\big| \mathcal{P}_n \big| = \frac{| G |}{k} \le \frac{| G |}{2} = \frac{\phi(n)}{2}\)</span>.</p>
+</div><p>注意，若 <span class="math inline">\(H = &lt;x&gt;\)</span>，那么依据定理 2，有 <span class="math inline">\(\#H = ord(x)\)</span>。因此拉格朗日定理可推广至 P2.</p><h1 id="插曲二次剩余">插曲：二次剩余</h1><p>下一个素性测试需要使用关系到所谓二次剩余的欧拉定理。二次剩余与下列问题有关：</p><p>Q. 怎样判断给定 <span class="math inline">\(a \in \mathbb{Z}\)</span> 平方数（<span class="math inline">\(\!\!\!\mod p\)</span>），即判断是否有事实 <span class="math inline">\(a \in (\mathbb{F}_o^\times)^2\)</span>.</p><p>A1. 我们先给出结论。若 <span class="math inline">\(p &gt; 2\)</span> 为素数，由于有 <span class="math inline">\(gcd(2, p-1) = 2\)</span>,那么 <span class="math display">\[a \in (\mathbb{F}_p^\times)^2 \iff ord(a) \mid \frac{p-1}{2}\]</span></p><p>A1 是以下定理的直接推论：</p><div class="thm">
+<p>若 <span class="math inline">\(p\)</span> 为素数，且有数 <span class="math inline">\(a\)</span> 满足 <span class="math inline">\((a, p) = 1\)</span>，那么对于任何 <span class="math inline">\(n \ge 1\)</span> 来说，方程 <span class="math inline">\(x^n \equiv a \pmod p\)</span> 有解，当且仅当 <span class="math inline">\(ord_p(a) \mid \frac{p-1}{(n, p-1)}\)</span>。其中 <span class="math inline">\(ord_p(a)\)</span> 为 <span class="math inline">\(\mathbb{F}_p^\times\)</span> 中 <span class="math inline">\([a]\)</span> 的阶。</p>
+</div><p>为了证明该定理，我们需要以下引理。</p><div class="lem">
+<p>若 <span class="math inline">\(G = &lt;x&gt;\)</span> 是一个阶为 <span class="math inline">\(n\)</span> 的循环群，且有 <span class="math inline">\(m \mid n\)</span>，那么 <span class="math inline">\(x^k\)</span> 的阶为 <span class="math inline">\(m\)</span> 当且仅当 <span class="math inline">\(k = \frac{n}{m}k&apos;\)</span>，其中 <span class="math inline">\(k&apos; \in \mathbb{Z}\)</span> 且 <span class="math inline">\(gcd(k&apos;m) = 1\)</span>.</p>
+</div><div class="proof" name="引理">
+<p>根据 P2，有 <span class="math inline">\(ord(x^k) = m \iff \frac{n}{(k, n)} = m \iff \frac{n}{m} = (k, n)\)</span>。</p>
+<p>一方面若有 <span class="math inline">\(k = \frac{n}{m}k&apos;\)</span> 且 <span class="math inline">\((k&apos;, m) = 1\)</span>，那么 $(k, n) = (k&apos;, m) = .</p>
+<p>另一方面若 <span class="math inline">\(\frac{n}{m} = (k, n)\)</span>，那么 <span class="math inline">\(\frac{n}{m} \mid k\)</span>。因此存在 <span class="math inline">\(k&apos; \in \mathbb{Z}\)</span> 使得 <span class="math inline">\(k = \frac{n}{m}k&apos;\)</span>。于是 <span class="math inline">\(\frac{n}{m} = (k, n) = (\frac{n}{m}k&apos;, n) = \frac{n}{m}(k&apos;, m)\)</span>。因此有 <span class="math inline">\((k&apos;, m) = 1\)</span>。</p>
+</div><div class="proof">
+<p>根据定理 3，有 <span class="math inline">\(\mathbb{F}_p^\times = &lt;g&gt;\)</span>。</p>
+<p>首先设 <span class="math inline">\(x^n = a\)</span> 在 <span class="math inline">\(F_p^\times\)</span> 中有解，于是有 <span class="math inline">\(i\)</span> 使得 <span class="math inline">\(x = g^k\)</span>。因此 <span class="math inline">\(a = g^{kn}\)</span>。因为有 <span class="math inline">\(ord(g) = p-1\)</span>，根据 P2 可得知 <span class="math display">\[ord(a) = \frac{p-1}{(nk, p-1)} \mid \frac{p-1}{(n , p-1)}\]</span></p>
+<p>另一方面，若有 <span class="math inline">\(m := ord(a) \mid \frac{p-1}{(n, p-1)}\)</span>，那么存在 <span class="math inline">\(k \in \mathbb{Z}\)</span> 使得 <span class="math inline">\(km = \frac{p-1}{(n, p-1)}\)</span>，或者说 <span class="math inline">\(p-1 = km(n, p-1)\)</span>。</p>
+<p>根据前述引理，<span class="math inline">\(ord(a) = \frac{\frac{p-1}{(n, p-1)}}{k}\)</span> 当且仅当 $k = </p>
+<p>于是 <span class="math inline">\(a = g^{\frac{p-1}{m}k&apos;}\)</span>，其中 <span class="math inline">\((k&apos;, m) = 1\)</span>.</p>
+</div><p>A1 给出的方法并不实际，因为除非 <span class="math inline">\(p-1\)</span> 的因式分解已知，求 <span class="math inline">\(ord(a)\)</span> 需要指数级别的时间。</p><p>然而，根据欧拉定理我们确实有另一种在多项式时间内判定此问题的方法。而该方法使用了所谓的雅可比符号。</p><p><span class="math inline">\(\newcommand{\J}[2]{\left(\frac{ #1 }{ #2 }\right)}\)</span></p><p>记号：若 <span class="math inline">\(p &gt; 2\)</span> 为一奇素数，<span class="math inline">\(a \in \mathbb{Z}\)</span>，那么勒让德符号 <span class="math inline">\(\J{a}{p}\)</span> 定义为</p><p><span class="math display">\[
+\J{a}{p} =
+\begin{cases}
+0, &amp; \text{if $p \mid a$}\\
+1, &amp; \text{if $a \bmod p \in (\mathbb{F}_p^\times)^2$ 为一非零平方}\\
+-1, &amp; \text{除上述以外}
+\end{cases}
+\]</span></p><p>那么，我们的问题等价于判定是否有 <span class="math inline">\(\J{a}{p} = 1\)</span>.</p><div class="thm" name="欧拉">
+<p>有</p>
+<p><span class="math display">\[
+\J{a}{p} \equiv a^{\frac{p-1}{2}} \pmod p
+\]</span></p>
+</div><p>注意，该定理说明了 <span class="math inline">\(\J{a}{p}\)</span> 可在多项式时间内求得：</p><p><span class="math display">\[
+\begin{aligned}
+\text{Time}(\text{计算 $\J{a}{p}$})
+&amp;= \Theta(\log(\frac{p-1}{2})\log^2(p)) \\
+&amp;= \Theta(\log^2(p))
+\end{aligned}
+\]</span></p><div class="proof" name="thm3">
+<p>若 <span class="math inline">\(p \mid a\)</span>，那么 <span class="math inline">\(a \equiv 0 \pmod p\)</span>。于是等式两边皆为 0。</p>
+<p>否则若 <span class="math inline">\(p \not\mid a\)</span>，那么 <span class="math inline">\(a \in \mathbb{F}_p^\times = G\)</span>。</p>
+<p>我们有以下两项引理：</p>
+<div class="lem" data-num="1">
+<p><span class="math display">\[
+G[2] = \{ x^2 = 1, x \in G\} = {1, -1}
+\]</span></p>
+<p>我们给出大致的证明。由于有 <span class="math inline">\(G\)</span> 为循环群且 <span class="math inline">\(\big| G[2] \big| = 2\)</span> ，因为 <span class="math inline">\(\{1, -1\} \subseteq G[2]\)</span>，因此 <span class="math inline">\(G[2] = \{1, -1\}\)</span>.</p>
+</div>
+<div class="lem" name="费马" data-num="2">
+<p><span class="math display">\[
+G^{\frac{p-1}{2}} \in \{1, -1\}
+\]</span></p>
+<div class="proof">
+<p>因为 <span class="math inline">\((a^{\frac{p-1}{2}})^2 = a^{p-1} \stackrel{P3}{=} = 1\)</span>, 因此 <span class="math inline">\(a^{\frac{p-1}{2}} \in G[2] \stackrel{Lem1}{=} \{1, -1\}\)</span></p>
+</div>
+</div>
+<p>根据引理 2，我们仅需证 <span class="math inline">\(\J{a}{p} = 1 \iff a^{\frac{p-1}{2}} \equiv 1 \pmod p\)</span>.</p>
+<p>于是</p>
+<p><span class="math display">\[
+\begin{aligned}
+\J{a}{p} = 1
+&amp; \stackrel{定义}{\iff} a \in (\mathbb{F}_p^\times)^2 \\
+&amp; \stackrel{略}{\iff} ord(a) \mid \frac{p-1}{2} \\
+&amp; \stackrel{P1}{\iff} a^{\frac{p-1}{2}} = 1 \text{ (在 $G$ 中)}
+\end{aligned}
+\]</span></p>
+</div><p>我们有如下性质：<br>
+L0 (欧拉) <span class="math inline">\(\J{a}{p} \equiv a^{\frac{p-1}{2}} \pmod p\)</span>.<br>
+L1 <span class="math inline">\(\J{a}{p} = \J{b}{p}\)</span>，若 <span class="math inline">\(a \equiv b \pmod p\)</span>.<br>
+L2 <span class="math inline">\(\J{ab}{p} = \J{a}{p}\J{b}{p}\)</span>.<br>
+L3 <span class="math inline">\(\J{ab^2}{p} = \J{a}{p}\)</span> 若 <span class="math inline">\(p \not\mid p\)</span>.<br>
+L4 <span class="math inline">\(\J{-1}{p} = 1 \iff p \mod 1 \pmod 4\)</span>.<br>
+L5 <span class="math inline">\(\J{2}{p} = (-1)^{\frac{p^2-1}{2}} = \begin{cases} 1, &amp;\text{若 $p \equiv \pm 1 \pmod 8$} \\ -1, &amp;\text{若 $p \equiv \pm 3 \pmod 8$} \end{cases}\)</span>.<br>
+L6 (高斯二次互反律) 若 <span class="math inline">\(p, q\)</span> 为奇素数，那么</p><p><span class="math display">\[
+\J{q}{p} = (-1)^{\frac{(p-1)(q-1)}{4}}\J{p}{q} =
+\begin{cases}
+-\J{p}{q}, &amp;\text{若 $p \equiv q \equiv 3 \pmod 4$}\\
+\J{p}{q}, &amp;\text{除此之外}
+\end{cases}
+\]</span></p><div class="ex" data-num="1">
+<p>判断 11 是否是同余 13 的平方：</p>
+<p><span class="math display">\[
+\J{11}{13} \stackrel{L6}{=} \J{13}{11} \stackrel{L5}{=} -1
+\]</span></p>
+<p>因此 11 不是同余 13 的平方。</p>
+</div><div class="ex" data-num="2">
+<p>判断 21 是否是同余 43 的平方：</p>
+<p><span class="math display">\[
+\J{21}{43} \stackrel{L2}{=} \J{3}{43}\J{7}{43} \stackrel{L6}{=} (-\J{43}{3})(-\J{43}{7}) \stackrel{L1}{=} \J{1}{3}\J{1}{7} = 1
+\]</span></p>
+<p>因此 21 是同余 43 的平方。</p>
+</div><p>注意，上述例子中我们对 21 进行了素因数分解。由于素因数分解算法为次指数复杂度，实际运用勒让德记号时除少数情况应避免使用 L2。所指少数情况包括在二进制下可轻易判断 <span class="math inline">\(p\)</span> 是否有因子 2。</p><p>进一步地，所谓的雅可比符号避免了进行素因数分解的需要。</p><p>若 <span class="math inline">\(n\)</span> 为一正奇数，那么定义</p><p><span class="math display">\[
+\J{a}{n} := \J{a}{p_1}^{e_1} \times \cdots \times \J{a}{p_r}^{e_r}
+\]</span></p><p>其中 <span class="math inline">\(n = p_1^{e_1} \times \cdots \times p_r^{e_r}\)</span>.</p><div class="thm" data-num="5">
+<p>雅可比符号满足以下条件：<br>
+J1 <span class="math inline">\(\J{a}{n} = \J{b}{n}\)</span> 当 <span class="math inline">\(a \equiv \pmod n\)</span>.<br>
+J2 <span class="math inline">\(\J{ab}{n} = \J{a}{n}\J{b}{n}\)</span>.<br>
+J3 <span class="math inline">\(\J{a}{nm} = \J{a}{n}\J{a}{m}\)</span> 当 <span class="math inline">\(m\)</span> 也是一个正奇数。<br>
+J4 <span class="math inline">\(\J{-1}{n} = (-1)^\frac{n-1}{2} = \begin{cases}1, &amp;\text{若 $n \equiv 1 \pmod 4$}\\-1, &amp;\text{若 $n \equiv 3 \pmod 4$}\end{cases}\)</span>.<br>
+J5 J6 (高斯二次互反律) 若 <span class="math inline">\(m, n\)</span> 为正奇数，那么 <span class="math display">\[
+\J{m}{n} = (-1)^{\frac{(n-1)(m-1)}{4}}\J{n}{m} =
+\begin{cases}
+-\J{n}{m}, &amp;\text{若 $n \equiv m \equiv 3 \pmod 4$}\\
+\J{n}{m}, &amp;\text{除此以外}
+\end{cases}
+\]</span></p>
+</div><div class="ex" data-num="2&apos;">
+<p>判断 21 是否是同余 43 的平方，使用雅可比符号：</p>
+<p><span class="math display">\[
+\J{21}{43} \stackrel{J6}{=} \J{43}{21} \stackrel{J1}{=} \J{1}{21} = 1
+\]</span></p>
+</div><p>注意：<br>
+1. 欧拉定理 (L0) 与雅可比符号间有相似之处。这与随后给出的欧拉素性测试有关。<br>
+2. <span class="math inline">\(\J{a}{n} = 1\)</span> 不一定表明 <span class="math inline">\(a\)</span> 为同余 <span class="math inline">\(n\)</span> 的平方，除非 <span class="math inline">\(n\)</span> 为素数。<br>
+3. 使用雅克布符号计算 <span class="math inline">\(\J{a}{p}\)</span> 的复杂度和计算欧几里得算法相当。</p><div class="proof" name="rmk3">
+<p>因为若有 <span class="math inline">\(r_1, \cdots, r_k\)</span> 为欧几里得算法中计算 <span class="math inline">\((a, p)\)</span> 时产生的余数，那么有 <span class="math inline">\(\J{a}{p} = \pm\J{p}{a} = \pm\J{r_1}{a} = \pm\J{a}{r_1} = \pm\J{r_2}{r_1} = \cdots\)</span>。而若其中任何一项 <span class="math inline">\(r_i\)</span> 为偶数，我们可首先从中尽可能多地提取因数 2.</p>
+</div><div class="ex">
+<p>不进行因数分解计算 <span class="math inline">\(\J{33}{43}\)</span>:</p>
+<p><span class="math display">\[
+\J{33}{43} \stackrel{J6}{=} \J{43}{33} \stackrel{J1}{=} \J{10}{33} \stackrel{J2}{=} \J{2}{33}\J{5}{33} \stackrel{J5}{=} 1 \times \J{5}{33} \stackrel{J6}{=} \J{33}{5} \stackrel{J1}{=} \J{3}{5} \stackrel{J6}{=} \J{5}{3} = \J{2}{3} \stackrel{J5}{=} -1
+\]</span></p>
+</div><h1 id="欧拉素性测试solovaystrassen-方法">欧拉素性测试（Solovay–Strassen 方法）</h1><div class="def">
+<p>一个奇合数 <span class="math inline">\(n\)</span> 被称作以 <span class="math inline">\(b\)</span> 为底的欧拉伪素数，若有</p>
+<p><span class="math display">\[
+b^\frac{n-1}{2} \equiv \J{b}{n} \pmod n
+\tag {$\star$}
+\]</span></p>
+<p>其中 <span class="math inline">\(\J{b}{n}\)</span> 指的是雅可比符号。</p>
+</div><p>根据欧拉定理（定理 3），若 <span class="math inline">\(n\)</span> 为素数，则对于任何满足 <span class="math inline">\(gdb(b, n) = 1\)</span> 的 <span class="math inline">\(b\)</span> 来说，皆有 <span class="math inline">\(n\)</span> 为以 <span class="math inline">\(b\)</span> 为底的欧拉伪素数。</p><p>记</p><p><span class="math display">\[\mathcal{E}_n = \{b \in (\mathbb{Z}/n\mathbb{Z})^\times : \text{式 $(\star)$ 成立}\} \subseteq (\mathbb{Z}/n\mathbb{Z})^\times\]</span></p><div class="thm" data-num="6">
+<ol type="a">
+<li><span class="math inline">\(\mathcal{E}_n\)</span> 为 <span class="math inline">\((\mathbb{Z}/n\mathbb{Z})^\times\)</span> 的子群。<br>
+</li>
+<li><span class="math inline">\(\mathcal{E}_n \subseteq \mathcal{P}_n\)</span>，即以 <span class="math inline">\(b\)</span> 为底的欧拉为素数一定是以 <span class="math inline">\(b\)</span> 为底的伪素数。<br>
+</li>
+<li>若 <span class="math inline">\(n\)</span> 为合数，则 <span class="math inline">\(\mathcal{E}_n \ne (\mathbb{Z}/n\mathbb{Z})^\times\)</span>。因此没有类似卡尔迈克尔数的存在。另外，有 <span class="math inline">\(\big| \mathcal{E}_n \big| \le \frac{1}{2}\phi(n)\)</span>.</li>
+</ol>
+</div><div class="proof">
+<ol type="a">
+<li><p>式 <span class="math inline">\((\star)\)</span> 两边在 <span class="math inline">\(b\)</span> 下都是乘法的。</p></li>
+<li><p>若 <span class="math inline">\(b \in \mathcal{E}_n\)</span>，则有</p>
+<p><span class="math display">\[
+ \begin{aligned}
+ b^\frac{n-1}{2} &amp;\equiv \J{b}{n} \pmod n\\
+ b^{n-1} &amp;\equiv \J{b}{n}^2 \pmod n\\
+ &amp;\equiv 1 \pmod n
+ \end{aligned}
+ \implies b \in \mathcal{P}_n
+ \]</span></p></li>
+<li><p>我们需要用到以下定理：</p></li>
+</ol>
+<div class="thm" data-num="7">
+<p>每一个卡尔迈克尔数都是 square-free 的。</p>
+<div class="claim" data-num="1">
+<p>若 <span class="math inline">\(b \in (\mathbb{Z}/n\mathbb{Z})^\times\)</span>, <span class="math inline">\(\J{b}{n} = -1\)</span> （雅克布符号），且对于任何整除 <span class="math inline">\(n\)</span> 的素数来说都有 <span class="math inline">\(b \equiv 1 \pmod \frac{n}{p}\)</span>，那么 <span class="math inline">\(b \not\in \mathcal{E}_n\)</span>.</p>
+</div>
+<div class="proof">
+<p>假设 <span class="math inline">\(b \in \mathcal{E}_n\)</span>，那么</p>
+<p><span class="math display">\[b^\frac{n-1}{2} \equiv \J{b}{n} \equiv -1 \pmod n\]</span></p>
+<p>所以</p>
+<p><span class="math display">\[b^\frac{n-1}{2} \equiv -1 \pmod \frac{n}{p}\]</span></p>
+<p>然而</p>
+<p><span class="math display">\[b \equiv 1 \pmod {n}{p}\]</span></p>
+<p>那么</p>
+<p><span class="math display">\[b^\frac{n-1}{2} \equiv 1^\frac{n-1}{2} \pmod \frac{n}{p}\]</span></p>
+<p>所以</p>
+<p><span class="math display">\[-1 \equiv 1 \pmod \frac{n}{p}\]</span></p>
+<p>但是这是不可能的。因为 <span class="math inline">\(n\)</span> 为奇数且为合数，因此 <span class="math inline">\(\frac{n}{p} &gt; 2\)</span>.</p>
+</div>
+<div class="claim" data-num="2">
+<p>若 <span class="math inline">\(p \mid\mid n\)</span> （<span class="math inline">\(gcd(n/p, p) = 1\)</span>）, 那么存在 <span class="math inline">\(b \in (\mathbb{Z}/n\mathbb{Z})^\times\)</span> 使得 <span class="math inline">\(\J{b}{n} = -1\)</span> 且 <span class="math inline">\(b \equiv \pmod {\frac{n}{p}}\)</span>.</p>
+</div>
+<div class="proof">
+<p>记 <span class="math inline">\(n&apos; = \frac{n}{p}\)</span>，取满足 <span class="math inline">\(\J{r}{p} = -1\)</span> 的 <span class="math inline">\(r \in \mathbb{Z}\)</span>。</p>
+<p>构造并观察如下集合的势：</p>
+<p><span class="math display">\[\#\{a : \text{在 $(\mathbb{Z}/p\mathbb{Z})^\times$ 中 $\J{a}{p} = -1$}\} = \frac{p-1}{2}\]</span></p>
+<p>因为 <span class="math inline">\(gcd(n&apos;, p) = 1\)</span>，存在 <span class="math inline">\(k\)</span> 使得 <span class="math inline">\(kn&apos; = r-1 \pmod p\)</span>，存在 <span class="math inline">\(b = kn&apos; + r \equiv 1 \pmod p\)</span> 使得</p>
+<p><span class="math display">\[\J{b}{n} = \J{b}{p}\J{b}{n&apos;}= \J{r}{p}\J{1}{n&apos;} = -1\]</span></p>
+<p>且 <span class="math inline">\(b&apos; \equiv 1 \pmod {\frac{n}{p}}\)</span>.</p>
+<p>于是假设定理 6.c 为假，即 <span class="math inline">\(\mathcal{E}_n = (\mathbb{Z}/n\mathbb{Z})^\times\)</span>.</p>
+<p>那么根据 (a) 有 <span class="math inline">\(\mathcal{P}_n = (\mathbb{Z}/n\mathbb{Z})^\times\)</span>。 即 <span class="math inline">\(n\)</span> 为卡尔迈克尔数。</p>
+<p>根据定理 7，<span class="math inline">\(n\)</span> 是 square-free 的，即存在满足 <span class="math inline">\(p \mid\mid n\)</span> 的素数 <span class="math inline">\(p\)</span>。于是根据 claim 2&amp;1，存在 <span class="math inline">\(b \not\in \mathcal{E}_n\)</span>.</p>
+<p>那么 <span class="math inline">\(\mathcal{E}_n \ne (\mathbb{Z}/n\mathbb{Z})^\times\)</span>。因为 <span class="math inline">\(\mathcal{E}_n\)</span> 是 <span class="math inline">\((\mathbb{Z}/n\mathbb{Z})^\times\)</span> 的子群，有 <span class="math inline">\(\frac{\phi(n)}{\big| \mathcal{E}_n \big|} = k \ge 2\)</span>.</p>
+</div>
+</div>
+<div class="proof" name="定理7（简述）">
+<p>假设定理 7 为假，那么存在 满足 <span class="math inline">\(p^2 \mid n\)</span> 的素数 <span class="math inline">\(p\)</span>，其中 <span class="math inline">\(n\)</span> 为奇数。</p>
+<p>那么可证明 <span class="math inline">\(G = (\mathbb{Z}/n\mathbb{Z})^\times\)</span> 中有一元素 <span class="math inline">\(b\)</span> 使得 <span class="math inline">\(ord(b) = \phi(p^2)\)</span>.</p>
+<p>选择这样的 <span class="math inline">\(b\)</span>，于是由于 <span class="math inline">\(n\)</span> 为卡尔迈克尔数，有 <span class="math inline">\(b^{n-1} \equiv 1 \pmod n\)</span>。那么根据 P1，有 <span class="math inline">\(ord(b) = \phi(p) = p(p-1) \mid n-1\)</span>。于是有 <span class="math inline">\(p \mid n-1\)</span>.</p>
+<p>然而 <span class="math inline">\(p \mid n\)</span>，所以假设不可能成立，于是 <span class="math inline">\(n\)</span> 是 square-free 的。</p>
+</div>
+</div><p>因此有欧拉测试如下：<br>
+取一随机数 <span class="math inline">\(b\)</span> 使得 <span class="math inline">\(1 &lt; b &lt; n\)</span>。<br>
+若 <span class="math inline">\(gcd(b, n) \ne 1\)</span>，则 <span class="math inline">\(n\)</span> 必然为合数。判断 <span class="math inline">\(n\)</span> 是否是 <span class="math inline">\(Epsp_b\)</span>，即在 <span class="math inline">\(\mathbb{Z}/n\mathbb{Z}\)</span> 中计算 <span class="math inline">\(b^\frac{n-1}{2}\)</span> 及 <span class="math inline">\(\J{b}{n}\)</span>。<br>
+若上两式不相等，则 <span class="math inline">\(n\)</span> 必定是合数。否则 <span class="math inline">\(n\)</span> 有可能是素数。</p><p>注意:<br>
+1. 若 <span class="math inline">\(n\)</span> 通过 <span class="math inline">\(k\)</span> 次测试，则 <span class="math display">\[\prob(\text{$n$ 为合数}) \le \frac{1}{2^k}\]</span> 2. 每一轮欧拉测试需要进行 <span class="math inline">\(\Theta(\log^3(n))\)</span> 次位运算。</p><h1 id="miller-rabin-素性测试">Miller-Rabin 素性测试</h1><div class="def">
+<p>给定奇合数 <span class="math inline">\(n\)</span>，将 <span class="math inline">\(n-1\)</span> 记作 <span class="math inline">\(2^\alpha s\)</span>，其中 <span class="math inline">\(s\)</span> 为奇数。另选择满足 <span class="math inline">\(gcd(b, n) = 1\)</span> 的数 <span class="math inline">\(b\)</span>。 <span class="math inline">\(n\)</span> 被称作以 <span class="math inline">\(b\)</span> 为底的强伪素数，即 <span class="math inline">\(Spsp_b\)</span>，若以下之一成立：</p>
+<ol type="1">
+<li><span class="math inline">\(b^s \equiv 1 \pmod n\)</span><br>
+</li>
+<li>对于某些 <span class="math inline">\(r\)</span>, <span class="math inline">\(0 \le r \le \alpha\)</span>，有 <span class="math inline">\(b^{2^r s} \equiv -1 \pmod n\)</span></li>
+</ol>
+</div><p>其中使用到了若 <span class="math inline">\(n\)</span> 为素数，那么 <span class="math inline">\(ord(b) = 2 \implies b = \pm 1 \pmod n\)</span>，而其对于非素数幂的合数来说不成立的事实。</p><p>记</p><p><span class="math display">\[\mathcal{S}_n = \{b \in (\mathbb{Z}/n\mathbb{Z})^\times : \text{$n$ 为 $Spsp_b$} \subseteq (\mathbb{Z}/n\mathbb{Z})^\times\]</span></p><div class="thm" data-num="8">
+<ol type="a">
+<li><span class="math inline">\(\mathcal{S}_n \subseteq \mathcal{E}_n\)</span>。（而我们之前有 <span class="math inline">\(\mathcal{E}_n \subseteq \mathcal{P}_n\)</span>）<br>
+</li>
+<li>若 <span class="math inline">\(n \equiv 3 \pmod 4\)</span>，那么 <span class="math inline">\(\mathcal{S}_n = \mathcal{E}_n\)</span>.<br>
+</li>
+<li>若 <span class="math inline">\(n\)</span> 为素数，则 <span class="math inline">\(\mathcal{S}_n = (\mathbb{Z}/n\mathbb{Z})^\times\)</span>.<br>
+</li>
+<li>若 <span class="math inline">\(n\)</span> 为合数，则 <span class="math inline">\(\big| \mathcal{S}_n \big| \frac{1}{4}(n-1)\)</span>.</li>
+</ol>
+</div><div class="proof">
+<ol type="a">
+<li></li>
+<li><p>若 <span class="math inline">\(n \equiv 3 \pmod 4\)</span>，那么有 <span class="math inline">\(\alpha = 1\)</span>, <span class="math inline">\(n - 1 = 2s\)</span>，则 <span class="math inline">\(s = \frac{n-1}{2}\)</span> 为奇数。</p>
+<p>在这样的情况下， <span class="math inline">\(b \in \mathcal{S}_n \iff b^s \equiv \pm 1 \pmod n\)</span>.</p>
+<p>若 <span class="math inline">\(b \in \mathcal{E}_n\)</span>，则</p>
+<p><span class="math display">\[
+ \begin{aligned}
+ b^\frac{n-1}{2} &amp;\equiv \J{b}{n} \pmod n\\
+ b^s &amp;\equiv \pm 1 \pmod n
+ \end{aligned}
+ \]</span></p>
+<p>所以 <span class="math inline">\(b \in \mathcal{S}_n\)</span> 而 <span class="math inline">\(\mathcal{E}_n \subseteq \mathcal{S}_n\)</span>。而根据 a，有 <span class="math inline">\(\mathcal{S}_n \subseteq \mathcal{E}_n\)</span>。因此 <span class="math inline">\(\mathcal{S}_n = \mathcal{E}_n\)</span>.</p></li>
+<li><p>设 <span class="math inline">\(n\)</span> 为素数，<span class="math inline">\(b \in G = (\mathcal{Z}/n\mathcal{Z})^\times\)</span>。那么 <span class="math inline">\(k := ord(b) \mid \phi(n) = n - 1 = 2^\alpha s\)</span>. 于是 <span class="math inline">\(k = 2^\beta s&apos;\)</span>，其中 <span class="math inline">\(0 \le \beta \le \alpha\)</span>, <span class="math inline">\(s&apos; \mid s\)</span>.</p>
+<p>若 <span class="math inline">\(\beta = 0\)</span>，则 <span class="math inline">\(k = s&apos;\)</span>。那么 <span class="math inline">\(b^{s&apos;} \equiv 1 \pmod n\)</span>，并且 <span class="math inline">\((b^{s&apos;})^\frac{s}{s&apos;} = b^s \equiv 1 \pmod n\)</span>。因此条件 1 成立而 <span class="math inline">\(b \in \mathcal{S}_n\)</span>.</p>
+<p>若 <span class="math inline">\(\beta &gt; 0\)</span>，则 <span class="math inline">\(k\)</span> 为偶数且 <span class="math inline">\(ord(b^\frac{k}{2}) = 2\)</span> (P2)。因为 <span class="math inline">\(G\)</span> 是循环群，所以 <span class="math inline">\(b^\frac{k}{2} \equiv -1 \pmod n\)</span>。因此 <span class="math inline">\((b^\frac{k}{2})^\frac{s&apos;}{s} \equiv (-1)^\frac{s}{s&apos;} = 2^{\beta - 1}\)</span> s$。因此条件 2 成立，其中有 <span class="math inline">\(r = \beta - 1 (0 \le r &lt; \alpha)\)</span>。因此 <span class="math inline">\(b \in \mathcal{S}_n\)</span> 且 <span class="math inline">\(G \subseteq \mathcal{S}_n\)</span>.</p>
+<p>于是有 <span class="math inline">\(G = \mathcal{S}_n\)</span>.</p></li>
+</ol>
+</div><p>因此有 Miller-Rabin 测试如下：<br>
+记 <span class="math inline">\(n-1 = 2^\alpha s\)</span>, 其中 <span class="math inline">\(s\)</span> 为奇数。<br>
+</p><p>取一随机数 <span class="math inline">\(b\)</span> 使得 <span class="math inline">\(1 &lt; b &lt; n-1\)</span>。<br>
+若 <span class="math inline">\(gcd(b, n) \ne 1\)</span>，则 <span class="math inline">\(n\)</span> 必然为合数。</p><p>计算 <span class="math inline">\(b_0 \equiv b^s \pmod n\)</span>，并检查 <span class="math inline">\(b_0 \equiv \pm1 \pmod n\)</span>。若有，则 <span class="math inline">\(n\)</span> 通过测试。否则，依下式逐次计算 <span class="math inline">\(b_1, b_2, \cdots, b_{\alpha - 1}\)</span>： <span class="math display">\[b_k \equiv b^2_{k-1} \pmod n, (1 \le k \le \alpha-1\]</span></p><p>若对于每一项皆有 <span class="math inline">\(b_k \equiv -1 \pmod n\)</span>，那么 <span class="math inline">\(n\)</span> 通过相对于此 <span class="math inline">\(b\)</span> 的测试。</p><p>若 <span class="math inline">\(n\)</span> 通过 <span class="math inline">\(k\)</span> 次 Miller-Rabin 测试，则</p><p><span class="math display">\[\prob(\text{$n$ 为合数}) \le \frac{1}{4^k}\]</span></p><p>假设广义黎曼猜想成立，Adleman, Pomerance, Rumely (1983) 和 Bach(1985) 证明了</p><p><span class="math display">\[\text{$n$ 为合数} \implies \text{$\exists b &lt; 2\log^2(n)$ 使得 $b \not \in \mathcal{S}_n$}\]</span></p><p>若如此，则有另一种素性测试：与其随机选择 <span class="math inline">\(b\)</span>，我们可以逐次取整数 <span class="math inline">\(b = 2, 3, 5, \cdots\)</span>。注意我们仅需取素数，由于有 <span class="math inline">\(&lt;\mathcal{S}_n&gt; \le \mathcal{E}_n \ne (\mathbb{Z}/n\mathbb{Z})^\times\)</span>.</p><p>事实上，在小于 <span class="math inline">\(25 \times 10^9\)</span> 的范围内，仅有 13 个合数满足 <span class="math inline">\(2, 3, 5 \in \mathcal{S}_n\)</span>，而没有任何合数满足 <span class="math inline">\(2, 3, 5, 7, 11, 13 \in \mathcal{S}_n\)</span>.</p><p>工程计算软件 Maple 中的 <code>isprime(n)</code> 函数交替使用 Miller-Rabin 测试和 Lucas 测试。根据 Maple 的文档，没有已知的合数能通过测试。</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>假设我们用二进制编码整数</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+<li id="fn1-1" role="doc-endnote"><p>假设我们用二进制编码整数<a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#测试-0-朴素测试"><span class="toc-number">1.</span> <span class="toc-text">测试 0: 朴素测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#测试-1-费马测试"><span class="toc-number">2.</span> <span class="toc-text">测试 1: 费马测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#插曲子群及拉格朗日定理"><span class="toc-number">3.</span> <span class="toc-text">插曲：子群及拉格朗日定理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#插曲二次剩余"><span class="toc-number">4.</span> <span class="toc-text">插曲：二次剩余</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#欧拉素性测试solovaystrassen-方法"><span class="toc-number">5.</span> <span class="toc-text">欧拉素性测试（Solovay–Strassen 方法）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#miller-rabin-素性测试"><span class="toc-number">6.</span> <span class="toc-text">Miller-Rabin 素性测试</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&text=数论与群论密码学-12-素数测试"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&is_video=false&description=数论与群论密码学-12-素数测试"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-12-素数测试&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&title=数论与群论密码学-12-素数测试"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-12-Primality Tests/&name=数论与群论密码学-12-素数测试&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

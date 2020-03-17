@@ -1,0 +1,39 @@
+/* inspired by */
+/* https://github.com/chinchang/hint.css */
+
+/* If `animateFill: true` (default) */
+.tippy-tooltip.hint-theme .tippy-backdrop {
+  background-color: #b34e4d;
+  font-weight: bold;
+  color: #333;
+}
+
+/* If `animateFill: false` */
+.tippy-tooltip.hint-theme {
+  background-color: #b34e4d;
+  /*border: 2px solid orange;*/
+  border-radius: 0;
+  font-size: 1em;
+  color: #f7f7f7;
+  text-align: left;
+}
+
+/* If `animateFill: false` */
+.tippy-tooltip.hint-theme p {
+  margin: 0;
+}
+
+.tippy-popper[x-placement^='top'] .tippy-tooltip.hint-theme .tippy-arrow {
+  border-top-color: #b34e4d;
+}
+.tippy-popper[x-placement^='bottom'] .tippy-tooltip.hint-theme .tippy-arrow {
+  border-bottom-color: #b34e4d;
+}
+
+a.footnote-ref > sup:before {
+  content: "["
+}
+
+a.footnote-ref > sup:after {
+  content: "]"
+}

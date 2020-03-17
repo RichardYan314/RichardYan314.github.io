@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="公钥密码系统 RSA加密算法 RSA 的设计特点  密钥生成 设计原则  费马分解 关于破解 RSA 耗时的几个事实  公钥密码系统如上一节所述，这里给出对公钥密码系统的概述以及一个实际的例子。与先前描述的对称/古典的密码系统相对，公钥密码系统中所用于加密/解密的密钥（因此这对密钥所指示的函数）是不同的。我们可以概念地认为，公钥密码系统中加密的算法是公开的，也即此信息可为通信第三方所知。而解密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-07-公钥密码系统及RSA加密算法">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="公钥密码系统 RSA加密算法 RSA 的设计特点  密钥生成 设计原则  费马分解 关于破解 RSA 耗时的几个事实  公钥密码系统如上一节所述，这里给出对公钥密码系统的概述以及一个实际的例子。与先前描述的对称/古典的密码系统相对，公钥密码系统中所用于加密/解密的密钥（因此这对密钥所指示的函数）是不同的。我们可以概念地认为，公钥密码系统中加密的算法是公开的，也即此信息可为通信第三方所知。而解密">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.571Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-07-公钥密码系统及RSA加密算法">
+<meta name="twitter:description" content="公钥密码系统 RSA加密算法 RSA 的设计特点  密钥生成 设计原则  费马分解 关于破解 RSA 耗时的几个事实  公钥密码系统如上一节所述，这里给出对公钥密码系统的概述以及一个实际的例子。与先前描述的对称/古典的密码系统相对，公钥密码系统中所用于加密/解密的密钥（因此这对密钥所指示的函数）是不同的。我们可以概念地认为，公钥密码系统中加密的算法是公开的，也即此信息可为通信第三方所知。而解密">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-07-公钥密码系统及RSA加密算法</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-06-Cryptography/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&text=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&is_video=false&description=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-07-公钥密码系统及RSA加密算法&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&name=数论与群论密码学-07-公钥密码系统及RSA加密算法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#公钥密码系统"><span class="toc-number">1.</span> <span class="toc-text">公钥密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rsa加密算法"><span class="toc-number">2.</span> <span class="toc-text">RSA加密算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rsa-的设计特点"><span class="toc-number">3.</span> <span class="toc-text">RSA 的设计特点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#密钥生成"><span class="toc-number">3.1.</span> <span class="toc-text">密钥生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计原则"><span class="toc-number">3.2.</span> <span class="toc-text">设计原则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#费马分解"><span class="toc-number">4.</span> <span class="toc-text">费马分解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于破解-rsa-耗时的几个事实"><span class="toc-number">5.</span> <span class="toc-text">关于破解 RSA 耗时的几个事实</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-07-公钥密码系统及RSA加密算法
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-02T22:19:22.000Z" itemprop="datePublished">2019-03-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#公钥密码系统">公钥密码系统</a></li>
+<li><a href="#rsa加密算法">RSA加密算法</a></li>
+<li><a href="#rsa-的设计特点">RSA 的设计特点</a>
+<ul>
+<li><a href="#密钥生成">密钥生成</a></li>
+<li><a href="#设计原则">设计原则</a></li>
+</ul></li>
+<li><a href="#费马分解">费马分解</a></li>
+<li><a href="#关于破解-rsa-耗时的几个事实">关于破解 RSA 耗时的几个事实</a></li>
+</ul>
+</div><h1 id="公钥密码系统">公钥密码系统</h1><p>如上一节所述，这里给出对公钥密码系统的概述以及一个实际的例子。</p><p>与先前描述的对称/古典的密码系统相对，公钥密码系统中所用于加密/解密的密钥（因此这对密钥所指示的函数）是不同的。我们可以概念地认为，公钥密码系统中加密的算法是公开的，也即此信息可为通信第三方所知。而解密的算法是私密的，确切来说仅为收信人所知。由此一来我们可以注意到另一种意义上的不对称性：密文仅可由收信人解密，而第三方，甚至于发信人都做不到这一点。因此公钥密码系统所建立的秘密信道是单向的。当然我们可以方便地重复两次同样的方法来建立双向的信道。</p><p>为了实现上述要求，我们需要一个被称之为陷阱门的函数：要求 <span class="math inline">\(f(x)\)</span> 可以被轻易地计算。具体地说，至少可在多项式时间内计算。而 <span class="math inline">\(f^{-1}(x)\)</span> 在合理的时间内（密文所携带的消息仍然有价值的时间内）不可被计算，除非有密文本身以外的信息。在见到实际的例子之前，这样的描述也许会显得十分抽象。我们可以这么来理解：函数 <span class="math inline">\(f\)</span> 像陷阱门一样，掉进去容易，然而没有额外的一点帮助想从内部开门是十分困难的。</p><p>最后，我们定义协议为人（或计算机）与彼此通信时所遵守的一系列有序的步骤。</p><p>下面给出一个实际的公钥密码系统。值得注意的是，该系统并非是类似于前文中的数个系统那样的玩具。</p><h1 id="rsa加密算法">RSA加密算法</h1><p>概况性地来讲，RSA加密算法的概念如下：用户 A 有一个形如 <span class="math inline">\((n_A, e_A)\)</span> 的公钥以及一个形如 <span class="math inline">\(d_A\)</span> 的私钥。所谓公钥，是尽人可知意思。例如，A 可将其公钥公开发表在网络上，使得任何想向 A 发送信息的用户 B 皆可使用此密钥加密欲发送给 A 的信息。而收到加密信息的 A 则使用仅为其所知的私钥 <span class="math inline">\(B\)</span> 解密信息。</p><p>如此通信双方仅需大方地在不安全的信道上交换各自的公钥，随后将欲发送的信息由对方的公钥加密，并用自己的私钥解密收到的信息。一个形象地比喻是，欲收信方公开发放锁而保留钥匙，而送信方用此公开可得的锁加密信息。如此一来由于解锁的钥匙是私密的，任何第三方，甚至是送信方本人都没有解密的能力。</p><p>接下来给出对 RSA 加密算法形式化的描述：</p><p>收信方 A 准备两不同的素数 <span class="math inline">\(p, q\)</span>，设 <span class="math inline">\(n := p \cdot q\)</span>。<br>
+准备数 <span class="math inline">\(e\)</span> 使得其满足以下要求： <span class="math display">\[1 &lt; e &lt; n, k = (p-1)(q-1) = \phi(n), gcd(e, k) = 1\]</span> 准备数 <span class="math inline">\(d\)</span> 使得 <span class="math inline">\(d \cdot e \equiv 1 \pmod k\)</span>。前述要求保证这样的 <span class="math inline">\(d\)</span> 是存在的。</p><p>A 将数 <span class="math inline">\((n, e)\)</span> 公开发表。若 B 希望向 A 发信，其可获取这一对数字。 B 将信息以某种公开的方法编码并分组为 <span class="math inline">\(m_1, \cdots, m_r\)</span>，其中 <span class="math inline">\(m_i &lt; n\)</span>。 B 计算 <span class="math inline">\(M_i := m_i^e \bmod n\)</span> 并将 <span class="math inline">\(M_1, \cdots, M_r\)</span> 按序发送给 A.</p><p>A 收到信息后，计算 <span class="math inline">\(m_i&apos; := M_i^d\)</span>，则有 <span class="math inline">\(m_i&apos; = m_i\)</span>.</p><p>我们需要考虑如下几个问题：</p><ol type="1">
+<li>何以使 RSA 构成一个密码系统？即为何有 <span class="math inline">\(m_i&apos; = m_i\)</span>？我们稍后将给出对此的证明。</li>
+<li>何以使 RSA 是实际的？我们注意到，加密算法可以简单地通过模运算实现。特别地，该实现的效率可由模幂算法保证。类似地，在 <span class="math inline">\(d_A\)</span> 已知的情况下，解密算法也可被高效地计算。</li>
+<li>何以使 RSA 是安全的？ RSA 的安全性来自于大数分解的困难性。当然随后我们将看到，对 <span class="math inline">\(p, q\)</span> 不当的选取会于此造成安全上的漏洞。</li>
+</ol><p>以上提到的该算法的正确性（即对于 <span class="math inline">\(m_i&apos; = m_i\)</span> 的断言）由费马定理保证。下面为其于第三节的重复：</p><div class="thm" name="费马">
+<p>若 <span class="math inline">\(p\)</span> 为素数，则</p>
+<p><span class="math display">\[
+\forall m\in \mathbb{Z}, m^{p-1} \equiv 1 \pmod p
+\]</span></p>
+<p>等价地，有</p>
+<p><span class="math display">\[
+\forall m\in \mathbb{Z}, m^p \equiv m \pmod p
+\]</span></p>
+</div><div class="cor">
+<p>设 <span class="math inline">\(n := p \cdot q\)</span>，其中 <span class="math inline">\(p, q\)</span> 为不同的素数，<br>
+设 <span class="math inline">\(k := (p-1)(q-1) = \phi(n)\)</span>，则<br>
+若 <span class="math inline">\(a \equiv 1 \pmod k\)</span>，有</p>
+<p><span class="math display">\[
+\forall m \in \mathbb{Z}, m^a \equiv m \pmod n
+\tag{1}
+\]</span></p>
+<p>特别地，若 <span class="math inline">\(e\in\mathbb{Z}, gcd (e, k) = 1\)</span>，<br>
+则 <span class="math inline">\(\exists d, e \cdot d \equiv 1 \pmod k\)</span>，于是有</p>
+<p><span class="math display">\[
+\forall m\in\mathbb{Z}, (m^e)^d \equiv m \pmod n
+\tag{2}
+\]</span></p>
+</div><p>该从理保证了 RSA 是一个密码系统。</p><div class="proof">
+<p>我们使用费马定理证明上述从理。</p>
+<p>首先最后一句陈述中的 <span class="math inline">\(\exists d, e \cdot d \equiv 1 \pmod k\)</span> 可由拓展欧几里得算法证明，而式 (2) 可由式 (1) 直接导出，因为有 <span class="math inline">\((m^e)^d = m^{ed}\)</span></p>
+<p>为了证明 (1)，根据中国剩余定理（或者欧几里得引理），我们仅需证明</p>
+<p><span class="math display">\[
+m^a \equiv m \pmod p \text{ 且 } m^a \equiv m \pmod q
+\tag{$\star$}
+\]</span></p>
+<p>为了证明式 (<span class="math inline">\(\star\)</span>) 中的第一个同余，考虑<br>
+1. <span class="math inline">\(p \mid m\)</span><br>
+<span class="math inline">\(\quad \implies m \equiv 0 \pmod p\)</span><br>
+<span class="math inline">\(\quad \implies m^a \equiv 0 \pmod p\)</span><br>
+<span class="math inline">\(\quad \implies m^a \equiv m \pmod p\)</span><br>
+2. <span class="math inline">\(p \nmid m\)</span><br>
+根据费马，有<br>
+<span class="math inline">\(\quad m^{p-1} \equiv 1 \pmod p\)</span><br>
+根据假设，有</p>
+<p><span class="math display">\[
+\begin{aligned}
+a &amp;= 1 + kt = 1 + (p-1)\underbrace{(q-1)t}_{s}\\
+&amp;= 1 + (p-1) s 
+\end{aligned}
+\]</span></p>
+<p>于是</p>
+<p><span class="math display">\[
+\begin{aligned}
+m^a = m^{1 + (p-1)s} = m \cdot m^{(p-1)s} &amp;= m \cdot (m^{p-1})^s\\
+\text{根据费马} &amp;\equiv m \cdot 1 \pmod p\\
+&amp;\equiv m \pmod p
+\end{aligned}
+\]</span></p>
+<p>同理可证第二个同余。</p>
+</div><h1 id="rsa-的设计特点">RSA 的设计特点</h1><h2 id="密钥生成">密钥生成</h2><ol type="1">
+<li><p>随机生成一数，使用后文将给出的素数判别测试判断此数是否为素数。重复直到获得一素数，设其为 <span class="math inline">\(p\)</span>. 类似选取数 <span class="math inline">\(q\)</span>. 设 <span class="math inline">\(n_A := p \cdot q\)</span>.</p></li>
+<li><p>设 <span class="math inline">\(k = (p-1)(q-1)\)</span>，并随机选取 <span class="math inline">\(\varepsilon_A\)</span> 直到 <span class="math inline">\(gcd(\varepsilon_A, k) = 1)\)</span>. 通过拓展欧几里得算法解 <span class="math inline">\(d_A\)</span>.</p></li>
+</ol><p>接下来的问题是，这样生成的密钥是否安全？</p><h2 id="设计原则">设计原则</h2><ol start="0" type="1">
+<li>不失一般性地假设 <span class="math inline">\(p &lt; q\)</span>，应有数 <span class="math inline">\(p\)</span> 足够大，否则即可对公钥进行暴力破解。</li>
+<li><span class="math inline">\(p-q\)</span> 应该足够大，否则可对公钥进行费马分解。</li>
+<li><span class="math inline">\(p-1\)</span> 与 <span class="math inline">\(q-1\)</span> 应各自有一个足够大的素因数，否则有 Pollard&apos;s p − 1 算法。</li>
+<li><span class="math inline">\(gcd(-1, q-1)\)</span> 应足够小。</li>
+<li><span class="math inline">\(d_A\)</span> 应足够大，至少有 <span class="math inline">\(d_A &gt; n_A^{1/4}\)</span>，否则有连分数算法。</li>
+</ol><h1 id="费马分解">费马分解</h1><p>设 <span class="math inline">\(n = p \cdot q\)</span>，其中 <span class="math inline">\(p, q\)</span> 为不同且皆不为 2 的素数。</p><p>设</p><p><span class="math display">\[
+\begin{aligned}
+s &amp;= \frac{p-q}{2} \\
+t &amp;= \frac{p+q}{2}
+\end{aligned}
+\]</span></p><p>由于要求， <span class="math inline">\(p, q\)</span> 皆为奇数，则两者差与和皆为偶数。</p><p>那么有</p><p><span class="math display">\[
+\begin{aligned}
+t^2 - s^2 &amp;= \frac{(p+q)^2}{4} - \frac{(p-q)^2}{4} \\
+&amp;= pq \\
+&amp;= n
+\end{aligned}
+\]</span></p><p>因此</p><p><span class="math display">\[s^2 + n = t^2\]</span></p><p>如果 <span class="math inline">\(s\)</span> 足够小，我们便可尝试 <span class="math inline">\(s = 1, 2, 3, \cdots\)</span> 直到有 <span class="math inline">\(s^2 + n\)</span> 为一平方数（平方数可以牛顿法非常快速地判定）。若是存在这样的数 <span class="math inline">\(s\)</span>，我们便可求出 <span class="math inline">\(t\)</span>，因此求出用于生成私钥的 <span class="math inline">\(p\)</span> 和 <span class="math inline">\(q\)</span>。</p><h1 id="关于破解-rsa-耗时的几个事实">关于破解 RSA 耗时的几个事实</h1><p>1999 年 8 月，S. Cavallar, B. Dodson, A.K. Lenstra, B. Murphy, P.L. Montgomery, H.J.J te Riele 完成了由 RSA 实验室悬赏的分解某一 512 比特（155 十进制位）的仅有两个素因数的数。该组人共用相当于一台计算机于 20 年能提供的算力，或者说 7500 台计算机 1 天的算力完成此挑战。这里一台计算机指的是搭载 64 MB 内存， 450 MHz 奔腾II 处理器的计算机。这样的配置在当年（1999 年）是非常标准的。因此即使是以当年的标准看，512 比特的密钥也是远不足以被称作是安全的。</p><p>而在 2009 年 12 月，T. Keinjung, K.Aoki, J. Franke, A.K. Lenstra, E. Thom´e, P. Gaudry, E. Kruppa, P. Montgomery, J. Bos, D. Osvik, H. te Riele, A, Timofeev,P. Zimmermann 成功达成了另一项分解 768 比特（232 十进制位）数的悬赏。该成就由平行运行的计算机在两年时间内完成。这些计算机提供了相当于一台计算机 2000 年所能提供的算力。这些计算机搭载的是单核 2.2GHz AMD 处理器。</p><p>事实上，后者是 RSA 实验室悬赏的诸多数中被分解的最大的一个。因此由于 1024 位的密钥已在当时有了被破解的趋势，其已不再鼓励被使用了。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#公钥密码系统"><span class="toc-number">1.</span> <span class="toc-text">公钥密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rsa加密算法"><span class="toc-number">2.</span> <span class="toc-text">RSA加密算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rsa-的设计特点"><span class="toc-number">3.</span> <span class="toc-text">RSA 的设计特点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#密钥生成"><span class="toc-number">3.1.</span> <span class="toc-text">密钥生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计原则"><span class="toc-number">3.2.</span> <span class="toc-text">设计原则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#费马分解"><span class="toc-number">4.</span> <span class="toc-text">费马分解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于破解-rsa-耗时的几个事实"><span class="toc-number">5.</span> <span class="toc-text">关于破解 RSA 耗时的几个事实</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&text=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&is_video=false&description=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-07-公钥密码系统及RSA加密算法&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&title=数论与群论密码学-07-公钥密码系统及RSA加密算法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/&name=数论与群论密码学-07-公钥密码系统及RSA加密算法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

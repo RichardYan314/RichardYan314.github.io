@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Pollard 的 \(\rho -1\) 方法  变种  Lenstra 方法  选取序列的方法  方法 1 (cf. Silverman/Tate) 方法 2 (cf. Koblitz)  Lenstra 方法的正确性   \(\newcommand{\gcd}{\mathsf{gcd}}\) \(\newcommand{\den}{\mathsf{den}}\)除了构造密码系统，椭圆曲线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-17-椭圆曲线素因子分解">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="Pollard 的 \(\rho -1\) 方法  变种  Lenstra 方法  选取序列的方法  方法 1 (cf. Silverman/Tate) 方法 2 (cf. Koblitz)  Lenstra 方法的正确性   \(\newcommand{\gcd}{\mathsf{gcd}}\) \(\newcommand{\den}{\mathsf{den}}\)除了构造密码系统，椭圆曲线">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.577Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-17-椭圆曲线素因子分解">
+<meta name="twitter:description" content="Pollard 的 \(\rho -1\) 方法  变种  Lenstra 方法  选取序列的方法  方法 1 (cf. Silverman/Tate) 方法 2 (cf. Koblitz)  Lenstra 方法的正确性   \(\newcommand{\gcd}{\mathsf{gcd}}\) \(\newcommand{\den}{\mathsf{den}}\)除了构造密码系统，椭圆曲线">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-17-椭圆曲线素因子分解</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-18-Elliptic-Curve-Primality-Test/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&text=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&is_video=false&description=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-17-椭圆曲线素因子分解&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&name=数论与群论密码学-17-椭圆曲线素因子分解&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pollard-的-rho--1-方法"><span class="toc-number">1.</span> <span class="toc-text">Pollard 的 \(\rho -1\) 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#变种"><span class="toc-number">1.1.</span> <span class="toc-text">变种</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lenstra-方法"><span class="toc-number">2.</span> <span class="toc-text">Lenstra 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选取序列的方法"><span class="toc-number">2.1.</span> <span class="toc-text">选取序列的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-1-cf.-silvermantate"><span class="toc-number">2.1.1.</span> <span class="toc-text">方法 1 (cf. Silverman/Tate)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-2-cf.-koblitz"><span class="toc-number">2.1.2.</span> <span class="toc-text">方法 2 (cf. Koblitz)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lenstra-方法的正确性"><span class="toc-number">2.2.</span> <span class="toc-text">Lenstra 方法的正确性</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-17-椭圆曲线素因子分解
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-07T15:06:48.000Z" itemprop="datePublished">2019-05-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#pollard-的-rho--1-方法">Pollard 的 <span class="math inline">\(\rho -1\)</span> 方法</a>
+<ul>
+<li><a href="#变种">变种</a></li>
+</ul></li>
+<li><a href="#lenstra-方法">Lenstra 方法</a>
+<ul>
+<li><a href="#选取序列的方法">选取序列的方法</a>
+<ul>
+<li><a href="#方法-1-cf.-silvermantate">方法 1 (cf. Silverman/Tate)</a></li>
+<li><a href="#方法-2-cf.-koblitz">方法 2 (cf. Koblitz)</a></li>
+</ul></li>
+<li><a href="#lenstra-方法的正确性">Lenstra 方法的正确性</a></li>
+</ul></li>
+</ul>
+</div><p><span class="math inline">\(\newcommand{\gcd}{\mathsf{gcd}}\)</span> <span class="math inline">\(\newcommand{\den}{\mathsf{den}}\)</span></p><p>除了构造密码系统，椭圆曲线还带来了新的素因子分解和素数判定的手段。本节及下一节分别讨论这两个话题。</p><h1 id="pollard-的-rho--1-方法">Pollard 的 <span class="math inline">\(\rho -1\)</span> 方法</h1><p>若已知 <span class="math inline">\(n\)</span> 是合数，若欲找到 <span class="math inline">\(n\)</span> 的一个非平凡因数：<br>
+1. 取数 <span class="math inline">\(B\)</span><br>
+2. 取数 <span class="math inline">\(k\)</span> 为尽可能多的小于 <span class="math inline">\(B\)</span> 的数的积。理想地取 <span class="math inline">\(k = B!\)</span><br>
+3. 随机选择 <span class="math inline">\(a\)</span> 使得 <span class="math inline">\(2 \le a \le n-2\)</span><br>
+3. 使用模幂算法计算 <span class="math inline">\(r = \mathsf{rem}(a^k, n)\)</span><br>
+4. 使用欧氏算法计算 <span class="math inline">\(d = (r-1, n)\)</span><br>
+5. 若有 <span class="math inline">\(d = 1\)</span> 或 <span class="math inline">\(d = n\)</span> 则重新选取 <span class="math inline">\(a\)</span> 或 <span class="math inline">\(k\)</span>。否则有 <span class="math inline">\(d \mid n\)</span> 且 <span class="math inline">\(d\)</span> 为 <span class="math inline">\(n\)</span> 的一个不大于 <span class="math inline">\(B\)</span> 的非平凡因数，我们称 <span class="math inline">\(d\)</span> 为 <span class="math inline">\(B\)</span>-smooth 的。</p><p>在 <span class="math inline">\(d\)</span> 与 <span class="math inline">\(\frac{n}{d}\)</span> 上重复该算法可得 <span class="math inline">\(n\)</span> 的素因子分解。</p><p>在有些情况下，例如 <span class="math inline">\(n = 491,389 = 383 \times 1283\)</span> 时，由于 <span class="math inline">\(n\)</span> 的最小非平凡素因数为 <span class="math inline">\(383\)</span>，由于 <span class="math inline">\(383 - 1 = 2 \times 191\)</span>，因此一开始我们必须取 <span class="math inline">\(B \ge 191\)</span> 才有可能得到一个非平凡的 <span class="math inline">\(d\)</span>。然而这样一来 <span class="math inline">\(k\)</span> 必须是一个非常大的数，从而使得在这些情况下该方法并不切实际。</p><h2 id="变种">变种</h2><p>我们给出 Pollard 的 <span class="math inline">\(\rho -1\)</span> 方法的一个变种。</p><p>取两数满足 <span class="math inline">\(B \le C\)</span>，计算 <span class="math inline">\(k_{B, C} = \displaystyle \prod_{l \le B} l^{\lfloor \frac{\log(C)}{\log(l)} \rfloor}\)</span>。</p><p>于是 <span class="math inline">\(k_{B, C}\)</span> 满足：</p><p><span class="math display">\[
+l^v \mid k_{B, C} \iff \text{$l \le B$ 且 $l^v \le C$}
+\tag{1}
+\]</span></p><p>注意， <span class="math inline">\(k_B := k_{B, B} = \mathsf{lam}\{n : n \le B\}\)</span>.</p><p>我们断言，对于满足 <span class="math inline">\(p \mid n\)</span> 的素数 <span class="math inline">\(p\)</span>，有</p><p><span class="math display">\[
+l^v \mid p-1 \implies \text{$l \le B$ 且 $l^v \le C$}
+\tag{$\star$}
+\]</span></p><p>因此对于任何互质与 <span class="math inline">\(n\)</span> 的数 <span class="math inline">\(a\)</span> （<span class="math inline">\((a, n) = 1\)</span>） 来说，记 <span class="math inline">\(k = k_{B,C}\)</span>，都有</p><p><span class="math display">\[
+a^k \equiv q \pmod p
+\tag{2}
+\]</span></p><p>因此有 <span class="math inline">\(p \mid (a^{k-1}, n) = d\)</span>.</p><div class="proof">
+<p>根据式 (<span class="math inline">\(\star\)</span>) 与式 (1)，有 <span class="math inline">\(l^v \mid p-1 \implies l^v \mid k_{B, C} \implies p-1 \mid k_{B, C}\)</span>。于是根据费马定理有式 (2) 成立。</p>
+</div><h1 id="lenstra-方法">Lenstra 方法</h1><p>基于 Pollard 的 <span class="math inline">\(\rho -1\)</span> 方法的原理，Lenstra 将 <span class="math inline">\((\mathbb{Z}/p\mathbb{Z})^\times = \mathbb{F}_p^\times\)</span> 替换为 <span class="math inline">\(E(\mathbb{F}_p)\)</span> 得到一条合适的椭圆曲线 <span class="math inline">\(E/\mathbb{Q}\)</span>。</p><p>由于我们要求 <span class="math inline">\(p \ge 5\)</span>，首先验证有 <span class="math inline">\((n, 6) = 1\)</span>，否则可得 <span class="math inline">\(n\)</span> 的一个因子。另外，验证不存在任何 <span class="math inline">\(r \ge 2\)</span> 使得 <span class="math inline">\(n \ne m^r\)</span>。</p><p>接下来选定参数 <span class="math inline">\(B\)</span>, <span class="math inline">\(C\)</span>，计算</p><p><span class="math display">\[
+k = \prod_{q \le B\\\text{$q$ 为素数}} q^{\lfloor \frac{\log C}{\log q} \rfloor}
+\]</span></p><p>随机选择 <span class="math inline">\(a, x_0, y_0 \in [0, n-1]\)</span>，因此有点 <span class="math inline">\(P = (x_0, y_0)\)</span>。</p><p>计算 <span class="math inline">\(b = y_0^2 - (x_0^3 + ax_0)\)</span> 并得过点 <span class="math inline">\(P\)</span> 的曲线</p><p><span class="math display">\[
+E : y^2 = x^3 + ax + b
+\]</span></p><p>设 <span class="math inline">\(\Delta_E = 4a^3 + 27b^2\)</span> 并验证有 <span class="math inline">\(g := \gcd(\Delta_E, n) = 1\)</span>。<br>
+若 <span class="math inline">\(g = n\)</span>，即 <span class="math inline">\(\Delta_E = n\)</span> 则重新选取曲线与点。<br>
+若 <span class="math inline">\(g \ne 1, n\)</span> 则得到一个 <span class="math inline">\(n\)</span> 的非平凡因数。<br>
+</p><p>否则有 <span class="math inline">\(g = 1\)</span>。此时通过后述方法选择序列 <span class="math inline">\(k_1, \cdots k_r = k\)</span>，并对 <span class="math inline">\(1 \le 1 \le k\)</span> 逐项求</p><p><span class="math display">\[
+P_j = k_jP = (\frac{x_j}{z_j}, \frac{y_j}{z_j}) \in E(\mathbb{Q})
+\]</span></p><p>其中 <span class="math inline">\(x_j, y_j, z_j\)</span> 约至最简，即 <span class="math inline">\(\gcd(x_j, y_j, z_j) = 1\)</span>.</p><p>记 <span class="math inline">\(d_j := \gcd(z_j, n)\)</span>。<br>
+若 <span class="math inline">\(d_j = n\)</span>，则重新选取曲线与点。<br>
+若 <span class="math inline">\(d_j \ne 1, n\)</span>，则得到一个 <span class="math inline">\(n\)</span> 的非平凡因数。</p><p>否则存在 <span class="math inline">\(\overline{x}_j \equiv \frac{x_j}{z_j} \pmod n\)</span> 与 <span class="math inline">\(\overline{y}_j \equiv \frac{y_j}{z_j} \pmod n\)</span>。于是有</p><p><span class="math display">\[
+\overline{P}_j = (\overline{x}_j, \overline{y}_j) \equiv k_jP \pmod n
+\]</span></p><p>可以直接从 <span class="math inline">\(\overline{P}_{j-1}\)</span> 中计算得到。</p><h2 id="选取序列的方法">选取序列的方法</h2><h3 id="方法-1-cf.-silvermantate">方法 1 (cf. Silverman/Tate)</h3><p>二进制展开 <span class="math inline">\(k\)</span>:</p><p><span class="math display">\[
+2^r + 2^{r-1}c_1 + \cdots + 2c_{r-1} + c_r
+\]</span></p><p>其中 <span class="math inline">\(c_i \in \{0, 1\}\)</span>。</p><p>取 <span class="math inline">\(k_0 = 1\)</span>, <span class="math inline">\(k_j = 2k_{j-1} + c_j\)</span></p><h3 id="方法-2-cf.-koblitz">方法 2 (cf. Koblitz)</h3><p>设 <span class="math inline">\(q_1 = 2, q_2 = 3, \cdots, q_r\)</span> 为不大于 <span class="math inline">\(B\)</span> 的素数。取</p><p><span class="math display">\[
+k_0 = 1\\
+k_{j+1} = q_i k_j
+\]</span></p><p>其中 <span class="math inline">\(A_{i-1} \le j &lt; A_i\)</span>, <span class="math inline">\(1 \le i \le r\)</span>, <span class="math inline">\(A_0 = 1\)</span>, <span class="math inline">\(A_i = \alpha_{q_1}\cdots\alpha_{q_i}\)</span>。因此该序列形如：</p><p><span class="math display">\[
+1, 2, 2^2, \cdots, \\
+2^{\alpha_2}, 3(2^{\alpha_2}), 3^2(2^{\alpha_2}), \cdots, \\
+3^{\alpha_3}2^{\alpha_2}, \cdots \\
+k
+\]</span></p><h2 id="lenstra-方法的正确性">Lenstra 方法的正确性</h2><p>首先，类似于 Pollard 的方法，我们有如下事实：</p><p>若有 <span class="math inline">\(p\)</span> 为素数且 <span class="math inline">\(p \mid n\)</span>，而 <span class="math inline">\(E/\mathbb{F}_p\)</span> 是一条满足如下条件的椭圆曲线：</p><p><span class="math display">\[
+\begin{aligned}
+l^v \mid \#E(\mathbb{F}_p)
+&amp;\implies \text{$l \le B$ 且 $l^v \le C$} \\
+&amp;\stackrel{\text{式 (1)}}{\iff} l^v \mid k_{B,C}
+\end{aligned}
+\tag{\star\star}
+\]</span></p><p>那么对于每一个点 <span class="math inline">\(P \in E(\mathbb{F}_p)\)</span> 皆有</p><p><span class="math display">\[
+k_{B, C}P = P_\infty
+\tag{3}
+\]</span></p><div class="proof">
+<p>根据式 (<span class="math inline">\(\star\star\)</span>) 及式 (1) 我们有 <span class="math inline">\(\#(E(\mathbb{F}_p)) \mid k_{B, C}\)</span>.</p>
+<p>根据 P3 有 <span class="math inline">\(ord(P) \mid \#(E(\mathbb{F}_p)) \mid k_{B, C}\)</span>.</p>
+<p>根据 P1 有 <span class="math inline">\(k_{B, C}P = P_\infty\)</span>.</p>
+</div><p>另外有如下事实：</p><p>若 <span class="math inline">\(p\)</span> 为素数，设</p><p><span class="math display">\[
+\begin{aligned}
+R_p
+&amp;= \{x \in \mathbb{Q} : \den(x) \not\equiv 0 \pmod p\}\\
+&amp;= \{\frac{a}{b} \in \mathbb{Q} : p \not\mid b\}
+\end{aligned}
+\]</span></p><p>有 <span class="math inline">\(R_p\)</span> 为 <span class="math inline">\(\mathbb{Q}\)</span> 的子环。</p><p>于是映射 <span class="math inline">\(x \to x \pmod p\)</span> 定义了如下环同构：</p><p><span class="math display">\[
+r_p : R_p \to \mathbb{F}_p
+\]</span></p><p>更多地，若 <span class="math inline">\(E/\mathbb{Q}\)</span> 是一条由 <span class="math inline">\(y^2 = f(x), f(x) \in \mathbb{Z}[x]\)</span> 定义的椭圆曲线（注意有 <span class="math inline">\(f(x)\)</span> 的系数皆为整数），于是若有素数 <span class="math inline">\(p\)</span>, <span class="math inline">\(p \not\mid \Delta_E\)</span>，那么</p><p><span class="math display">\[
+r_{E, p}((x, y)) = 
+\begin{cases}
+(r_p(x), r_p(y)), &amp;\text{若 $p \not\mid \den(x)$}\\
+P_\infty, &amp;\text{否则}
+\end{cases}
+\]</span></p><p>定义了如下群同态：</p><p><span class="math display">\[
+r_{E, p} : E(\mathbb{Q}) \to \overline{E}(\mathbb{F}_p)
+\]</span></p><p>其中 <span class="math inline">\(\overline{E}/\mathbb{F}_p\)</span> 是由 <span class="math inline">\(y^2 \equiv f(x) \pmod p\)</span> 定义的椭圆曲线。</p><p>该事实证明中的难点在于证明 <span class="math inline">\(r_{E, p}\)</span> 是同态： <span class="math inline">\(r_{E, p}(P + Q) = r_{E, p}(P) + r_{E, p}(Q)\)</span></p><div class="cor">
+<p>若 <span class="math inline">\(P \in E(\mathbb{Q})\)</span> 有无穷阶，且存在数 <span class="math inline">\(k &gt; 0\)</span> 使得</p>
+<p><span class="math display">\[
+kr_{E, p}(P) = P_\infty
+\]</span></p>
+<p>那么有 <span class="math inline">\(p \mid \den(x)\)</span>，其中 <span class="math inline">\((x, y) = kP\)</span>.</p>
+</div><div class="proof">
+<p>若 <span class="math inline">\(kr_{E, p}(P) = P_\infty\)</span>，那么 <span class="math inline">\(r_{E, p}(kP) \stackrel{\text{同态}}{=} kr_{E, p}(P) = P_\infty\)</span>。于是根据 <span class="math inline">\(r_{E, p}\)</span> 的定义有 <span class="math inline">\(p \mid \den(x)\)</span>.</p>
+</div><p>于是若有素数 <span class="math inline">\(p\)</span>, <span class="math inline">\(p \mid n\)</span>，且式 (<span class="math inline">\(\star\star\)</span>) 对于 <span class="math inline">\(E/\mathbb{F}_p\)</span> 成立（根据哈赛定理若有 <span class="math inline">\(B &gt; p+1+2\sqrt{p} \iff B &gt; (\sqrt{p}+1)^2 \iff \sqrt{B} &gt; \sqrt{p}+1\)</span>），那么有 <span class="math inline">\(p \mid \gcd(\den(\underbrace{x(k_{B, C}P)}_{\text{点 $k_{B, C}P$ 的 x坐标}}), n)\)</span>.</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pollard-的-rho--1-方法"><span class="toc-number">1.</span> <span class="toc-text">Pollard 的 \(\rho -1\) 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#变种"><span class="toc-number">1.1.</span> <span class="toc-text">变种</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lenstra-方法"><span class="toc-number">2.</span> <span class="toc-text">Lenstra 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选取序列的方法"><span class="toc-number">2.1.</span> <span class="toc-text">选取序列的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-1-cf.-silvermantate"><span class="toc-number">2.1.1.</span> <span class="toc-text">方法 1 (cf. Silverman/Tate)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法-2-cf.-koblitz"><span class="toc-number">2.1.2.</span> <span class="toc-text">方法 2 (cf. Koblitz)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lenstra-方法的正确性"><span class="toc-number">2.2.</span> <span class="toc-text">Lenstra 方法的正确性</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&text=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&is_video=false&description=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-17-椭圆曲线素因子分解&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&title=数论与群论密码学-17-椭圆曲线素因子分解"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/&name=数论与群论密码学-17-椭圆曲线素因子分解&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

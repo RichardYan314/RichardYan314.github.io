@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="进位制计数法 加法运算 乘法运算 除法运算 进制展开 多项式时间算法  进位制计数法首先考察自然数的表示方法。虽然通常意义上的加法与乘法在皮亚诺公理所定义的一进制系统下有很清晰的定义，然而其运算却需要相当多的操作。例如，计算一进制表达的两数 \(n\) 与 \(m\) 之和，需要的操作数量几乎正比于 \(n\) （“几乎正比” 为不严格意义下 \(\Theta(n)\) 的表达）。而一进制下乘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-01-算术的时间复杂度">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="进位制计数法 加法运算 乘法运算 除法运算 进制展开 多项式时间算法  进位制计数法首先考察自然数的表示方法。虽然通常意义上的加法与乘法在皮亚诺公理所定义的一进制系统下有很清晰的定义，然而其运算却需要相当多的操作。例如，计算一进制表达的两数 \(n\) 与 \(m\) 之和，需要的操作数量几乎正比于 \(n\) （“几乎正比” 为不严格意义下 \(\Theta(n)\) 的表达）。而一进制下乘">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.569Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-01-算术的时间复杂度">
+<meta name="twitter:description" content="进位制计数法 加法运算 乘法运算 除法运算 进制展开 多项式时间算法  进位制计数法首先考察自然数的表示方法。虽然通常意义上的加法与乘法在皮亚诺公理所定义的一进制系统下有很清晰的定义，然而其运算却需要相当多的操作。例如，计算一进制表达的两数 \(n\) 与 \(m\) 之和，需要的操作数量几乎正比于 \(n\) （“几乎正比” 为不严格意义下 \(\Theta(n)\) 的表达）。而一进制下乘">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-01-算术的时间复杂度</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-02-Greatest-Common-Divisor-and-the-Euclidean-Algorithm/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Footnote-Test/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&text=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&is_video=false&description=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-01-算术的时间复杂度&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&name=数论与群论密码学-01-算术的时间复杂度&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#进位制计数法"><span class="toc-number">1.</span> <span class="toc-text">进位制计数法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加法运算"><span class="toc-number">2.</span> <span class="toc-text">加法运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#乘法运算"><span class="toc-number">3.</span> <span class="toc-text">乘法运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#除法运算"><span class="toc-number">4.</span> <span class="toc-text">除法运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#进制展开"><span class="toc-number">5.</span> <span class="toc-text">进制展开</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#多项式时间算法"><span class="toc-number">6.</span> <span class="toc-text">多项式时间算法</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-01-算术的时间复杂度
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-05T20:14:08.000Z" itemprop="datePublished">2019-01-05</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#进位制计数法">进位制计数法</a></li>
+<li><a href="#加法运算">加法运算</a></li>
+<li><a href="#乘法运算">乘法运算</a></li>
+<li><a href="#除法运算">除法运算</a></li>
+<li><a href="#进制展开">进制展开</a></li>
+<li><a href="#多项式时间算法">多项式时间算法</a></li>
+</ul>
+</div><h1 id="进位制计数法">进位制计数法</h1><p>首先考察自然数的表示方法。虽然通常意义上的加法与乘法在皮亚诺公理所定义的一进制系统下有很清晰的定义，然而其运算却需要相当多的操作。例如，计算一进制表达的两数 <span class="math inline">\(n\)</span> 与 <span class="math inline">\(m\)</span> 之和，需要的操作数量几乎正比于 <span class="math inline">\(n\)</span> （“几乎正比” 为不严格意义下 <span class="math inline">\(\Theta(n)\)</span> 的表达）。而一进制下乘法的运算复杂程度则更甚，为 <span class="math inline">\(\Theta(nm)\)</span>。之所以如此的原因为，一进制下表达（编码）数 <span class="math inline">\(n\)</span> 需要的符号个数为 <span class="math inline">\(\Theta(n)\)</span>。</p><p>而更加优越的进位制计数法则被用于减少运算的复杂度。一般地，在进位制计数法中，给定一基底 <span class="math inline">\(b~(b \in \mathbb{N},~b \ge 2)\)</span>，我们可以表示任意自然数 <span class="math inline">\(n \in \mathbb{N}\)</span> 为：</p><p><span class="math display">\[
+\begin{aligned}
+n &amp;= d_{k-1}b^{k-1} + d_{k_2}b^{k-2} + \cdots d_1 b + d_0 \\
+  &amp;= \prod_{i=0}^{k-1} d_i b^i
+\end{aligned}
+\]</span></p><p>其中 <span class="math inline">\(d_{k-1} \ne 0\)</span>，<span class="math inline">\(0 \le d_i &lt; b\)</span>, for <span class="math inline">\(0 \le i &lt; k\)</span>.</p><p>这样，我们将 <span class="math inline">\(b\)</span> 进制下的 <span class="math inline">\(n\)</span> 表示为</p><p><span class="math display">\[
+n = \left( d_{k-1}, \cdots, d_0\right)_b
+\]</span></p><p>注意：我们有</p><p><span class="math display">\[
+\underbrace{b^{k-1}\le}_{d_{k-1} \ne 0}
+n
+\underbrace{\le b^{k}}_{d_{k-1}&lt;b}
+\]</span></p><p>在不等式各部分上取 <span class="math inline">\(log_b\left(\cdot\right)\)</span>，我们有：</p><p><span class="math display">\[
+k-1 \le log_b n &lt; k\\
+k-1 = \lfloor log_b n \rfloor 
+\]</span></p><p>因此，<span class="math inline">\(b\)</span> 进制计数法中表达数 <span class="math inline">\(n\)</span> 的位数大约正比于 <span class="math inline">\(log(n)\)</span>。其中对数的底可由换底公式任意设定，因为比例常量无关紧要。</p><p>当 <span class="math inline">\(b = 10\)</span> 时，该系统表示日常生活使用的十进制。当 <span class="math inline">\(b = 2\)</span> 时，该系统表示计算机存储及运算时使用的二进制。另外，我们称一个二进制位为一比特。</p><h1 id="加法运算">加法运算</h1><p>在进位制下计算两数 <span class="math inline">\(n\)</span> 与 <span class="math inline">\(m\)</span> 之和时，我们将对应位上的数以及上一位运算所得到的进位相加，产生该位的和与下一位的进位。同时，我们设进入到第 <span class="math inline">\(0\)</span> 位的进位为 <span class="math inline">\(0\)</span>。由于任一数位的运算结果均取决于上一位的进位，因此进位制下的加法运算复杂度为 <span class="math inline">\(\Theta(max\{log(n), log(m)\})\)</span>。这里我们忽略计算机实际运算加法时额外需要的管理开支。</p><h1 id="乘法运算">乘法运算</h1><p>二进制下的乘法运算可以简单地由移位与多次相加实现。若 <span class="math inline">\(n\)</span> 有 <span class="math inline">\(k\)</span> 比特， <span class="math inline">\(m\)</span> 有 <span class="math inline">\(l\)</span> 比特，并且不失一般性地假设 <span class="math inline">\(l \le k\)</span>，我们一共需要 <span class="math inline">\(l-1\)</span> 次移位，每次计算 <span class="math inline">\(k+1\)</span> 位的和。因此计算二进制表示的 <span class="math inline">\(n\)</span> 与 <span class="math inline">\(m\)</span> 之积，共需 <span class="math inline">\((l-1)(k+1) = lk - k + l - 1\)</span> 步操作。于是可得二进制下的乘法运算复杂度为 <span class="math inline">\(\Theta(log(n)log(m))\)</span><a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a> <a href="#fn2-1" class="footnote-ref" id="fnref2-1" role="doc-noteref"><sup>2</sup></a>。</p><h1 id="除法运算">除法运算</h1><p>给定正整数 <span class="math inline">\(n\)</span>, <span class="math inline">\(m\)</span>，下式</p><p><span class="math display">\[
+n = qm + r,~ 0 \le r &lt; m
+\]</span></p><p>唯一地确定 <span class="math inline">\(q\)</span>, <span class="math inline">\(r\)</span>。我们分别称以 <span class="math inline">\(m\)</span> 除 <span class="math inline">\(n\)</span>（即“<span class="math inline">\(n\)</span> 除以 <span class="math inline">\(m\)</span>”）的商数与余数，并记</p><p><span class="math display">\[
+quo(n, m) := q\\
+rem(n, m) := r
+\]</span></p><p>若 <span class="math inline">\(n\)</span> 有 <span class="math inline">\(k\)</span> 比特， <span class="math inline">\(m\)</span> 有 <span class="math inline">\(l\)</span> 比特，并且不失一般性地假设 <span class="math inline">\(l \le k\)</span>，计算除法共需 <span class="math inline">\(q\)</span> 的比特数次减法，其中一次减法的复杂度为 <span class="math inline">\(\Theta(l)\)</span>。那么计算除法需要的操作数为 <span class="math inline">\((k-l+1)l \le kl\)</span>，因此复杂度为 <span class="math inline">\(\Theta(log(n)log(m))\)</span>。</p><hr><p>因此我们发现，使用进位制表达整数相对于一进制来说，就储存与运算效率而言要更优越。</p><p>最后我们考察将一进制数转换为 <span class="math inline">\(b\)</span> 进制数（其中 <span class="math inline">\(b \ge 2\)</span>）。</p><h1 id="进制展开">进制展开</h1><p>方法：给定一进制数 <span class="math inline">\(n\)</span> 与进制 <span class="math inline">\(b\)</span> （<span class="math inline">\(b \ge 2\)</span>），逐次将商数除以 <span class="math inline">\(b\)</span>，并以逆序列出余数。</p><p>形式化地，</p><p>设 <span class="math inline">\(q_0 := 0\)</span>，重复计算 <span class="math inline">\(q_{i+1} := quo(q_i, b),~r_{i+1} := rem(q_i, b)\)</span><br>
+直至 <span class="math inline">\(q_k = 0\)</span>。<br>
+那么数 <span class="math inline">\(n\)</span> 的 <span class="math inline">\(b\)</span> 进制展开则为 <span class="math inline">\((r_k, \cdots, r_1)_b\)</span>。</p><h1 id="多项式时间算法">多项式时间算法</h1><p>设 <span class="math inline">\(P(n_1, \cdots, m_r)\)</span> 为一关于位数分别为 <span class="math inline">\(k_1, \cdots, k_r\)</span> 的正整数 <span class="math inline">\(n_1, \cdots, n_r\)</span> 的函数。那么我们说 <span class="math inline">\(P(n_0, \cdots, n_r)\)</span> 是多项式时间可算的，若计算该函数的时间正比于 <span class="math inline">\(k_1^{d_1}\cdots k_r^{d_r}\)</span>，或者等价地，正比于 <span class="math inline">\(log(n_1)^{d_1}\cdots log(n_r)^{d_r}\)</span></p><p>例如，根据前文所述，进位制中的加法与乘法皆为多项式时间可算。</p><p>考虑阶乘函数 <span class="math inline">\(n!=1\cdot 2\cdots n\)</span>，该函数的时间复杂度为 <span class="math inline">\(\Theta(n^2log(n))\)</span>，因此不是多项式时间可算的。</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>存在更高效的 Schönhage–Strassen 算法，时间复杂度为 <span class="math inline">\(\Theta(n \log(n) \log(\log(n)))\)</span></p>
+</div><div class="tippy-tooltip" id="tooltip2-1" style="display: none">
+<p>本文成文以后又由 Harvey 和 Hoeven 提出了 <span class="math inline">\(\Theta(n \log n)\)</span> 的算法。若某个猜想成立，这将是理论上能做到的最佳</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+
+<li id="fn1-1" role="doc-endnote"><p>存在更高效的 Schönhage–Strassen 算法，时间复杂度为 <span class="math inline">\(\Theta(n \log(n) \log(\log(n)))\)</span><a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li><li id="fn2-1" role="doc-endnote"><p>本文成文以后又由 Harvey 和 Hoeven 提出了 <span class="math inline">\(\Theta(n \log n)\)</span> 的算法。若某个猜想成立，这将是理论上能做到的最佳<a href="#fnref2-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#进位制计数法"><span class="toc-number">1.</span> <span class="toc-text">进位制计数法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#加法运算"><span class="toc-number">2.</span> <span class="toc-text">加法运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#乘法运算"><span class="toc-number">3.</span> <span class="toc-text">乘法运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#除法运算"><span class="toc-number">4.</span> <span class="toc-text">除法运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#进制展开"><span class="toc-number">5.</span> <span class="toc-text">进制展开</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#多项式时间算法"><span class="toc-number">6.</span> <span class="toc-text">多项式时间算法</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&text=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&is_video=false&description=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-01-算术的时间复杂度&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&title=数论与群论密码学-01-算术的时间复杂度"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-01-Time-Complexity-of-Arithmetic/&name=数论与群论密码学-01-算术的时间复杂度&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

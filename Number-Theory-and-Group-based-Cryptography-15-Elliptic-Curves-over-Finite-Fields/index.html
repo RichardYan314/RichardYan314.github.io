@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="性质  \(\big| E(\GF{p}) \big|\) 哈赛定理（Hasse&amp;apos;s Theorem） \(E(\GF{p})\) 的结构 Type   \[\newcommand{\GF}[1]{\mathbb{F}_{ #1 }}\]接前文所述，本章讨论当取 \(K = \GF{p}\)，其中 \(p\) 为素数且 \(p \ne 2, 3\) 时的椭圆曲线 \(E(\GF{p}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-15-有限域上的椭圆曲线">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="性质  \(\big| E(\GF{p}) \big|\) 哈赛定理（Hasse&amp;apos;s Theorem） \(E(\GF{p})\) 的结构 Type   \[\newcommand{\GF}[1]{\mathbb{F}_{ #1 }}\]接前文所述，本章讨论当取 \(K = \GF{p}\)，其中 \(p\) 为素数且 \(p \ne 2, 3\) 时的椭圆曲线 \(E(\GF{p}">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.577Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-15-有限域上的椭圆曲线">
+<meta name="twitter:description" content="性质  \(\big| E(\GF{p}) \big|\) 哈赛定理（Hasse&amp;apos;s Theorem） \(E(\GF{p})\) 的结构 Type   \[\newcommand{\GF}[1]{\mathbb{F}_{ #1 }}\]接前文所述，本章讨论当取 \(K = \GF{p}\)，其中 \(p\) 为素数且 \(p \ne 2, 3\) 时的椭圆曲线 \(E(\GF{p}">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-15-有限域上的椭圆曲线</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/SCP-reading-list/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-14-Torsion-Points/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&text=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&is_video=false&description=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-15-有限域上的椭圆曲线&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&name=数论与群论密码学-15-有限域上的椭圆曲线&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#性质"><span class="toc-number">1.</span> <span class="toc-text">性质</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#big-egfp-big"><span class="toc-number">1.1.</span> <span class="toc-text">\(\big| E(\GF{p}) \big|\)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈赛定理hasses-theorem"><span class="toc-number">1.2.</span> <span class="toc-text">哈赛定理（Hasse&#39;s Theorem）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#egfp-的结构"><span class="toc-number">1.3.</span> <span class="toc-text">\(E(\GF{p})\) 的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type"><span class="toc-number">1.4.</span> <span class="toc-text">Type</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-15-有限域上的椭圆曲线
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-04-26T21:36:38.000Z" itemprop="datePublished">2019-04-26</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#性质">性质</a>
+<ul>
+<li><a href="#big-egfp-big"><span class="math inline">\(\big| E(\GF{p}) \big|\)</span></a></li>
+<li><a href="#哈赛定理hasses-theorem">哈赛定理（Hasse&apos;s Theorem）</a></li>
+<li><a href="#egfp-的结构"><span class="math inline">\(E(\GF{p})\)</span> 的结构</a></li>
+<li><a href="#type">Type</a></li>
+</ul></li>
+</ul>
+</div><p><span class="math display">\[\newcommand{\GF}[1]{\mathbb{F}_{ #1 }}\]</span></p><p>接前文所述，本章讨论当取 <span class="math inline">\(K = \GF{p}\)</span>，其中 <span class="math inline">\(p\)</span> 为素数且 <span class="math inline">\(p \ne 2, 3\)</span> 时的椭圆曲线 <span class="math inline">\(E(\GF{p})\)</span>。其中 <span class="math inline">\(E: y^2 = f(x)\)</span>, <span class="math inline">\(f(x)\)</span> 是立方的。虽然我们使用 <span class="math inline">\(\GF{p}\)</span> 来论证，然而不难证明，本章给出的所有事实对于任意的有限域 <span class="math inline">\(\mathbb{F}_q\)</span>，其中 <span class="math inline">\(q = p^n\)</span> 都成立。注意 <span class="math inline">\(\GF{q} \ne \mathbb{Z}/p^n\mathbb{Z}\)</span>，后者当 <span class="math inline">\(n &gt; 1\)</span> 时不构成域。</p><h1 id="性质">性质</h1><h2 id="big-egfp-big"><span class="math inline">\(\big| E(\GF{p}) \big|\)</span></h2><p>依据定义，有 <span class="math inline">\(E(\GF{p}) \subset \GF{p} \times \GF{p} \cup \{P_\infty\}\)</span>。因此首先有 <span class="math inline">\(\big| E(\GF{p}) \big| \le p^2 + 1\)</span>.</p><p>更进一步地，由于有 <span class="math inline">\(E: y^2 = f(x)\)</span>，给定 <span class="math inline">\(x \in \GF{p}\)</span>，记</p><p><span class="math inline">\(\newcommand{\J}[2]{\left(\frac{ #1 }{ #2 }\right)}\)</span></p><p><span class="math display">\[
+\chi_p(x) = L\J{x}{p}
+\]</span></p><p>其中 <span class="math inline">\(L\J{\cdot}{\cdot}\)</span> 表示这里使用的是勒让德记号。后文不再强调。有</p><p><span class="math display">\[
+\#\{y: y^2 = f(x)\} =
+\begin{cases}
+1, &amp;f(x) = 0\\
+2, &amp;f(x) \in (\GF{p}^\times)^2\\
+0, &amp;f(x) \not \in (\GF{p}^\times)^2
+\end{cases}
+=
+\begin{cases}
+1, &amp;\chi_p(f(x)) = 0\\
+2, &amp;\chi_p(f(x)) = 1\\
+0, &amp;\chi_p(f(x)) = -1
+\end{cases}
+\quad\quad = \chi_p(f(x)) + 1
+\]</span></p><p>因此有</p><p><span class="math display">\[
+\#\{(x, y) : y^2 = f(x)\} \
+= \sum_{x \in \GF{p}} (\chi_p(f(x)) + 1) \
+= p + \sum_{x \in \GF{p}} \chi_p(f(x))
+\]</span></p><p><span class="math display">\[
+\big| E(\GF{p}) \big| = p + 1 + \sum_{x \in \GF{p}} \chi_p(f(x))
+\]</span></p><p>记 <span class="math inline">\(N_{E/F} := \big| E(\GF{p}) \big|\)</span>, <span class="math inline">\(a_{E/F} = \sum_{x \in \GF{p}} \chi_p(f(x))\)</span>，其中 <span class="math inline">\(F = \GF{p}\)</span>，于是有 <span class="math inline">\(N_{E/F} = p + 1 - a_{E/F}\)</span>.</p><div class="def">
+<p>若 <span class="math inline">\(p \mid a_{E/F}\)</span>，则称椭圆曲线 <span class="math inline">\(E/F\)</span> 为超奇异的。</p>
+</div><h2 id="哈赛定理hasses-theorem">哈赛定理（Hasse&apos;s Theorem）</h2><div class="thm" name="哈赛定理">
+<p><span class="math display">\[
+\big| N_{E/F} - (p+1) \big| \le 2 \sqrt{p}
+\]</span></p>
+</div><div class="cor">
+<p><span class="math display">\[
+\lim_{p \to \infty} N_{E/F} = p + 1
+\]</span></p>
+</div><p>因此有 <span class="math inline">\(p+1 - 2\sqrt{p} \le N_{E/F} \le p+1 + 2\sqrt{p}\)</span>.</p><h2 id="egfp-的结构"><span class="math inline">\(E(\GF{p})\)</span> 的结构</h2><p>记 <span class="math inline">\(N := N_{E/F}\)</span>, <span class="math inline">\(G := E(\GF{p})\)</span>，有</p><p><span class="math display">\[
+G \stackrel{P3}{=} G[N] \stackrel{\text{property in part d}}{\le} \mathbb{Z}/N\mathbb{Z} \times \mathbb{Z}/N\mathbb{Z}
+\]</span></p><p>其中 <span class="math inline">\(\le\)</span> 表示子群。</p><h2 id="type">Type</h2><p>若 <span class="math inline">\(G \le \mathbb{Z}/N\mathbb{Z} \times \mathbb{Z}/N\mathbb{Z}\)</span>，则存在整数 <span class="math inline">\(A, B \ge 1\)</span> 使得 <span class="math inline">\(B \mid A\)</span> 且</p><p><span class="math display">\[
+G \simeq \mathbb{Z}/A\mathbb{Z} \times \mathbb{Z}/B\mathbb{Z}
+\tag{1}
+\]</span></p><p>我们称二元组 <span class="math inline">\((A, B)\)</span> 为 <span class="math inline">\(G\)</span> 的 Type.</p><p>当 <span class="math inline">\(G = \GF{p}\)</span> 时，有 <span class="math inline">\(B \mid p−1\)</span>.</p><p>接下来我们讨论怎样求 <span class="math inline">\(G = E(\GF{p})\)</span> 的 type。首先注意到若我们进行素因数分解，记 <span class="math inline">\(N = \displaystyle \prod_{l \mid N} l^{n_l}\)</span>，其中 <span class="math inline">\(l\)</span> 皆为素数，则有</p><p><span class="math display">\[
+A = \prod_{l \mid A} l^{\alpha_l} = \prod_{l \mid N} l^{\alpha_l}
+\\
+B = \prod_{l \mid B} l^{\beta_l} = \prod_{l \mid N} l^{\beta_l}
+\tag{2}
+\]</span></p><p>其中 <span class="math inline">\(\alpha_l \ge \beta_l \ge 0\)</span> 且 <span class="math inline">\(n_l = \alpha_l + \beta_l\)</span>.</p><div class="proof">
+<p>因为有 <span class="math inline">\(N \stackrel{\text{式 1}}{=} AB\)</span> 且 <span class="math inline">\(B \mid A\)</span>.</p>
+</div><p>其次注意到式 1 意味着有</p><p><span class="math display">\[
+G[l^{n_l}] \simeq \mathbb{Z}/l^{\alpha_l}\mathbb{Z} \times \mathbb{Z}/l^{\beta_l}\mathbb{Z}
+\tag{3}
+\]</span></p><div class="proof">
+<p><span class="math display">\[
+\begin{aligned}
+G[l^{n_l}]
+&amp;\stackrel{\text{式 1}}{=} ((\mathbb{Z}/A\mathbb{Z}) \times (\mathbb{Z}/B\mathbb{Z}))[l^{n_l}]\\
+&amp;\simeq (\mathbb{Z}/A\mathbb{Z})[l^{n_l}] \times (\mathbb{Z}/B\mathbb{Z})[l^{n_l}]\\
+&amp;= (\mathbb{Z}/A\mathbb{Z})[l^{\alpha_l}] \times (\mathbb{Z}/B\mathbb{Z})[l^{\beta_l}]\\
+\end{aligned}
+\]</span></p>
+<p>其中有</p>
+<p><span class="math display">\[
+gcd(A, l^{n_l}) = l^{\alpha_l}\\
+gcd(B, l^{n_l}) = l^{\beta_l}\\
+\]</span></p>
+<p>又因为 <span class="math inline">\(\big| G \big| = n\)</span>，于是 <span class="math inline">\(G[m] = G[gcd(m, n)]\)</span>.</p>
+<p>可证若 <span class="math inline">\(H\)</span> 为 <span class="math inline">\(n\)</span>阶 循环群，且 <span class="math inline">\(m \mid n\)</span>，那么 <span class="math inline">\(H[m]\)</span> 为 <span class="math inline">\(m\)</span>阶 循环群，那么 <span class="math inline">\(H[m] \cong \mathbb{Z}/m\mathbb{Z}\)</span>.</p>
+<p>于是有 <span class="math inline">\((\mathbb{Z}/A\mathbb{Z})[l^{\alpha_l}] \cong \mathbb{Z}/l^{\alpha_l}\mathbb{Z} \quad (l^{\alpha_l} \mid A)\)</span>.</p>
+</div><p>最后注意到，若式 3 成立，则取 <span class="math inline">\(k \ge 1\)</span>，有</p><p><span class="math display">\[
+\big| G[l^k] \big| =
+\begin{cases}
+l^{2k}, &amp; 1 \le k \le beta_l \\
+l^{\beta_l+k}, &amp; \beta_l \le k \le \alpha_l \\
+l^{\alpha_l + \beta_l}, &amp; k \ge \alpha_l
+\end{cases}
+\tag{4}
+\]</span></p><p>因此，我们可以通过以下方式求得 <span class="math inline">\(A\)</span>:</p><p>对于每个 <span class="math inline">\(l \mid N\)</span>，求 <span class="math inline">\(\big| G[l^k] \big|\)</span>, <span class="math inline">\(k = 1, \cdots\)</span>。根据式 4 求 <span class="math inline">\((\alpha_l, \beta_l)\)</span>，则可得 <span class="math inline">\(G\)</span> 的 type / 结构常数 <span class="math inline">\(\{(\alpha_l, \beta_l)\}_{l \mid N}\)</span>。于是 <span class="math inline">\(A = \prod l^{\alpha_l}\)</span>, <span class="math inline">\(B = \prod l^{\beta_l}\)</span>.</p><div class="ex">
+<p>若 <span class="math inline">\(E: y^2 = x^3 - x\)</span>, <span class="math inline">\(p = 71\)</span>，求 <span class="math inline">\(E(\GF{p})\)</span> 的结构。</p>
+<p>首先计算 <span class="math inline">\(N = \big| E(\GF{71}) \big|\)</span>。后文记 <span class="math inline">\(F := \GF{71}\)</span>.</p>
+<p><span class="math display">\[-a_{E/F} = \Sigma_{x \in \GF{71}}\]</span></p>
+<p>注意到 <span class="math inline">\(f(-x) = (-x)^3 - (-x) = -f(x)\)</span>。于是有</p>
+<p><span class="math display">\[
+\J{f(-x)}{p}
+= \J{-f(x)}{p}
+= \J{-1}{p}\J{f(x)}{p}
+\stackrel{71 \bmod 4 = 3}{=} -\J{f(x)}{p}
+\]</span></p>
+<p>于是</p>
+<p><span class="math display">\[
+-a_{E/F} = \Sigma_{x \in \GF{71}} \J{f(x)}{p} = \Sigma_{x \in \GF{71}} \J{-f(x)}{p} = -\Sigma\J{f(-x)}{p}
+\]</span></p>
+<p>因此有 <span class="math inline">\(a_{E/F} = 0\)</span>。因此 <span class="math inline">\(N = \big| E(\GF{71}) \big| = 71 + 1 = 72\)</span>.</p>
+<p>接下来有 <span class="math inline">\(72 = 2^3 \cdot 3^2\)</span>。于是有</p>
+<p><span class="math display">\[
+l=2: \quad \alpha_2 + \beta_2 = 3 = n_2, \quad \alpha_2 \ge \beta_2 \ge 0 \quad (\alpha_2, \beta_2) = (3, 0), (2, 1)
+\\
+l=3: \quad \alpha_3 + \beta_3 = 2 = n_3, \quad \alpha_3 \ge \beta_3 \ge 0 \quad (\alpha_3, \beta_3) = (2, 0), (1, 1)
+\]</span></p>
+<p>对于 <span class="math inline">\(l = 2\)</span>，通过在 <span class="math inline">\(\GF{71}\)</span> 里解 <span class="math inline">\(x^3 - x = 0\)</span>，有</p>
+<p><span class="math display">\[
+\begin{aligned}
+G[2]
+&amp;= \{(x, 0): f(x) = 0\} \cup \{P_\infty\}\\
+&amp;= \{(0, 0), (1, 0), (-1, 0)\} \cup \{P_\infty\}
+\end{aligned}
+\]</span></p>
+<p>因此 <span class="math inline">\(\big| G[2] \big| = 4\)</span>.</p>
+<p>于是根据式 4，由于 <span class="math inline">\(\beta_2 \ge 1 = k\)</span>，有 <span class="math inline">\((\alpha_2, \beta_2) = (2, 1)\)</span>.</p>
+<p>对于 <span class="math inline">\(l = 3\)</span>，我们有取巧的手段。由于有 <span class="math inline">\(B \mid p-1 = 70 = 2 \cdot 5 \cdot 7\)</span>，且 <span class="math inline">\(3 \mid p-1\)</span>，因此必然得有 <span class="math inline">\(\beta_3 = 0\)</span> （<span class="math inline">\(l^{\beta_l} \mid B \mid p-1\)</span>）。于是 <span class="math inline">\((\alpha_3, \beta_3) = (2, 0)\)</span>.</p>
+<p>因此，所求结构为 <span class="math inline">\(\{(2, 1)_2, (2, 0)_3\}\)</span>，且</p>
+<p><span class="math display">\[
+\begin{aligned}
+A = 2^{\alpha_2} \cdot 3^{\alpha_3} = 2^2 \cdot 3^2 = 36
+\\
+B = 2^{\beta_2} \cdot 3^{\beta_3} = 2^1 \cdot 3^0 = 2
+\end{aligned}
+\implies \text{$E(\GF{71})$ 的 Type 为 $(36, 2)$}
+\]</span></p>
+<p>因此 <span class="math inline">\(E(\GF{71}) \simeq \mathbb{Z}/36\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}\)</span>。由此可知 <span class="math inline">\(E(\GF{71})\)</span> 中元素阶最高为 <span class="math inline">\(36\)</span>，并且一定存在这样的元素。</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#性质"><span class="toc-number">1.</span> <span class="toc-text">性质</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#big-egfp-big"><span class="toc-number">1.1.</span> <span class="toc-text">\(\big| E(\GF{p}) \big|\)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈赛定理hasses-theorem"><span class="toc-number">1.2.</span> <span class="toc-text">哈赛定理（Hasse&#39;s Theorem）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#egfp-的结构"><span class="toc-number">1.3.</span> <span class="toc-text">\(E(\GF{p})\) 的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type"><span class="toc-number">1.4.</span> <span class="toc-text">Type</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&text=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&is_video=false&description=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-15-有限域上的椭圆曲线&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&title=数论与群论密码学-15-有限域上的椭圆曲线"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-15-Elliptic-Curves-over-Finite-Fields/&name=数论与群论密码学-15-有限域上的椭圆曲线&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

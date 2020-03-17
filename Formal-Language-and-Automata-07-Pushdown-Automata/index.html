@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="var lodash = _;   下推自动机（Pushdown Automata, PDA）在有限状态自动机的基础上增加了一个可读写的栈，其中状态转移函数在匹配输入字符串的下一个字符之外还需匹配栈顶符号，并且可选地从栈顶移除/向栈顶写入任意多个字符。计算开始时栈为空，并在原先接受条件的基础上要求栈为空。形式化地，定义下推自动机 \(G\) 为元组 \((Q, \Sigma, \Gamma, \">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机理论-07-下推自动机">
+<meta property="og:url" content="https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="var lodash = _;   下推自动机（Pushdown Automata, PDA）在有限状态自动机的基础上增加了一个可读写的栈，其中状态转移函数在匹配输入字符串的下一个字符之外还需匹配栈顶符号，并且可选地从栈顶移除/向栈顶写入任意多个字符。计算开始时栈为空，并在原先接受条件的基础上要求栈为空。形式化地，定义下推自动机 \(G\) 为元组 \((Q, \Sigma, \Gamma, \">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-08-13T12:54:49.259Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="形式语言与自动机理论-07-下推自动机">
+<meta name="twitter:description" content="var lodash = _;   下推自动机（Pushdown Automata, PDA）在有限状态自动机的基础上增加了一个可读写的栈，其中状态转移函数在匹配输入字符串的下一个字符之外还需匹配栈顶符号，并且可选地从栈顶移除/向栈顶写入任意多个字符。计算开始时栈为空，并在原先接受条件的基础上要求栈为空。形式化地，定义下推自动机 \(G\) 为元组 \((Q, \Sigma, \Gamma, \">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>形式语言与自动机理论-07-下推自动机</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-08-Pumping-Lemma-for-Context-Free-Languages/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-06-Context-Free-Languages/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&text=形式语言与自动机理论-07-下推自动机"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&is_video=false&description=形式语言与自动机理论-07-下推自动机"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-07-下推自动机&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&name=形式语言与自动机理论-07-下推自动机&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        形式语言与自动机理论-07-下推自动机
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-06-08T22:10:10.000Z" itemprop="datePublished">2019-06-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><script src="https://cdn.jsdelivr.net/d3js/3.5.17/d3.min.js" integrity="sha256-uB5nPcWK8vr5e83snqtMUYJ2n/5TZ3PV9CCRk1pzob4=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.6.0/js-yaml.min.js" integrity="sha256-cClLF3hmu8Q/atb1MfoMUg+4h2MTXFMl5+UuvXBWE8g=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/lodash/4.10.0/lodash.min.js" integrity="sha256-WplZqoBFo5rcW50YJBm/A1DRy7NnlMHTVDZBan+g2ZU=" crossorigin="anonymous"></script><script> var lodash = _; </script><script src="https://cdn.jsdelivr.net/lodash/4.10.0/lodash.fp.min.js" integrity="sha256-21hyGphPmEWw6dEv1N50zj2CGTCph/CZOkIQHqGoTfs=" crossorigin="anonymous"></script><p><link href="/FSA/state-diagram/StateViz.css" rel="stylesheet"> <link href="/FSA/tape/tape.css" rel="stylesheet"> <link href="/FSA/buttons.css" rel="stylesheet"></p><script src="/FSA/TMViz.bundle.js" charset="utf-8"></script><script src="/FSA/embedded.bundle.js" charset="utf-8"></script><p>下推自动机（Pushdown Automata, PDA）在有限状态自动机的基础上增加了一个可读写的栈，其中状态转移函数在匹配输入字符串的下一个字符之外还需匹配栈顶符号，并且可选地从栈顶移除/向栈顶写入任意多个字符。计算开始时栈为空，并在原先接受条件的基础上要求栈为空。</p><p>形式化地，定义下推自动机 <span class="math inline">\(G\)</span> 为元组 <span class="math inline">\((Q, \Sigma, \Gamma, \delta, q_0, Q_{acc})\)</span></p><p>其中 <span class="math inline">\(Q\)</span>, <span class="math inline">\(\Sigma\)</span>, <span class="math inline">\(q_0\)</span>, <span class="math inline">\(Q_{acc}\)</span> 的定义及意义与它们在 FSA 中的相同。</p><p><span class="math inline">\(\Gamma\)</span> 为与 <span class="math inline">\(\Sigma\)</span> （不失一般性地）不交的有限集合，称为栈字符集。同时称 <span class="math inline">\(\Sigma\)</span> （前称字符集）为输入字符集以明示区别。</p><p>另有符号 <span class="math inline">\(\varepsilon \not\in \Gamma\)</span> 为 <span class="math inline">\(\Gamma^0\)</span> 的唯一元素作为唯一零长度的栈字符串。我们以 <span class="math inline">\(\varepsilon\)</span> 同时记零长栈字符串及零长输入字符串，并由上下文来做区分。</p><p><span class="math inline">\(\delta\)</span> 为 <span class="math inline">\(Q \times (\Sigma \cup \{\varepsilon\}) \times (\Gamma \cup \{\varepsilon\}) \times Q \times \Gamma^*\)</span> 上的关系。称元素 <span class="math inline">\((p, a, A, q, B) \in \delta\)</span> 为 <span class="math inline">\(G\)</span> 的一个转移，其表示若 <span class="math inline">\(G\)</span> 当前的状态为 <span class="math inline">\(p\)</span>，下一个输入字符为 <span class="math inline">\(a\)</span>，栈顶有符号 <span class="math inline">\(A\)</span>，则 <span class="math inline">\(G\)</span> 应读入 <span class="math inline">\(a\)</span>，出栈 <span class="math inline">\(A\)</span>，状态转移至 <span class="math inline">\(q\)</span>，并入栈字符串 <span class="math inline">\(B\)</span>。</p><p>在用图表示 PDA 时，对于每一个 <span class="math inline">\((p, a, A, q, B) \in \delta\)</span>，添加自节点 <span class="math inline">\(p\)</span> 至节点 <span class="math inline">\(q\)</span> 的有向边并以 <span class="math inline">\(a, A \mapsto B\)</span> 标记该边。</p><p>若对于任何 <span class="math inline">\(p \in Q\)</span>, <span class="math inline">\(a \in \Sigma\)</span>, <span class="math inline">\(A \in \Gamma\)</span>, 至多仅分别有一个 <span class="math inline">\(q \in Q\)</span>, <span class="math inline">\(B \in \Gamma^*\)</span>，使得</p><p><span class="math display">\[
+(p, a, \varepsilon, q, B) \in \delta \\
+(p, \varepsilon, A, q, B) \in \delta
+\]</span></p><p>中仅有一项成立，则称 PDA <span class="math inline">\(G\)</span> 为确定性下推自动机（DPDA），这样的情况下有时也将 <span class="math inline">\(\delta\)</span> 当做 <span class="math inline">\(Q \times (\Sigma \cup \{\varepsilon\}) \times (\Gamma \cup \{\varepsilon\}) \to Q \times \Gamma^*\)</span> 类型的函数使用（注意，并非所有该类型的函数都符合上述条件）。否则称 <span class="math inline">\(G\)</span> 为非确定性下推自动机（NPDA）。</p><p>有时可见其他类似的定义，如 <span class="math inline">\(\delta \subseteq Q \times \Sigma^* \times \Gamma^* \times Q \times \Gamma^*\)</span>。通常来说<a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a>，类似的定义都是等价的。</p><p><span class="math inline">\(\newcommand{\step}{\vdash_G}\)</span> <span class="math inline">\(\newcommand{\steps}{\step^*}\)</span></p><p>定义 <span class="math inline">\((Q, \Sigma^*, \Gamma^*)^2\)</span> 上的中缀二元关系 <span class="math inline">\(\step\)</span> 为满足以下要求的最小集合：</p><p><span class="math display">\[
+(p, a, A, q, B) \in \delta \iff (p, a\omega, A\gamma) \step (q, \omega, B\gamma)
+\]</span></p><p>定义 <span class="math inline">\(\steps\)</span> 为 <span class="math inline">\(\step\)</span> 的自反传递封闭。</p><p>于是定义在 <span class="math inline">\(\Sigma\)</span> 上的字符串 <span class="math inline">\(s\)</span> 被自动机 <span class="math inline">\(G\)</span> 识别，若有 <span class="math inline">\((q_0, s, \varepsilon) \steps (q, \varepsilon, \varepsilon)\)</span>，其中 <span class="math inline">\(q \in Q_{acc}\)</span>.</p><p>于是可定义下推自动机 <span class="math inline">\(G\)</span> 识别的语言为</p><p><span class="math display">\[
+L(G) := \{s \in \Sigma^* : (q_0, s, \varepsilon) \steps (q_m, \varepsilon, \varepsilon), q \in Q_{acc}\}
+\]</span></p><div class="ex">
+<p>下述下推自动机识别语言 <span class="math inline">\(L = \{a^ib^i | i \ge 0\}\)</span>.</p>
+<div id="ex1">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#ex1"), `
+  input: "aaaabbbbb"
+  start states: A
+  accept states: [B]
+  type: pda
+  table:
+    A:
+      a: {push: i}
+      b: {pop: i, B}
+    B:
+      b: {pop: i}
+`));
+</script>
+<p>该自动机是确定的。</p>
+</div><div class="ex">
+<p>下述下推自动机识别语言 <span class="math inline">\(L = \{a^ib^i | i \ge 0\} \cup \{a^2b^i | i \ge 0\}\)</span>.</p>
+<div id="ex2">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#ex2"), `
+  input: ""
+  start states: A
+  accept states: [B, C]
+  type: pda
+  table:
+    A:
+      a: {push: i}
+      b: [{pop: i, B}, {pop: [i, i], C}]
+    B:
+      b: {pop: i}
+    C:
+      b: {pop: [i, i]}
+`));
+</script>
+<p>该自动机是非确定的，并且不存在识别该语言的确定性下推自动机。</p>
+</div><p>有证明表示，任何上下文无关语法描述的语言皆有识别其的下推自动机。另对于任何下推自动机，皆有描述其所识别的语言的上下文无关语法。</p><p>有证明表示，确定性下推自动机所识别的语言严格子集于非确定性下推自动机所识别的语言。因此不存在用于下推自动机的确定化算法。</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>例如，需要允许不读入字符，不出栈字符，不入栈字符</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+<li id="fn1-1" role="doc-endnote"><p>例如，需要允许不读入字符，不出栈字符，不入栈字符<a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&text=形式语言与自动机理论-07-下推自动机"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&is_video=false&description=形式语言与自动机理论-07-下推自动机"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-07-下推自动机&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&title=形式语言与自动机理论-07-下推自动机"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-07-Pushdown-Automata/&name=形式语言与自动机理论-07-下推自动机&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

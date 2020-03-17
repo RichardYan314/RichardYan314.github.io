@@ -1,0 +1,154 @@
+@charset "UTF-8";
+.def {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.def:before {
+  content: "定义 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.def[data-num]:before {
+  content: "定义 " attr(data-num) "."; }
+
+.def[name]:before {
+  content: "定义（" attr(name) "）"; }
+
+.def[data-num][name]:before {
+  content: "定义 " attr(data-num) ".（" attr(name) "）"; }
+
+.ex {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.ex:before {
+  content: "示例 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.ex[data-num]:before {
+  content: "示例 " attr(data-num) "."; }
+
+.ex[name]:before {
+  content: "示例（" attr(name) "）"; }
+
+.ex[data-num][name]:before {
+  content: "示例 " attr(data-num) ".（" attr(name) "）"; }
+
+.thm {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.thm:before {
+  content: "定理 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.thm[data-num]:before {
+  content: "定理 " attr(data-num) "."; }
+
+.thm[name]:before {
+  content: "定理（" attr(name) "）"; }
+
+.thm[data-num][name]:before {
+  content: "定理 " attr(data-num) ".（" attr(name) "）"; }
+
+.lem {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.lem:before {
+  content: "引理 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.lem[data-num]:before {
+  content: "引理 " attr(data-num) "."; }
+
+.lem[name]:before {
+  content: "引理（" attr(name) "）"; }
+
+.lem[data-num][name]:before {
+  content: "引理 " attr(data-num) ".（" attr(name) "）"; }
+
+.cor {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.cor:before {
+  content: "从理 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.cor[data-num]:before {
+  content: "从理 " attr(data-num) "."; }
+
+.cor[name]:before {
+  content: "从理（" attr(name) "）"; }
+
+.cor[data-num][name]:before {
+  content: "从理 " attr(data-num) ".（" attr(name) "）"; }
+
+.conj {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.conj:before {
+  content: "猜想 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.conj[data-num]:before {
+  content: "猜想 " attr(data-num) "."; }
+
+.conj[name]:before {
+  content: "猜想（" attr(name) "）"; }
+
+.conj[data-num][name]:before {
+  content: "猜想 " attr(data-num) ".（" attr(name) "）"; }
+
+.claim {
+  display: block;
+  margin: 12px 0;
+  font-style: italic; }
+
+.claim:before {
+  content: "断言 .";
+  font-weight: bold;
+  font-style: normal; }
+
+.claim[data-num]:before {
+  content: "断言 " attr(data-num) "."; }
+
+.claim[name]:before {
+  content: "断言（" attr(name) "）"; }
+
+.claim[data-num][name]:before {
+  content: "断言 " attr(data-num) ".（" attr(name) "）"; }
+
+.proof {
+  display: block;
+  margin: 12px 0;
+  font-style: normal; }
+
+.proof:before {
+  content: "证明.";
+  font-style: italic; }
+
+.proof:after {
+  content: "\25FC";
+  display: block;
+  text-align: right;
+  /* For Edge */
+  -moz-text-align-last: right;
+  /* For Firefox prior 58.0 */
+  text-align-last: right; }
+
+.proof[name]:before {
+  content: "证明（" attr(name) "）"; }

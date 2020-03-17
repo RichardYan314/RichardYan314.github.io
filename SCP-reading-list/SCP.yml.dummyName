@@ -1,0 +1,873 @@
+# TODO:
+"https://zhuanlan.zhihu.com/SCP-Foundation":
+
+scp-001:
+    name: Awaiting De-classification [Blocked]
+    contain:
+        - dr-clef-s-proposal:
+            name: "The Gate Guardian"
+            class: Euclid/Keter
+            score: 10
+            k-class: XK # PATMOS XK-class end-of-the-world scenario
+            site: 
+                - Site 0
+                - Site 19
+            date:
+                - ██-██-████
+            refer:
+                - scp-076
+                - scp-073
+                - scp-995
+                - scp-616
+                - scp-098
+            personnel:
+                - Dr. Clef
+                - the Founder
+                - O5-14
+                - the Administrator
+            seeAlso:
+                - "incident report re: Indian Ocean Submarine Missile Experiment, December 26, 2004"
+                - Patmos series of Emergency Orders
+                - Emergency Procedure PATMOS
+        - djoric-dmatix-proposal:
+            name: Thirty-Six
+            class: Euclid
+            Threat Level: Green|Circumstantial-Red
+            score: 8
+            k-class:
+                - LK (Localized Crisis)
+                - LK (Localized Crisis)
+                - DK (Dimensional Shift)
+            site:
+                - Site-90
+                - Site-128
+                - Site-41
+                - Site-98
+                - Site-203
+                - Site 87
+            date:
+                - ██/██/20██
+                - ██/██/1944
+                - ██/██/19██
+                - ██/██/19██
+                - ██/██/20██
+                - ██/██/████
+                - ██/██/20██
+            location:
+                - Islamic Republic of Eastern Samothrace
+            refer:
+                - SCP-1295
+                - UAP-████
+                - UAP-████
+                - UAP-████
+                - SCP-1348
+                - UAP-████
+                - UAP-████
+                - SCP-1173
+                - SCP-361
+                - SCP-738
+                - SCP-1348
+                - SCP-073
+                - SCP-076
+                - item E-7455
+            personnel:
+                - GOI-16 “The Horizon Initiative”
+                - GOI-03 “The Chaos Insurgency”
+                - HMFSCP
+                - POI-1458
+                - POI-1459
+                - POI-1460
+                - Preservationist
+                - Dr. ████████
+                - MTF 
+                - Agent ████
+                - Agent ████████
+                - O5
+        - roget-s-proposal:
+            name: Keter Duty
+            class: Thaumiel
+            k-class:
+                - VK-Class
+            location:
+                - Greece 
+            date:
+                - 09/18/1999
+            refer:
+                - SCP-718
+                - SCP-689
+                - SCP-990
+                - SCP-122
+                - SCP-1178
+                - SCP-1984
+                - SCP-1440
+                - SCP-836
+                - SCP-1048
+                - SCP-1055
+                - SCP-1295
+                - SCP-871
+                - SCP-505
+                - SCP-140
+                - SCP-231
+                - ██:██-N
+                - SCP-058
+                - SCP-1983	
+                - SCP-682
+                - SCP-296
+                - SCP-579
+                - SCP-055
+            personnel:
+                - Overwatch Command
+        # TODO
+        - 深红之王
+        
+scp-008:
+    name: Zombie Plague
+    class: Euclid
+    score: 0
+    tag:
+        - -boring
+    site: G2 sites
+    refer:
+        - scp-500
+
+scp-012:
+    name: A Bad Composition
+    class: Euclid
+    score: 0
+    tag:
+        - -boring
+    personnel:
+        - Archaeologist K.M. Sandoval
+        - Site 19 Special Salvage
+scp-038:
+    name: The Everything Tree
+    class: Safe
+    site: Site-23
+    score: 3
+    location:
+        - █████████████, New York
+    refer:
+        - scp-500
+        - scp-173
+    personnel:
+        - Dr. Klein
+    date:
+        - 19██
+        - 11/08/████
+        - 11/08/████
+
+scp-049:
+    name: Plague Doctor
+    class: Euclid
+    score: 1
+    tag:
+        - -无聊
+    site: 
+        - Site-19
+        - Site-85
+        - Site-42
+    location: 
+        - the town of Montauban in southern France
+    personnel:
+        - Dr. Raymond Hamm
+        - D-85123
+        - Dr. Theron Sherman
+        - Dr. Elijah Itkin
+    date:
+        - 04/16/2017
+        - 5/7/17
+    seeAlso:
+        - going-home
+        - excerpts-from-the-medical-tragedy-of-dr-bartholomew-artz-aut
+        - death-and-the-doctors-hub
+        - the-hanged-king-s-comedy
+
+SCP-055:
+    name: [unknown]
+    class: keter
+    score: 3
+    tag:
+        - +设定
+    site:
+        - Site 19
+    personnel:
+        - Bartholomew Hughes
+        - Dr. John Marachek
+        - ███████
+    date:
+        - ██/██/20██
+    
+scp-067:
+    name: The Artist's Pen
+    class: safe
+    score: 1
+    tag:
+        - -无聊
+    refer:
+        - SCP-███
+    personnel:
+        - Test Subject 1204M 
+        - Test Subject 1102F
+
+scp-073:
+    name: "Cain"
+    class: Euclid
+    score: 3
+    tag:
+        - +设定
+    site:
+        - Site-17
+    location:
+        - New York Police Department
+        - Middle East
+    date:
+        - 19██
+    refer:
+        - SCP-1216
+        - SCP-1427
+        - SCP-2481
+        - SCP-2711
+
+scp-075:
+    name: Corrosive Snail
+    score: 0
+    tag:
+        - -恶心
+    refer:
+        - scp-294
+    personnel:
+        - Dr. Takeshi Yamada.
+
+        
+# TODO
+scp-076:
+    name: "Able"
+    score: # TODO
+    contain:
+        - scp-076-2
+    personnel:
+        - Dr. █████ █. █████
+        - Director Maria Jones
+    seeAlso:
+        - scp-076-2-splash
+
+scp-079:
+    name: Old AI
+    class: Euclid
+    score: 4
+    tag:
+        - +设定
+    site: Site-15
+    date:
+        - 1978
+        - 1981
+        - 01/27/2006
+        - 01/28/2006
+        - 03/14/2008
+        - 04/28/2008
+    location:
+        - ██████████
+    refer:
+        - scp-███
+        - scp-682
+        - scp-076
+    personnel:
+        - █████ ██████
+        - ████████ (O5-4)
+        - ███████ ████ (O5-9)
+        - Dr. █████████
+        - "████████████: (O5-4)"
+        - General █████████
+        - "████████: (O5-4)"
+        - Dr. █████
+        - Dr. ██████
+        
+# TODO
+scp-085:
+    name: Hand-drawn "Cassy"
+    class: safe
+    score: 5
+    tag:
+        - +设定
+    refer:
+        - scp-067
+        - scp-914
+    personnel:
+        - Subject-1101F
+        - Dr. [EXPUNGED]
+        - M C Escher
+
+# TODO
+SCP-086:
+
+# TODO
+scp-087:
+
+# TODO
+SCP-093:
+
+# TODO
+SCP-096:
+
+# TODO
+scp-098:
+
+# TODO
+SCP-106:
+
+# TODO
+scp-140:
+
+# TODO
+scp-166:
+
+# TODO
+scp-173:
+
+scp-182:
+    name: "Rider"
+    class: Euclid
+    score: 2
+    refer:
+        - scp-076-2
+        - scp-682
+    personnel:
+        - Agent █████
+        - Dr. ███████
+        - Agent J████████ ██████
+        - Agent ████
+    seeAlso:
+        - experiment-log-t-98816-oc108-682
+        
+# TODO
+scp-208:
+
+# TODO
+scp-231:
+
+scp-253:
+    name: The Cancer Plague
+    class: Euclid
+    score: 3
+    refer:
+        - scp-500
+    seeAlso:
+        - incident-i-j77-82
+
+# TODO
+scp-256:
+
+# TODO
+scp-257-arc:
+
+# TODO
+scp-261:
+    
+scp-294:
+    name: The Coffee Machine
+    class: Euclid
+    score: 5
+    refers:
+        - scp-075
+        - scp-085
+    personnel:
+        - Agent Joseph ██████
+        - Agent █████ █████████
+        - ███████████
+        - O5-[DATA EXPUNGED]
+        - Researcher ███ ██████
+        - Agent ████████
+        - Agent ██████
+        - Dr.████████
+        - A D-class personnel
+        - Dr. King
+        - Dr. Menchu
+        - D-151839
+
+# TODO
+scp-321:
+
+# TODO
+scp-338:
+
+scp-343:
+    name: "God"
+    class: safe
+    score: 1
+    personnel:
+        - Dr. Beck
+        - Dr. ████████████ ███████████
+        - O5-█
+
+# TODO
+scp-348:
+
+scp-409:
+    name: Contagious Crystal
+    class: Keter
+    score: 0
+    refer:
+        - scp-500
+    personnel:
+        - Dr. [500-0021D]
+        - 409-D5
+
+# TODO
+SCP-426:
+
+scp-427:
+    name: Lovecraftian Locket
+    class: safe
+    score: 3
+    contain:
+        - scp-427-1: 
+            name: Flesh Beasts
+            class: Keter
+    refer:
+        - scp-500
+        - scp-914
+    
+# TODO
+scp-447:
+    name: Ball of Green Slime
+    class: safe
+    score: # TODO
+    seeAlso:
+        - experiment-log-447-a
+    
+scp-500:
+    name: Panacea
+    class: safe
+    score: 3
+    refer:
+        - scp-038
+        - scp-914
+        - scp-253
+        - scp-008
+        - scp-409
+        - scp-231-4
+        - scp-208
+        - scp-427
+    personnel:
+        - Dr. [500-0022F]
+        - Dr. Gears
+        - Dr. █████████
+        - Dr. Gibbons
+        - Dr. [500-0021D]
+        - D-██████
+    seeAlso:
+        - experiment-log-447-a
+        - olympia-project
+    
+# TODO
+scp-505:
+
+# TODO
+scp-540:
+
+# TODO
+scp-571:
+
+scp-614:
+    name: IP Address 57.32.███.███
+    class: Euclid
+    refer:
+        - scp-███
+        - scp-███
+        - scp-███
+        - scp-███
+        - scp-███
+    personnel:
+        - Dr. Opus
+        - O5-█
+   
+# TODO
+scp-616:
+
+scp-682:
+    name: Hard-to-Destroy Reptile
+    class: Keter
+    score: 0
+    refer:
+        - scp-079
+        - scp-409
+        - scp-689
+        - scp-182
+    personnel:
+        - Dr. ██████
+        - Agent ███████
+        - Agent ███
+        - Agent ████████ (KIA)
+        - D-129 (KIA)
+        - D-027 (KIA)
+        - D-173 (KIA)
+        - D-200 (KIA)
+        - D-193 (KIA)
+        - Agent ███
+        - Agent ████████████
+        - Dr. ███████
+        - D-124
+        - D-137 (KIA)
+        - D-201 (KIA)
+        - D-202 (KIA)
+        - D-203 (KIA)
+        - Agent ███████
+        - MSgt █████████
+        - Agent ████████
+        - Agent ██████ (KIA)
+        - D-018 (KIA)
+        - D-211 (KIA)
+        - D-216
+        - Agent ████████
+        - SSgt ██████
+        - TSgt █████
+        - Pvt ████████
+        - Pvt █████
+        - Lt. ████████████
+        - SSgt ████████ (KIA)
+        - Col ████████ (KIA)
+        - Pvt ███████ (KIA)
+        - Pvt ██████ (KIA)
+        - Agent ███ (KIA)
+        - D-221
+        - Agent ██████████ (KIA)
+        - Agent ████████ (KIA)
+        - Agent ██████ (KIA)
+        - D-028 (KIA)
+        - D-111 (KIA)
+        - D-281 (KIA)
+        - D-209 (KIA)
+        - Agent ██████████
+        - Agent ██████
+        - D-291 (MIA)
+        - Agent ████████ (KIA)
+        - Agent █████████████ (KIA)
+        - D-299 (KIA)
+        - D-277 (KIA)
+        - D-278 (KIA)
+        - D-279 (KIA)
+        - Dr. █████
+        - General ███
+        - General ██████
+        - Dr. ██████████
+        - Dr. ████████
+        - Dr. ███████
+        - Dr. █████
+        - ████████
+        - Dr. Gears
+
+scp-689:
+    name: Haunter in the Dark
+    class: Keter
+    score: 1
+    personnel:
+        - Dr. ████████████
+        - ███████ ██████████████
+        - Dr. ████████
+        - Dr. █████
+    
+# TODO
+scp-752:
+
+# TODO
+scp-816:
+
+# TODO
+scp-828:
+    name: ᖃᓪᓗᐱᓪᓗᐃᑦ
+
+# TODO
+scp-871:
+
+# TODO
+SCP-895:
+
+# TODO
+SCP-902:
+
+scp-914:
+    name: The Clockworks
+    class: safe
+    score: 4
+    personnel:
+        - Dr. █████
+        - Dr.███
+        - Dr.███████
+        - Dr. █████
+        - ███████
+    seeAlso:
+        - experiment-log-914
+
+# TODO
+scp-931:
+
+# TODO
+scp-939:
+    name: With Many Voices
+    class: Keter
+
+# TODO
+scp-963:
+
+# TODO
+scp-995:
+
+# TODO
+scp-1000:
+
+# TODO
+scp-1101:
+
+# TODO
+SCP-1171:
+
+# TODO
+scp-1230:
+
+# TODO
+scp-1237:
+
+# TODO
+scp-1238:
+
+# TODO
+scp-1427:
+
+# TODO
+scp-1726:
+
+# TODO
+scp-1976:
+
+# TODO
+SCP-1981:
+
+# TODO
+SCP-2000:
+
+# TODO
+scp-2053:
+
+# TODO
+scp-2217:
+
+# TODO
+SCP-2317:
+
+# TODO
+scp-2399:
+
+# TODO
+SCP-2432:
+
+# TODO
+scp-2470:
+
+# TODO
+scp-2512:
+    name: An Anomalous Area In Arizona
+
+scp-2521:
+    name: ●●|●●●●●|●●|●
+    class: Keter
+    score: 4
+
+# TODO
+scp-2481:
+
+# TODO
+scp-2673:
+
+# TODO
+scp-2700:
+
+# TODO
+scp-3002:
+
+# TODO
+scp-3008:
+
+# TODO
+scp-3199:
+
+# TODO
+scp-3200:
+
+# TODO
+scp-3700:
+
+# TODO
+scp-3812:
+
+# TODO
+scp-3936:
+
+# TODO
+scp-3999:
+    # ZK Class End-of-reality scenario
+    name: I Am At The Center of Everything That Happens To Me
+    class: Apollyon
+    score: 5
+    refer:
+        - SCP-2432
+        - SCP-1981
+        - SCP-1171
+    personnel:
+        - Researcher Talloran
+        - MTF Omega-8
+        - MTF Lambda-12
+        - MTF Psi-7
+        - MTF Tau-5
+        - MTF Iota-10
+        - Serpent's Hand
+        - Brian Fredrick Bondiskey
+        - O5-█
+        - Dr. █████████ ████
+        - Church of the Broken God
+        - Max Lipshitz
+        - Fifth Church
+        - Patton Oswalt
+        - MTF Rho-19
+
+# TODO
+scp-4000:
+
+# TODO
+scp-4017:
+
+# TODO
+scp-4266:
+
+scp-4290:
+    name: The Child Hungers
+    class: Keter, Neutralized
+    score: 2
+    refer:
+      - scp-1726
+      - scp-2481
+      - second-hytoth-hub
+      - scp-140
+    personnel:
+        - Mobile Task Force Alpha-1 ("Red Right Hand")
+        - Mobile Task Force Tau-5 ("Samsara")
+        - Mobile Task Force Nu-7 ("Hammer Down")
+        - Agent Zenovia Marinos
+    external:
+        - http://wanderers-library.wikidot.com/
+        
+# TODO
+experiment-log-447-a:
+    refer:
+        - scp-447
+    personnel:
+        - O5-█
+        - O5-██
+        - Dr. A. Clef
+
+# TODO
+experiment-log-914:
+
+# TODO
+experiment-log-t-98816-oc108-682:
+
+# TODO
+incident-i-j77-82:
+
+object-classes:
+    name: Object Classes
+
+# TODO
+olympia-project:
+
+scp-076-2-splash:
+    seeAlso:
+        - scp-076-2
+
+# TODO
+scp-076-2:
+    name: Mobile Task Force Omega 7 Incident Log
+
+# TODO
+second-hytoth-hub:
+
+# TODO
+updated-amnestics-guide:
+    name: Updated Amnestics Guide
+
+# TODO
+black-white-black-white-black-white-black-white-black-white:
+
+# TODO
+death-and-the-doctors-hub:
+
+# TODO
+excerpts-from-the-medical-tragedy-of-dr-bartholomew-artz-aut:
+
+# TODO
+going-home:
+
+# TODO
+the-hanged-king-s-comedy:
+
+# TODO
+末世遗书:
+
+# TODO
+# 幻影直升机, RK
+
+# TODO
+事故CN-1999A-J:
+
+# TODO
+SCP-____-J:
+
+scp-006-j:
+    name: WHAT THE FUCK IS THAT THING
+    class: KETER OH GOD KILL IT
+    score: 4
+    refer:
+        - scp-006-cu-ex
+    personnel:
+        - Mobile Task Force Alpha 21 "Husbands"
+        - Dr. ████████
+        - O5-██
+
+scp-006-cu-ex:
+    class:  Lifetime Companion
+    score: 3
+    refer:
+        - scp-006-j
+    personnel:
+        - Mobile Task Force Phi-24 ("Exoskeleton Enthusiasts") 
+        - Assistant Entomologist Johnson
+        - O5-1
+        - Obro-1
+        - Head Entomologist Patrick
+        
+scp-4357-j:
+    score: 0
+    
+# TODO
+SCP-100000-J:
+
+# TODO
+SCP-TTKU-J:
+
+# TODO
+scp-cn-042:
+
+# TODO
+scp-cn-075:
+
+# TODO
+scp-cn-994:
+
+SCP-CN-1108:
+    name: [警告 - 浏览权限不足]
+    class: Keter（暂定）
+    score: 4
+    refer: 
+      - scp-3936
+    personnel:
+      - 文员 mkop
+

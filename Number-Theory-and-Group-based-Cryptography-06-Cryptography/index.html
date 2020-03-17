@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="狭义密码系统 广义密码系统 几个密码系统的例子  凯撒密码 维热纳尔密码系统 （维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统） 希尔密码系统 仿射密码系统   狭义密码系统古代的密码系统通常可概括为以下格式：1-明文-&amp;gt;[加密器]-密文-&amp;gt;[解密器]-明文-&amp;gt;形式化地来说，狭义的密码系统由 \((\mathcal{P}, \mathcal{C}, f)\) 组成。其中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-06-密码学">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="狭义密码系统 广义密码系统 几个密码系统的例子  凯撒密码 维热纳尔密码系统 （维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统） 希尔密码系统 仿射密码系统   狭义密码系统古代的密码系统通常可概括为以下格式：1-明文-&amp;gt;[加密器]-密文-&amp;gt;[解密器]-明文-&amp;gt;形式化地来说，狭义的密码系统由 \((\mathcal{P}, \mathcal{C}, f)\) 组成。其中">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.571Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-06-密码学">
+<meta name="twitter:description" content="狭义密码系统 广义密码系统 几个密码系统的例子  凯撒密码 维热纳尔密码系统 （维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统） 希尔密码系统 仿射密码系统   狭义密码系统古代的密码系统通常可概括为以下格式：1-明文-&amp;gt;[加密器]-密文-&amp;gt;[解密器]-明文-&amp;gt;形式化地来说，狭义的密码系统由 \((\mathcal{P}, \mathcal{C}, f)\) 组成。其中">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-06-密码学</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-05-Fast-Exponentiation/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&text=数论与群论密码学-06-密码学"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&is_video=false&description=数论与群论密码学-06-密码学"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-06-密码学&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&name=数论与群论密码学-06-密码学&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#狭义密码系统"><span class="toc-number">1.</span> <span class="toc-text">狭义密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广义密码系统"><span class="toc-number">2.</span> <span class="toc-text">广义密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#几个密码系统的例子"><span class="toc-number">3.</span> <span class="toc-text">几个密码系统的例子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#凯撒密码"><span class="toc-number">3.1.</span> <span class="toc-text">凯撒密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#维热纳尔密码系统-维吉尼亚密码系统维吉利亚密码系统弗吉尼亚密码系统"><span class="toc-number">3.2.</span> <span class="toc-text">维热纳尔密码系统 （维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#希尔密码系统"><span class="toc-number">3.3.</span> <span class="toc-text">希尔密码系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#仿射密码系统"><span class="toc-number">3.4.</span> <span class="toc-text">仿射密码系统</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-06-密码学
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-27T22:08:02.000Z" itemprop="datePublished">2019-02-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#狭义密码系统">狭义密码系统</a></li>
+<li><a href="#广义密码系统">广义密码系统</a></li>
+<li><a href="#几个密码系统的例子">几个密码系统的例子</a>
+<ul>
+<li><a href="#凯撒密码">凯撒密码</a></li>
+<li><a href="#维热纳尔密码系统-维吉尼亚密码系统维吉利亚密码系统弗吉尼亚密码系统">维热纳尔密码系统 <span style="display:none;">（维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统）</span></a></li>
+<li><a href="#希尔密码系统">希尔密码系统</a></li>
+<li><a href="#仿射密码系统">仿射密码系统</a></li>
+</ul></li>
+</ul>
+</div><h1 id="狭义密码系统">狭义密码系统</h1><p>古代的密码系统通常可概括为以下格式：</p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-明文-&gt;[加密器]-密文-&gt;[解密器]-明文-&gt;</span><br></pre></td></tr></tbody></table></figure><p>形式化地来说，狭义的密码系统由 <span class="math inline">\((\mathcal{P}, \mathcal{C}, f)\)</span> 组成。其中 <span class="math inline">\(\mathcal{P}\)</span> 表示明文的集合，即可阅读的消息序列之集合，密文 <span class="math inline">\(\mathcal{C}\)</span> 为经由函数 <span class="math inline">\(f\)</span> 编码，不可读的消息序列之集合，记作 <span class="math inline">\(\mathcal{C}\)</span>; 函数 <span class="math inline">\(f: \mathcal{P} \to \mathcal{C}\)</span> 被称作加密变化，其逆函数 <span class="math inline">\(f: \mathcal{C} \to \mathcal{P}\)</span> 被称作解密变化，有</p><p><span class="math display">\[
+\mathcal{P} \stackrel{f}{\to} \mathcal{C} \stackrel{f^{-1}}{\to} \mathcal{P}
+\]</span></p><p>由于发信方需要在通信之前先将 <span class="math inline">\(f^{-1}\)</span> 告知收信方，因此需要事先便有一条安全的通信渠道，例如双方私下会面并约定分开后的通讯经由某一特定的方式加密。我们将要在之后看到的某个密码系统便是统帅凯撒与其军事将领在出征前约定好所使用的函数的。</p><p>如此的方案有两处不妥。首先它并不适用于通信双方并无法事先建立安全的通信渠道的情况，例如互联网上互不相识的双方并不能事先通过安全的渠道约定好所用的密码系统。另外一点是类似的：这样的密码系统的保密性完全依赖于函数 <span class="math inline">\(f^{-1}\)</span> 的秘密性，因此这样的系统必定是一次性的，即函数 <span class="math inline">\(f\)</span> 在一次使用后即不应该再次使用。</p><p>因此我们对密码系统做出如下推广：</p><h1 id="广义密码系统">广义密码系统</h1><p>广义密码系统由 <span class="math inline">\((\mathcal{P}, \mathcal{C}, \mathcal{K}, \mathcal{E}, \mathcal{D})\)</span> 组成，其中 <span class="math inline">\(\mathcal{P}, \mathcal{C}\)</span> 如前述代表明文及密文集合； <span class="math inline">\(\mathcal{K}\)</span> 为密钥空间，其于以下两集合中分别索引（指定）一个函数；而 <span class="math inline">\(\mathcal{E}=\{E_k\}_{k\in\mathcal{K}}, \mathcal{D}=\{D_k\}_{k\in\mathcal{K}}\)</span> 分别为形同如下的函数之集合：</p><p><span class="math display">\[
+E_k: \mathcal{P} \to \mathcal{C} \qquad D_k: \mathcal{C} \to \mathcal{P}
+\]</span></p><p>我们称 <span class="math inline">\(E_k\)</span> 为加密函数， <span class="math inline">\(D_k\)</span> 为解密函数，并要求其符合</p><p><span class="math display">\[
+\forall k\in\mathcal{K}, \exists k&apos;\in\mathcal{K}, \forall p\in\mathcal{P}: D_{k&apos;}(E_k(p)) = p
+\]</span></p><p>即：对于每一个由 <span class="math inline">\(k\in\mathcal{K}\)</span> 参数化的加密函数 <span class="math inline">\(E_k\)</span> 都存在至少一个由某一 <span class="math inline">\(k&apos;\in\mathcal{K}\)</span> 参数化的解密函数 <span class="math inline">\(D_{k&apos;}\)</span>，使得任何由 <span class="math inline">\(E_k\)</span> 加密的密文皆可由 <span class="math inline">\(D_{k&apos;}\)</span> 解密。</p><p>这样一来，由于加密及解密函数集分别为两组由 <span class="math inline">\(\mathcal{K}\)</span> 参数化的函数族，我们便可以安全地固定下一个密码系统，而仅通过变更使用的密钥来解决先前对古典密码系统提出的问题中的第二点。</p><p>而关于第一个问题，我们将随后提出一种在不安全的信道中以不为第三方所知的交换密钥的方式。</p><p>以下给出几个著名的密码系统，作为对先前所述的数论之应用。</p><h1 id="几个密码系统的例子">几个密码系统的例子</h1><h2 id="凯撒密码">凯撒密码</h2><p>设</p><p><span class="math display">\[
+\begin{aligned}
+\mathcal{P} &amp;= \mathbb{Z}/26\mathbb{Z} \iff \text{A-Z}\\
+\mathcal{C} &amp;= \mathcal{P} \\
+f(x) &amp;= (x + 3) \bmod 26 \\
+f^{-1}(x) &amp;= (x - 3) \bmod 26
+\end{aligned}
+\]</span></p><p>即明文密文皆为英文字母表组成的字符串，其由整数 0 至 25 分别编码 A-Z。加密将每一字母向后滑动三位，超出 Z 的部分绕回至 A。而解密则向前滑动三位。</p><p>另外我们注意到，若将此系统拓展至任意位的滑动，则有</p><p><span class="math display">\[
+\begin{aligned}
+\mathcal{K} &amp;= \mathbb{Z}/26\mathbb{Z} \\
+E_k(x) &amp;= (x + k) \bmod 26, k\in\mathcal{K} \\
+D_k(x) &amp;= (x - k) \bmod 26, k\in\mathcal{K} \\
+\end{aligned}
+\]</span></p><p>且对应 <span class="math inline">\(E_k\)</span> 的解密函数为 <span class="math inline">\(D_k\)</span>。</p><p>由于英文（乃至各语言）中各字符的出现频率在统计学上有可循规律，因此可以据此推断出可能的密钥 <span class="math inline">\(k\)</span>。甚至，由于该系统中共有 26 种可能的密钥，而两段阅读起来同样对人类有意义的明文不大可能被加密到同样的密文，我们完全可以尝试遍所有可能的密钥。</p><h2 id="维热纳尔密码系统-维吉尼亚密码系统维吉利亚密码系统弗吉尼亚密码系统">维热纳尔密码系统 <span style="display:none;">（维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统）</span></h2><p>设</p><p><span class="math display">\[
+\begin{aligned}
+\mathcal{P} = \mathcal{C} &amp;= (\mathbb{Z}/26\mathbb{Z})^n\\
+D_k(\vec{x}) &amp;= \vec{x} + \vec{k}
+\end{aligned}
+\]</span></p><p>其中 <span class="math inline">\(k\in\mathcal{K}=\mathcal{P}\)</span>。</p><p>概念上我们可以这么理解：相对于凯撒密码中逐字母加密的方法，该系统将明文分成大小为 <span class="math inline">\(n\)</span> 的若干块，并且对每一块使用同样的函数加密：即对于每一块中第 <span class="math inline">\(i\)</span> 个字母，总是使用同样的凯撒密码加密，而对于不同位的字母，使用的密钥是不同的。</p><p>通过该系统，我们可以引出分块加密的概念：定义 <span class="math inline">\(n\)</span>-块 密码系统为 <span class="math inline">\(\mathcal{P} = \mathcal{C} = \Sigma^n = \underbrace{\Sigma\times\cdots\times\Sigma}_{\text{$n$ 个}}\)</span> 的系统，其中 <span class="math inline">\(\Sigma\)</span> 为一个相当于之前的<span class="math inline">\(\mathcal{P}, \mathcal{C}\)</span> 的有限的符号集，被称为密码系统的字母表，而 <span class="math inline">\(\mathcal{P}, \mathcal{C}\)</span> 被称为词或者块集合。</p><p>该系统解决了凯撒密码中的两个问题，然而其依旧是不足够安全的：若加密块的长度 <span class="math inline">\(n\)</span> 远小于明文的长度，我们依旧可以尝试不同的 <span class="math inline">\(n\)</span>，并将密文分成大小为 <span class="math inline">\(n\)</span> 的若干块，随后提取每一块的第 <span class="math inline">\(i\)</span> 个字母，并进行类似凯撒密码小节中所述的统计学分析。这一点在同一份密钥被反复使用的情况下同样适用。</p><h2 id="希尔密码系统">希尔密码系统</h2><p>设</p><p><span class="math display">\[
+\begin{aligned}
+\Sigma &amp;= \mathbb{Z}/m\mathbb{Z}, n \ge 1 \\
+\mathcal{P} = \mathcal{C} &amp;= \Sigma^n \qquad \text{（列向量）}\\
+\mathcal{K} &amp;= GL_n(\Sigma) \qquad \text{（$n \times n$ 可逆矩阵，其元素来源于 $\Sigma$）}\\
+E_A(\vec{x}) &amp;= A\vec{x}\\
+D_A(\vec{x}) &amp;= A^{-1}\vec{x}\\
+\end{aligned}
+\]</span></p><p>其中 <span class="math inline">\(A\in\mathcal{K}\)</span> 且 <span class="math inline">\(A\)</span> 可逆，其逆 <span class="math inline">\(A^{-1}\in\mathcal{K}\)</span>.</p><p>因此有</p><p><span class="math display">\[
+D_A(E_A(\vec{x})) 
+= D_A(A\vec{x}) 
+= A^{-1}A\vec{x}
+= \underbrace{A^{-1}A}_{I}\vec{x} 
+= \vec{x}
+\]</span></p><p>其中所有运算都在 <span class="math inline">\(\mathbb{Z}/m\mathbb{Z}\)</span> 中进行。</p><p>我们可以做如下拓展：</p><h2 id="仿射密码系统">仿射密码系统</h2><p><span class="math display">\[
+\begin{aligned}
+\Sigma &amp;= \mathbb{Z}/m\mathbb{Z}, n \ge 1 \\
+\mathcal{P} = \mathcal{C} &amp;= \Sigma^n\\
+\mathcal{K} &amp;= GL_n(\Sigma)\times\mathcal{P}\\
+E_{A, \vec{b}}(\vec{x}) &amp;= A\vec{x}+\vec{b}\\
+D_{A, \vec{b}}(\vec{x}) &amp;= A^{-1}\vec{x}-A^{-1}\vec{b}\\
+\end{aligned}
+\]</span></p><p>注意有</p><p><span class="math display">\[
+D_{A, \vec{b}}(E_{A, \vec{b}}(\vec{x})) 
+= D_{A, \vec{b}}(A\vec{x}+\vec{b}) 
+= A^{-1}(A\vec{x}+\vec{b})-A^{-1}\vec{b}
+= A^{-1}A\vec(x)+A^{-1}\vec{b}-A^{-1}\vec{b}
+= \vec{x}
+\]</span></p><p>因此，我们需要知道当何时矩阵 <span class="math inline">\(A\in M_n(\mathbb{Z}/m\mathbb{Z})\)</span> 可逆。</p><div class="lem">
+<p>设 <span class="math inline">\(R\)</span> 为交换环， <span class="math inline">\(A\in M_n(R)\)</span> 为一 <span class="math inline">\(n \times n\)</span> 矩阵，则以下三个命题等价：</p>
+<ol type="i">
+<li><span class="math inline">\(A\)</span> 可逆，即 <span class="math inline">\(\exists B \in M_n(R), AB = BA = I\)</span>.<br>
+</li>
+<li><span class="math inline">\(det(A) \in R^\times\)</span>，即 <span class="math inline">\(det(A)\)</span> 在 <span class="math inline">\(R\)</span> 中有逆。<br>
+</li>
+<li>关于 <span class="math inline">\(A\)</span> 的线性映射 <span class="math inline">\(L_A: R^n \to R^n, L(\vec{x}) = A\vec{x}\)</span> 定义了一个双射（即可逆）。</li>
+</ol>
+</div><div class="proof">
+<p><span class="math inline">\(i \implies ii\)</span> 若 <span class="math inline">\(AB = BA = I\)</span>，那么 <span class="math inline">\(det(A)det(B) = det(AB) = I\)</span>，于是 <span class="math inline">\(det(A) \in R^\times\)</span>.</p>
+<p><span class="math inline">\(ii \implies i\)</span> 可使用 <span class="math inline">\(A\)</span> 的余子式证得。</p>
+<p><span class="math inline">\(i \iff iii\)</span> 因为有 <span class="math inline">\(L_{AB} = L_A \circ L_B, L_I = I_{R^n}\)</span>，因此 <span class="math inline">\(L_{A^{-1}}\)</span> 是 <span class="math inline">\(L_A\)</span> 的逆。</p>
+</div><hr><p>应该注意到的是，这几个系统远非可被称作是安全的。首先由于该密钥空间很小，攻击者完全可以尝试所有可能的密钥。另外，其所使用的加密函数通常都使得密文有统计规律可寻。我们将在随后的文章中对通过这样的统计规律进行攻击做出简要的介绍。</p><p>另外需要注意到的是，前述的密码系统都是对称的。即加密解密所使用的函数皆使用相同的密钥，或者两密钥之间存在简单的变换。实际上，我们可以将如此系统中的密钥理解为某种共享的秘密，于是我们又回到了面临通信双方需要事先准备好一条私密的通信渠道的问题。</p><p>我们今后将给出一共两种本质上相同的方案：其一为不对称的公钥加密系统，该种系统使得通信双方不需事先约定好本次通信所共用的密钥；其二为通信双方通过某种方法在不安全的信道创建不可为第三方所知的密钥，而随后将此密钥用在类似于前述的对称加密系统中。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#狭义密码系统"><span class="toc-number">1.</span> <span class="toc-text">狭义密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#广义密码系统"><span class="toc-number">2.</span> <span class="toc-text">广义密码系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#几个密码系统的例子"><span class="toc-number">3.</span> <span class="toc-text">几个密码系统的例子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#凯撒密码"><span class="toc-number">3.1.</span> <span class="toc-text">凯撒密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#维热纳尔密码系统-维吉尼亚密码系统维吉利亚密码系统弗吉尼亚密码系统"><span class="toc-number">3.2.</span> <span class="toc-text">维热纳尔密码系统 （维吉尼亚密码系统，维吉利亚密码系统，弗吉尼亚密码系统）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#希尔密码系统"><span class="toc-number">3.3.</span> <span class="toc-text">希尔密码系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#仿射密码系统"><span class="toc-number">3.4.</span> <span class="toc-text">仿射密码系统</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&text=数论与群论密码学-06-密码学"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&is_video=false&description=数论与群论密码学-06-密码学"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-06-密码学&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&title=数论与群论密码学-06-密码学"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-06-Cryptography/&name=数论与群论密码学-06-密码学&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="正：不偏斜；则：模范；正则：正规。 私以为，以正则翻译 &amp;quot;Regular Languages&amp;quot; 中的 &amp;quot;Regular&amp;quot; 不恰当，应取其 “常规” 之意，翻译为常规语言，因其定义简单而这样的语言对其中可包含的字符串限制较少。然而本文将按习俗使用公认的翻译“正则语言”。 一个语言被称为是“正则的”，若其可以用 \(\Sigma\) 中的元素（视这些元素分别为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机理论-02-正则语言及正则表达式">
+<meta property="og:url" content="https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="正：不偏斜；则：模范；正则：正规。 私以为，以正则翻译 &amp;quot;Regular Languages&amp;quot; 中的 &amp;quot;Regular&amp;quot; 不恰当，应取其 “常规” 之意，翻译为常规语言，因其定义简单而这样的语言对其中可包含的字符串限制较少。然而本文将按习俗使用公认的翻译“正则语言”。 一个语言被称为是“正则的”，若其可以用 \(\Sigma\) 中的元素（视这些元素分别为">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2020-01-18T05:04:39.614Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="形式语言与自动机理论-02-正则语言及正则表达式">
+<meta name="twitter:description" content="正：不偏斜；则：模范；正则：正规。 私以为，以正则翻译 &amp;quot;Regular Languages&amp;quot; 中的 &amp;quot;Regular&amp;quot; 不恰当，应取其 “常规” 之意，翻译为常规语言，因其定义简单而这样的语言对其中可包含的字符串限制较少。然而本文将按习俗使用公认的翻译“正则语言”。 一个语言被称为是“正则的”，若其可以用 \(\Sigma\) 中的元素（视这些元素分别为">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>形式语言与自动机理论-02-正则语言及正则表达式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-03-Finite-State-Automata/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-01-Languages/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&text=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&is_video=false&description=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-02-正则语言及正则表达式&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&name=形式语言与自动机理论-02-正则语言及正则表达式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        形式语言与自动机理论-02-正则语言及正则表达式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-08T22:55:30.000Z" itemprop="datePublished">2019-05-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><blockquote>
+<p>正：不偏斜；则：模范；正则：正规。</p>
+</blockquote><p>私以为，以正则翻译 &quot;Regular Languages&quot; 中的 &quot;Regular&quot; 不恰当，应取其 “常规” 之意，翻译为常规语言，因其定义简单而这样的语言对其中可包含的字符串限制较少。然而本文将按习俗使用公认的翻译“正则语言”。</p><div class="def" name="正则语言">
+<p>一个语言被称为是“正则的”，若其可以用 <span class="math inline">\(\Sigma\)</span> 中的元素（视这些元素分别为长度为 1 的字符串）， <span class="math inline">\(\{\varepsilon\}\)</span>, <span class="math inline">\(\emptyset = \{\}\)</span>，以及并，串联及封闭运算定义。</p>
+<p>注意，我们并不允许交，补以及幂运算。虽然有些（并非全部）使用了交，补的定义的语言有等价的正则的定义，而幂运算可以写作多次连续的串联运算。</p>
+</div><div class="def" name="正则表达式">
+<p>定义正则语言的表达式称为正则表达式。</p>
+</div><p>稍后将证明并非所有语言都是正则的。</p><p>需要注意的是，应用计算机领域使用 “正则表达式” 这个词来代表具有更多功能的表达式。这些功能有些有等价的真正正则的定义，例如 <span class="math inline">\(L^+\)</span> 可定义为 <span class="math inline">\(L \cdot L^*\)</span>， <span class="math inline">\(L?\)</span>（意为有或没有）可定义为 <span class="math inline">\(L + \{\varepsilon\}\)</span>。 <a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a> 而有一些功能则超出了正则表达式的能力范围，其所定义的语言不一定存在等价的正则的定义。另外，本系列文章讨论的正则表达式的意义在于判定给定字符串是否属于某语言集合，而应用计算机领域使用的 “正则表达式” 则有匹配子字符串的功能。后文对这样的 “正则表达式” 再加讨论。</p><p>我们约定，在描述正则语言时，三种正则运算的优先级由高至低为 <span class="math inline">\(*, \cdot, +\)</span>。本系列文章仅在记录正则表达式时，出于排版方便将后缀 <span class="math inline">\(*\)</span> 而非上标。</p><p>接下来的两个例子考虑 <span class="math inline">\(\Sigma = \{a, b\}\)</span>.</p><div class="ex">
+<p><span class="math inline">\((a + b)*\)</span> 描述所有定义在 <span class="math inline">\(\Sigma\)</span> 上的字符串。</p>
+</div><div class="ex">
+<p><span class="math inline">\(a* + b* = \{\varepsilon, a, aa, \dots\} \cup \{\varepsilon, b, bb, \dots\} = \{\varepsilon, a, b, aa, bb, \dots\}\)</span></p>
+</div><p>特别注意到，上述两个定义不等价，因为有 <span class="math inline">\(ab \in (a + b)^*\)</span>, <span class="math inline">\(ab \not\in a^* + b^*\)</span>.</p><p>接下来给出几个比较难的例子作为练习。这几个例子使用 <span class="math inline">\(\Sigma = \{a, b\}\)</span>。鼠标悬停或触摸黑色部分看答案。</p><style>
+.heimu,.heimu a{
+    background-color: #5a5a5a;
+    color:#5a5a5a;
+    text-shadow: none;
+}::selection{
+    background:#9ab0c0;
+    color:#fff;
+}
+
+.heimu:hover,.heimu:hover a{
+    transition:color .13s linear;
+    color:#fff;
+}
+</style><div class="ex">
+<p>所有有前缀 <span class="math inline">\(ababb\)</span> 的字符串</p>
+<div class="heimu">
+<p><span class="math display">\[ababb(a+b)*\]</span></p>
+</div>
+</div><div class="ex">
+<p>所有有中缀 <span class="math inline">\(ababb\)</span> 的字符串</p>
+<div class="heimu">
+<p><span class="math display">\[(a+b)*ababb(a+b)*\]</span></p>
+</div>
+</div><div class="ex">
+<p>长度为偶数的字符串</p>
+<div class="heimu">
+<p><span class="math display">\[((a+b)(a+b))*\]</span> 或者 <span class="math display">\[(aa+ab+ba+bb)*\]</span></p>
+</div>
+</div><div class="ex">
+<p>所有以一个 <span class="math inline">\(b\)</span> 开头且长度为双数的语言</p>
+<div class="heimu">
+<p><span class="math display">\[
+\underbrace{b(a+b)}_{1}
+\underbrace{(aa + ab + ba + bb)*}_{2}\]</span></p>
+<p>1: 单个 <span class="math inline">\(b\)</span> 加上任何字母构成的长度为 2 的前缀</p>
+<p>2: 后跟任意多个双字母组合</p>
+</div>
+</div><div class="ex">
+<p>所有不以 <span class="math inline">\(ab\)</span> 为后缀的字符串</p>
+<div class="heimu">
+<p><span class="math display">\[
+\underbrace{(a+b)*(aa+bb+ba)}_{1}
+\underbrace{+ a + b + \varepsilon}_{2}
+\]</span></p>
+<p>1: 以 <span class="math inline">\(aa, bb, ba\)</span> 为后缀的长度至少为 2 的字符串</p>
+<p>2: 长度小于 2 的字符串肯定不以 <span class="math inline">\(ab\)</span> 为后缀</p>
+</div>
+</div><div class="ex">
+<p>不包含 <span class="math inline">\(aa\)</span> 中缀的字符串</p>
+<div class="heimu">
+<p><span class="math display">\[
+\underbrace{(ab+b)*}_{1}
+\underbrace{(\varepsilon + a)}_{2}
+\]</span></p>
+<p>1: 等价于 <span class="math inline">\((ab*)*\)</span>，必定以 <span class="math inline">\(b\)</span> 结尾且不包含 <span class="math inline">\(aa\)</span></p>
+<p>2: 前缀必定以 <span class="math inline">\(b\)</span> 结尾因此还可以有至多一个 <span class="math inline">\(a\)</span>。这里 <span class="math inline">\(\varepsilon\)</span> 是多余的</p>
+</div>
+</div><div class="ex">
+<p>不包含中缀 <span class="math inline">\(bb\)</span> 的偶数长度的字符串</p>
+<div class="heimu">
+<p>做不出来就算了【笑</p>
+</div>
+</div><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>此处不可定义为 <span class="math inline">\(L + \emptyset\)</span>，否则考虑 <span class="math inline">\((L_1+\emptyset) \cdot L_2 = L_1L_2 \ne (L_1L_2) + (L_2)\)</span></p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+<li id="fn1-1" role="doc-endnote"><p>此处不可定义为 <span class="math inline">\(L + \emptyset\)</span>，否则考虑 <span class="math inline">\((L_1+\emptyset) \cdot L_2 = L_1L_2 \ne (L_1L_2) + (L_2)\)</span><a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&text=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&is_video=false&description=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-02-正则语言及正则表达式&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&title=形式语言与自动机理论-02-正则语言及正则表达式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/&name=形式语言与自动机理论-02-正则语言及正则表达式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

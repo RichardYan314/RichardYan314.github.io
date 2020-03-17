@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="DFA 确定性有限状态自动机  最小化 DFA  NFA 非确定性有限状态自动机  子集构造算法（subset construction algorithm）  \(\varepsilon\)-NFA  \(\varepsilon\)-转移 移除算法  Addendum   var lodash = _;   本节介绍一种自动机：有限状态自动机。后文将说明其与正则语言的关系。DFA 确定性有限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机理论-03-有限状态自动机">
+<meta property="og:url" content="https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="DFA 确定性有限状态自动机  最小化 DFA  NFA 非确定性有限状态自动机  子集构造算法（subset construction algorithm）  \(\varepsilon\)-NFA  \(\varepsilon\)-转移 移除算法  Addendum   var lodash = _;   本节介绍一种自动机：有限状态自动机。后文将说明其与正则语言的关系。DFA 确定性有限">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.565Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="形式语言与自动机理论-03-有限状态自动机">
+<meta name="twitter:description" content="DFA 确定性有限状态自动机  最小化 DFA  NFA 非确定性有限状态自动机  子集构造算法（subset construction algorithm）  \(\varepsilon\)-NFA  \(\varepsilon\)-转移 移除算法  Addendum   var lodash = _;   本节介绍一种自动机：有限状态自动机。后文将说明其与正则语言的关系。DFA 确定性有限">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>形式语言与自动机理论-03-有限状态自动机</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-04-Regular-Languages-and-Finite-State-Automata/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&text=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&is_video=false&description=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-03-有限状态自动机&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&name=形式语言与自动机理论-03-有限状态自动机&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#dfa-确定性有限状态自动机"><span class="toc-number">1.</span> <span class="toc-text">DFA 确定性有限状态自动机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#最小化-dfa"><span class="toc-number">1.1.</span> <span class="toc-text">最小化 DFA</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nfa-非确定性有限状态自动机"><span class="toc-number">2.</span> <span class="toc-text">NFA 非确定性有限状态自动机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#子集构造算法subset-construction-algorithm"><span class="toc-number">2.1.</span> <span class="toc-text">子集构造算法（subset construction algorithm）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#varepsilon-nfa"><span class="toc-number">3.</span> <span class="toc-text">\(\varepsilon\)-NFA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#varepsilon-转移-移除算法"><span class="toc-number">3.1.</span> <span class="toc-text">\(\varepsilon\)-转移 移除算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#addendum"><span class="toc-number">4.</span> <span class="toc-text">Addendum</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        形式语言与自动机理论-03-有限状态自动机
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-09T12:46:53.000Z" itemprop="datePublished">2019-05-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#dfa-确定性有限状态自动机">DFA 确定性有限状态自动机</a>
+<ul>
+<li><a href="#最小化-dfa">最小化 DFA</a></li>
+</ul></li>
+<li><a href="#nfa-非确定性有限状态自动机">NFA 非确定性有限状态自动机</a>
+<ul>
+<li><a href="#子集构造算法subset-construction-algorithm">子集构造算法（subset construction algorithm）</a></li>
+</ul></li>
+<li><a href="#varepsilon-nfa"><span class="math inline">\(\varepsilon\)</span>-NFA</a>
+<ul>
+<li><a href="#varepsilon-转移-移除算法"><span class="math inline">\(\varepsilon\)</span>-转移 移除算法</a></li>
+</ul></li>
+<li><a href="#addendum">Addendum</a></li>
+</ul>
+</div><script src="https://cdn.jsdelivr.net/d3js/3.5.17/d3.min.js" integrity="sha256-uB5nPcWK8vr5e83snqtMUYJ2n/5TZ3PV9CCRk1pzob4=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.6.0/js-yaml.min.js" integrity="sha256-cClLF3hmu8Q/atb1MfoMUg+4h2MTXFMl5+UuvXBWE8g=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/lodash/4.10.0/lodash.min.js" integrity="sha256-WplZqoBFo5rcW50YJBm/A1DRy7NnlMHTVDZBan+g2ZU=" crossorigin="anonymous"></script><script> var lodash = _; </script><script src="https://cdn.jsdelivr.net/lodash/4.10.0/lodash.fp.min.js" integrity="sha256-21hyGphPmEWw6dEv1N50zj2CGTCph/CZOkIQHqGoTfs=" crossorigin="anonymous"></script><p><link href="/FSA/state-diagram/StateViz.css" rel="stylesheet"> <link href="/FSA/tape/tape.css" rel="stylesheet"> <link href="/FSA/buttons.css" rel="stylesheet"></p><script src="/FSA/TMViz.bundle.js" charset="utf-8"></script><script src="/FSA/embedded.bundle.js" charset="utf-8"></script><p>本节介绍一种自动机：有限状态自动机。后文将说明其与正则语言的关系。</p><h1 id="dfa-确定性有限状态自动机">DFA 确定性有限状态自动机</h1><div class="def" name="确定性有限状态自动机">
+<p>一个确定性有限状态自动机（Deterministic Finite State Automaton, DFSA/DFA）由以下元组定义：</p>
+<p><span class="math display">\[M = (Q, \Sigma, \delta, q_0, Q_{acc})\]</span></p>
+<p>其中各部分的意义为：</p>
+<ul>
+<li><p><span class="math inline">\(Q\)</span> 为一有限非空的集合，称为状态集</p></li>
+<li><p><span class="math inline">\(\Sigma\)</span> 为有限非空的集合，称为字符集或字母表。其与形式语言中字母表的意义相同。</p></li>
+<li><p><span class="math inline">\(\delta\)</span> 为映射 <span class="math inline">\(\delta : Q \times \Sigma \to Q\)</span>，称为状态转移函数。其表明了若当前状态为 <span class="math inline">\(q_{curr}\)</span>，当前所读到的字符为 <span class="math inline">\(\sigma_{curr}\)</span>，那么自动机的状态改变为 <span class="math inline">\(q_{next} = \delta(q_{curr}, \sigma_{curr})\)</span>。</p>
+<p>有时也会以状态转移表来表示 <span class="math inline">\(\delta\)</span>。此时定义 <span class="math inline">\(\delta \subseteq Q \times \Sigma \times Q\)</span>，其中有 <span class="math inline">\((q_{curr}, \sigma_{curr}, q_{next}) \in \delta \iff \delta(q_{curr}, \sigma{curr}) = q_{next}\)</span>.</p>
+<p>由于此处要求 <span class="math inline">\(\delta\)</span> 为映射，因此以状态转移表定义时要求 <span class="math inline">\(\delta\)</span> 中所有元素的前两个部分两两不同。</p></li>
+<li><p><span class="math inline">\(q_0 \in Q\)</span> 为一特殊的状态，称为初始状态。初始状态有且仅有一个。</p></li>
+<li><p><span class="math inline">\(Q_{acc} \subseteq Q\)</span> 为接受状态集。该定义对于是否 <span class="math inline">\(Q_{acc} \ne Q\)</span> 以及 <span class="math inline">\(q_0 \not\in Q_{acc}\)</span> 并不作任何断言。</p></li>
+</ul>
+</div><p>以上抽象的定义可以通过图的方法展示出来，该方法当状态数量不多时特别有用。具体的方法是，图的节点表示 <span class="math inline">\(Q\)</span>，用没有来源的输入箭头标明初始状态 <span class="math inline">\(q_0\)</span>，用两个同心圆表示接受状态 <span class="math inline">\(Q_{acc}\)</span>。若有 <span class="math inline">\((q_{curr}, \sigma_{curr}, q_{next}) \in \delta\)</span> 则图中有从节点 <span class="math inline">\(q_{curr}\)</span> 到节点 <span class="math inline">\(q_{next}\)</span> 的有向边，并以 <span class="math inline">\(\sigma_{curr}\)</span> 标记该有向边。</p><div class="ex">
+<p>考虑定义如下的 FSA:</p>
+<p><span class="math display">\[
+\begin{aligned}
+M &amp;= (Q, \Sigma, \delta, q_0, Q_{acc})\\
+Q &amp;= \{A, B, C, D\}\\
+\Sigma &amp;= \{0, 1\}\\
+q_0 = A &amp;\in Q\\
+\delta &amp;= \left\{
+\begin{array}{l}
+(A, 0, B)\\
+(A, 1, A)\\
+(B, 0, B)\\
+(B, 1, C)\\
+(C, 0, D)\\
+(C, 1, A)\\
+(D, 0, D)\\
+(D, 1, D)
+\end{array} \right\}\\
+Q_{acc} &amp;= \{D\}\\
+&amp;\subset Q
+\end{aligned}
+\]</span></p>
+<p>其中状态转移也可表达为</p>
+<p><span class="math display">\[
+\begin{array}{l|ll}
+\text{当前状态\符号} &amp; 0 &amp; 1 \\
+\hline
+A &amp; B &amp; A \\
+B &amp; B &amp; C \\
+C &amp; D &amp; A \\
+D &amp; D &amp; D
+\end{array}
+\]</span></p>
+<p>我们注意到，由于该自动机的状态转移表中每一格仅有一个元素，因此该自动机是确定性的。</p>
+<p>其对应的状态图为：</p>
+<div id="dfa">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#dfa"), `
+  input: "01101001"
+  start state: A
+  accept states: [D]
+  type: fsa
+  table:
+    A:
+      0: B
+      1: A
+    B:
+      0: B
+      1: C
+    C:
+      0: D
+      1: A
+    D:
+      0: D
+      1: D
+`));
+</script>
+</div><p>我们说一个确定性状态图（或者其描述的确定性有限状态自动机）接受一个字符串 <span class="math inline">\(\sigma_1\sigma_2\dots \sigma_n\)</span>，如果有一条从起始状态到某个接收状态以 <span class="math inline">\(\sigma_1\sigma_2\dots\sigma_n\)</span> 标记的路径。称该状态机接受的所有字符串的集合为其识别的语言。</p><p>上述可形式化地定义如下：</p><p>首先我们将状态转移函数 <span class="math inline">\(\delta\)</span> 拓展至 <span class="math inline">\(Q \times \Sigma^* \to Q\)</span>:</p><p><span class="math display">\[
+\delta^*(q, s) =
+\begin{cases}
+q, &amp;s = \varepsilon\\
+\delta(q, \sigma), &amp;s = \sigma \in \Sigma\\
+\delta(\delta^*(s&apos;, q), \sigma), &amp;s = s&apos;\sigma \wedge \delta^*(s&apos;,q)! \wedge \delta(\delta^*(s&apos;, q), \sigma)!\\
+\text{未定义}, &amp;\text{除以上情况外}
+\end{cases}
+\]</span></p><p>其中，我们允许 <span class="math inline">\(\delta, \delta^*\)</span> 为不完全函数，或者称为偏函数。取拓展前的版本为例，即 <span class="math inline">\(\delta\)</span> 在某些 <span class="math inline">\((\sigma, q) \in Q \times \Sigma\)</span> 上没有定义。我们用记号 <span class="math inline">\(\delta(q, \sigma)!\)</span> 表示 <span class="math inline">\(\delta\)</span> 在参数 <span class="math inline">\((q, \sigma)\)</span> 上有定义。</p><p>允许不完全的定义完全是为了定义的简洁考虑的。我们可以人为地给每个自动机加上一个特殊的状态，记作 <span class="math inline">\(q_{rej}\)</span>，并设所有未定义的 <span class="math inline">\(\delta(q, \sigma) := q_{rej}\)</span> （这同样包括 <span class="math inline">\(\forall \sigma\in\Sigma, \delta(q_{rej}, \sigma) = q_{rej}\)</span>），于是便不存在 <span class="math inline">\(s\)</span> 使得 <span class="math inline">\(\delta^*(q_{rej}, s) \in Q_{acc}\)</span>，因此可以在不改变所识别的语言的前提下使得 <span class="math inline">\(\delta\)</span> 仍为全函数。当然对于有的状态机来说，我们就要显式地多定义许多项转移了。</p><p>若我们视符号为长度为 1 的字符串，则可以不做区分地用 <span class="math inline">\(\delta\)</span> 指代拓展前后的状态转移函数。</p><p>于是便可定义</p><p><span class="math display">\[
+L(M) = \{s\in\Sigma^*: \delta(q_0, s) \in Q_{acc}\} \subseteq \Sigma^*
+\]</span></p><p>称 <span class="math inline">\(L(M)\)</span> 为状态机 <span class="math inline">\(M\)</span> 识别的语言。若 <span class="math inline">\(s \in L(M)\)</span>，称 <span class="math inline">\(s\)</span> 被 <span class="math inline">\(M\)</span> 接受，否则称 <span class="math inline">\(s\)</span> 被 <span class="math inline">\(M\)</span> 拒绝。</p><p>据此定义，我们可以看到前例中有字符串 <span class="math inline">\(01101001\)</span> 被状态机 <span class="math inline">\(M\)</span> 接受。</p><h2 id="最小化-dfa">最小化 DFA</h2><p>对于任意 DFA <span class="math inline">\(M = (Q, \Sigma, \delta, q_0, Q_{acc})\)</span>，称状态 <span class="math inline">\(q_1, q_2 \in Q\)</span> 是不可区分的，若有</p><p><span class="math display">\[
+\forall s \in \Sigma^*. \delta(q_1, s) \in Q_{acc} \iff \delta(q_2, s) \in Q_{acc}
+\]</span></p><p>注意不可区分关系是自反的，对称的，传递的，因此不可区分关系在集合 <span class="math inline">\(Q\)</span> 上定义了一个等价关系。</p><p>显然，对于 <span class="math inline">\(q_1 \in Q/Q_{acc}\)</span>, <span class="math inline">\(q_2 \in Q_{acc}\)</span> （或相反），总是有 <span class="math inline">\(q_1\)</span> 与 <span class="math inline">\(q_2\)</span> 是可区分的，此时取 <span class="math inline">\(s = \varepsilon\)</span>.</p><p>于是有标记不可区分簇算法如下：</p><ul>
+<li><p>stage 0: 标记所有对 <span class="math inline">\((q_1, q_2)\)</span>，其中 <span class="math inline">\(q_1 \in Q/Q_{acc}\)</span>, <span class="math inline">\(q_2 \in Q_{acc}\)</span>（或相反）为可区分的</p></li>
+<li><p>重复进行，直到没有新的对被标记</p>
+<p>stage <span class="math inline">\(i\)</span> (<span class="math inline">\(i \ge 1\)</span>): 考虑任何尚未标记为可区分的对 <span class="math inline">\((q_1, q_2)\)</span>，若存在 <span class="math inline">\(\sigma \in \Sigma\)</span>，使得对 <span class="math inline">\((\delta(q_1, \sigma), \delta(q_2, \sigma))\)</span> 已被标记，则标记 <span class="math inline">\((q_1, q_2)\)</span>。</p></li>
+</ul><p>此时合并所有不可区分簇。</p><p>P. Linz 给出的证明表示，对于任何正则语言，存在唯一的识别该语言的最小 DFA。即，若 DFA <span class="math inline">\(M_1, M_2\)</span> 识别该语言，最小化 <span class="math inline">\(M_1, M_2\)</span> 将得到同一个 DFA，同时，若 DFA <span class="math inline">\(M_1, M_2\)</span> 皆为最小，则有 <span class="math inline">\(M_1 = M_2\)</span>.</p><h1 id="nfa-非确定性有限状态自动机">NFA 非确定性有限状态自动机</h1><p>我们可以在 DFA 的基础上如此放宽定义：首先拓展状态转移函数至 <span class="math inline">\(\delta&apos;: Q \times \Sigma \to \mathcal{P}(Q)\)</span>，即给定当前状态 <span class="math inline">\(q_{curr}\)</span>，当前读入字符 <span class="math inline">\(\sigma_{curr}\)</span>，有 <span class="math inline">\(\delta&apos;(q_{curr}, \sigma_{curr}) \subseteq Q\)</span>，即允许转移至多个状态。注意，这说明了我们可以同时处于多个状态中，而并非状态机通过某种方法，例如随机选择，转移到多个状态中的某一个中。</p><p>如此一来由于我们可以同时处于多个状态中，于是也有必要拓展状态转移函数的值域如：<span class="math inline">\(\delta&apos;&apos;(Q_{curr}, \sigma_{curr}) = \displaystyle \bigcup_{q_{curr} \in Q_{curr}} \delta&apos;(q_{curr}, \sigma_{curr})\)</span>, <span class="math inline">\(\delta&apos;&apos;: \mathcal{P}(Q) \times \Sigma \to \mathcal{P}(Q)\)</span>。我们称这样的有限状态自动机为非确定性有限状态自动机（nondeterministic finite state automata, NFSA/NFA）.</p><p>若我们视 <span class="math inline">\(\delta(q, \sigma) = \delta&apos;&apos;(\{q\}, \sigma)\)</span>，则可发现 DFA 是 NFA 的特例，于是后文将不做区别地使用 <span class="math inline">\(\delta\)</span> 代指 <span class="math inline">\(\delta&apos;&apos;\)</span>，而由上下文确定 <span class="math inline">\(\delta\)</span> 的值域/定义域。</p><p>当以状态转移表来表示 NFS 的状态转移函数 <span class="math inline">\(\delta\)</span> 时，可定义 <span class="math inline">\(\delta \subseteq Q \times \Sigma \times Q\)</span>，其中有 <span class="math inline">\((q_{curr}, \sigma_{curr}, q_{next}) \in \delta \iff \delta(\{q_{curr}\}, \sigma_{curr}) \supseteq \{q_{next}\}\)</span>.</p><p>类似地，我们像定义 DFA 时那样继续将状态转移函数拓展至字符串上。于是有</p><p><span class="math display">\[
+L(M) = \{s\in\Sigma^*: \exists q \in Q_{acc}, \delta(\{q_0\}, s) = q \wedge q \in Q_{acc}\}
+\]</span></p><p>等价地，也可说</p><p><span class="math display">\[
+L(M) = \{s\in\Sigma^*: \delta(\{q_0\}, s) \cap Q_{acc} \ne \emptyset\}
+\]</span></p><p>下面是一个非确定性状态机的例子。</p><div class="ex">
+<div id="nfa">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#nfa"), `
+  input: "01101001"
+  start state: A
+  accept states: [D]
+  type: fsa
+  table:
+    A:
+      0: [A, B]
+      1: A
+    B:
+      1: C
+    C:
+      0: D
+    D:
+      0: D
+      1: D
+`));
+</script>
+</div><h2 id="子集构造算法subset-construction-algorithm">子集构造算法（subset construction algorithm）</h2><p>虽然前文称 NFA 是由 DFA 的定义拓展来的，然而事实上给定一个 NFA，有算法可以构造出接受相同语言的 DFA （虽然不一定是最小的）。又由于根据定义有 <span class="math inline">\(DFA \subseteq NFA\)</span>，该算法构造性地证明了 <span class="math inline">\(DFA \equiv NFA\)</span>，即两种计算模型的计算能力是等价的或者说一个语言若能被 NFA/DFA 识别，则一定有能识别它的 DFA/NFA.</p><p>该算法来源于如下观察：对于 NFA <span class="math inline">\(M_{NFA} = (Q_{NFA}, \Sigma, \delta_{NFA}, q_{0, NFA}, Q_{acc, NFA})\)</span> 来说，由于集合 <span class="math inline">\(Q_{NFA}\)</span> 有限，有 <span class="math inline">\(\big| \mathcal{P}(Q_{NFA}) \big| = 2^{\big| Q_{NFA} \big|}\)</span> 有限.</p><p>于是可记 <span class="math inline">\(Q_{DFA} \ni q_{curr, DFA} = Q_{curr, NFA} \subseteq Q_{NFA}\)</span>，从而有 <span class="math inline">\(Q_{DFA}\)</span> 为有限集合，符合 DFA 定义的要求。那么便可以得到等价的状态转移函数 <span class="math inline">\(\delta_{DFA}(q, \sigma) := \delta_{NFA}(q, \sigma)\)</span>。注意由于有 <span class="math inline">\(Q_{DFA} \subseteq \mathcal{P}(Q_{NFA})\)</span> 为集合的集合，有 <span class="math inline">\(\delta_{DFA}: Q_{DFA} \times \Sigma \to Q_{DFA} = \mathcal{P}(Q_{NFA}) \times \Sigma \to \mathcal{P}(Q_{NFA})\)</span>，注意其定义域与值域和 <span class="math inline">\(\delta_{NFA}\)</span> 一模一样。这就是该算法的名称“子集构造”的由来。</p><p>当然，由于 <span class="math inline">\(Q_{DFA} \subseteq \mathcal{P}(Q_{NFA})\)</span>，有 <span class="math inline">\(\big| Q_{DFA} \big| \le \big| \mathcal{P}(Q_{NFA}) \big| = 2^{\big| Q_{NFA} \big|}\)</span>，于是我们至多需要构造指数级别个状态，而这其中可能大部分工作都是浪费，因为这些状态并不见得在 <span class="math inline">\(M_{NFA}\)</span> 中可达。于是在 <span class="math inline">\(M_{NFA}\)</span> 上使用图遍历算法，除了个别极端情况外，都可以将状态的数量降到合理的范围内。</p><p>下面给出一个例子，其中可使用队列或者栈数据结构记录当前待处理的子集。</p><div class="ex">
+<p>将如下 NFA 化简为 DFA:</p>
+<div id="sca_nfa">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#sca_nfa"), `
+  input: "00101"
+  start state: A
+  accept states: [C]
+  type: fsa
+  table:
+    A:
+      0: [A, B]
+      1: A
+    B:
+      1: C
+    C:
+      [0, 1]: C
+`));
+</script>
+<p>使用子集构造算法，可得 DFA 的状态转移表：</p>
+<p><span class="math display">\[
+\begin{array}{lll}
+\text{当前状态\符号} &amp; 0 &amp; 1 &amp; 新状态\\
+\hline
+&amp;&amp;&amp; \{A\}\\
+\{A\} &amp; \{A, B\} &amp; \{A\} &amp; \{A, B\}\\
+\{A, B\} &amp; \{A, B\} &amp; \{A, C\} &amp; \{A, C\}\\
+\{A, C\} &amp; \{A, B, C\} &amp; \{A, C\} &amp; \{A, B, C\}\\
+\{A, B, C\} &amp; \{A, B, C\} &amp; \{A, C\}
+\end{array}
+\]</span></p>
+<p>于是等价的 DFA 如下：</p>
+<div id="sca_dfa">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#sca_dfa"), `
+  input: "00101"
+  start state: "A"
+  accept states: ["A,B,C", "A,C"]
+  type: fsa
+  table:
+    "A":
+      0: "A,B"
+      1: "A"
+    "A,B":
+      0: "A,B"
+      1: "A,C"
+    "A,C":
+      0: "A,B,C"
+      1: "A,C"
+    "A,B,C":
+      0: "A,B,C"
+      1: "A,C"
+`));
+</script>
+<p>注意，子集构造算法得到的并不一定是最小的等价 DFA。该例中有状态 <span class="math inline">\(\{A, B, C\}\)</span> 和 <span class="math inline">\(\{A, C\}\)</span> 可合并为一个状态。我们将在后文讨论最小化 DFA 的算法。</p>
+</div><h1 id="varepsilon-nfa"><span class="math inline">\(\varepsilon\)</span>-NFA</h1><p>更进一步的拓展来源于对如下事实的观察：对于任何字符串 <span class="math inline">\(s \in \Sigma^*\)</span> 来说，皆有 <span class="math inline">\(s = \varepsilon s\)</span>，即 <span class="math inline">\(\varepsilon\)</span> 是任何字符串的前缀。因此我们可拓展状态转移函数为：</p><p><span class="math display">\[
+\delta^\varepsilon: \mathcal{P}(Q) \times \Sigma \to \mathcal{P}(Q)
+\\
+\delta^\varepsilon(Q_{acc}, \sigma) =
+\bigcup_{q \in Q_{acc}}
+\delta^\varepsilon(\delta(q, \varepsilon), \sigma) \cup
+\delta(q, \sigma) \cup
+\delta^\varepsilon(\delta(q, \sigma), \varepsilon)
+\]</span></p><p>我们称所有形如 <span class="math inline">\(\delta(q, \varepsilon)\)</span> 的转移为 <span class="math inline">\(\varepsilon\)</span>-转移。我们可以将 <span class="math inline">\(\varepsilon\)</span>-转移 理解为是状态机自发的行为，即不需要读入字符即可产生的转移行为。由于 <span class="math inline">\(\varepsilon\)</span>-转移 使得我们必然会同时处于多个状态（取决我们视 <span class="math inline">\(s = s\)</span> 还是 <span class="math inline">\(s = \varepsilon \cdot s\)</span>），于是该定义使得状态机必然是非确定性的，而称定义中有 <span class="math inline">\(\varepsilon\)</span>-转移 的状态机为 <span class="math inline">\(\varepsilon\)</span>-NFA。</p><p>在该定义下，为了方便表达，我们也可以进一步取消仅有一个初始状态的要求，并定义 <span class="math inline">\(Q_0 \subseteq Q\)</span> 为初始状态集合。因为这样的定义等价于有 <span class="math inline">\(q&apos;_0 \in Q&apos; = Q \cup \{q&apos;_0\}\)</span> 且对于所有 <span class="math inline">\(q_0 \in Q_0\)</span> 皆有 <span class="math inline">\(\delta(q&apos;_0, \varepsilon) = q_0\)</span>。于是我们发现对于 <span class="math inline">\(\varepsilon\)</span>-NFA 来说是否限制仅有一个初始状态分别得到的定义是等价的。</p><h2 id="varepsilon-转移-移除算法"><span class="math inline">\(\varepsilon\)</span>-转移 移除算法</h2><p>该算法构造性地证明了 <span class="math inline">\(\varepsilon\)</span>-NFA 与 NFA 的等价性。</p><p>以状态转移图来描述，考虑 <span class="math inline">\(\varepsilon\)</span>-NFA <span class="math inline">\(M\)</span>，以下算法构造等价的 NFA <span class="math inline">\(M&apos;\)</span>:</p><ol type="1">
+<li><p>复制 <span class="math inline">\(M\)</span> 至 <span class="math inline">\(M&apos;\)</span>，移除 <span class="math inline">\(M&apos;\)</span> 中所有的 <span class="math inline">\(\varepsilon\)</span>-转移，以及所有进入转移皆为 <span class="math inline">\(\varepsilon\)</span>-转移的节点，初始节点除外。</p></li>
+<li><p>对于 <span class="math inline">\(M\)</span> 中每一条由数个 <span class="math inline">\(\varepsilon\)</span>-转移 接一个以 <span class="math inline">\(b \in \Sigma\)</span> 标记的转移构成的路径：</p>
+<p><span class="math display">\[
+ p
+ \stackrel{\varepsilon}{\to}
+ \bigcirc
+ \stackrel{\varepsilon}{\to}
+ \cdots
+ \stackrel{\varepsilon}{\to}
+ \bigcirc
+ \stackrel{b}{\to}
+ q\]</span></p>
+<p>于 <span class="math inline">\(M&apos;\)</span> 中加入转移 <span class="math inline">\(p \stackrel{b}{\to} q\)</span>，其中允许有 <span class="math inline">\(p = q\)</span>。</p></li>
+<li><p>在 <span class="math inline">\(M\)</span> 中对于每一条完全由 <span class="math inline">\(\varepsilon\)</span>-转移 组成的路径</p>
+<p><span class="math display">\[
+ p
+ \stackrel{\varepsilon}{\to}
+ \bigcirc
+ \stackrel{\varepsilon}{\to}
+ \cdots
+ \stackrel{\varepsilon}{\to}
+ \circledcirc
+ \]</span></p>
+<p>在 <span class="math inline">\(M&apos;\)</span> 中标记 <span class="math inline">\(p\)</span> 为接受状态。</p></li>
+</ol><div class="ex">
+<p>考虑将如下 <span class="math inline">\(\varepsilon\)</span>-NFA:</p>
+<div id="enfa">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#enfa"), `
+  input: "3.14"
+  start state: A
+  accept states: [D, E]
+  epsilon transition: e
+  type: fsa
+  table:
+    A:
+      [0,1,2,3,4,5,6,7,8,9]: B
+    B:
+      ".": C
+      e: [A, E]
+    C:
+      [0,1,2,3,4,5,6,7,8,9]: D
+    D:
+      e: [C, E]
+    E:
+`));
+</script>
+<p>其等价的 NFA 如下：</p>
+<div id="enfa_nfa">
+
+</div>
+<script>
+window.addEventListener("load", () => window.vizAutomaton(document.querySelector("#enfa_nfa"), `
+  input: "3.14"
+  start state: A
+  accept states: [B, D]
+  type: fsa
+  table:
+    A:
+      [0,1,2,3,4,5,6,7,8,9]: B
+    B:
+      [0,1,2,3,4,5,6,7,8,9]: B
+      ".": C
+    C:
+      [0,1,2,3,4,5,6,7,8,9]: D
+    D:
+      [0,1,2,3,4,5,6,7,8,9]: D
+`));
+</script>
+</div><hr><p>于是我们有 <span class="math inline">\(DFA \equiv NFA \equiv \varepsilon\text{-}NFA\)</span>.</p><h1 id="addendum">Addendum</h1><div class="def">
+<p>给定描述一有限状态自动机的状态转移图，称其中一节点为</p>
+<p>可达的（reachable），若存在至少一条从 <span class="math inline">\(q_0\)</span> 至该节点的路径；</p>
+<p>补可达的（co-reachable），若存在至少一条从该节点至任意接受节点的路径。</p>
+</div><div class="def">
+<p>若给定有限状态自动机中所有状态皆既是可达的又是补可达的，则称该状态机是整洁的（trim）。</p>
+<p>称移除给定有限状态自动机中所有非可达和非补可达状态的操作为修整。</p>
+</div><p>由于我们主要关心有限状态自动机所识别的语言，且移除非可达的和非补可达的状态并不会改变其识别的语言，因此我们总是假设给定有限状态自动机是整洁的（若不然可通过修整的操作得到识别语言意义上等价的有限状态自动机）。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#dfa-确定性有限状态自动机"><span class="toc-number">1.</span> <span class="toc-text">DFA 确定性有限状态自动机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#最小化-dfa"><span class="toc-number">1.1.</span> <span class="toc-text">最小化 DFA</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nfa-非确定性有限状态自动机"><span class="toc-number">2.</span> <span class="toc-text">NFA 非确定性有限状态自动机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#子集构造算法subset-construction-algorithm"><span class="toc-number">2.1.</span> <span class="toc-text">子集构造算法（subset construction algorithm）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#varepsilon-nfa"><span class="toc-number">3.</span> <span class="toc-text">\(\varepsilon\)-NFA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#varepsilon-转移-移除算法"><span class="toc-number">3.1.</span> <span class="toc-text">\(\varepsilon\)-转移 移除算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#addendum"><span class="toc-number">4.</span> <span class="toc-text">Addendum</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&text=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&is_video=false&description=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-03-有限状态自动机&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&title=形式语言与自动机理论-03-有限状态自动机"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-03-Finite-State-Automata/&name=形式语言与自动机理论-03-有限状态自动机&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

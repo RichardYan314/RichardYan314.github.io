@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="离散对数问题  群 群元素的阶 循环群（循环子群） 阶的基本性质  阶的基本性质的证明  对数表的上限（阶的上限）   上一章里我们讨论了基于素因数分解复杂度的 RSA 密码系统，同时也观察到了不良设计的密钥生成算法易受到的一些攻击。接下来我们将要讨论基于离散对数问题复杂度的一些密码系统，这一章首先讨论离散对数问题。离散对数问题 设 \(b \in G = (\mathbb{Z}/m\math">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-08-离散对数问题">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="离散对数问题  群 群元素的阶 循环群（循环子群） 阶的基本性质  阶的基本性质的证明  对数表的上限（阶的上限）   上一章里我们讨论了基于素因数分解复杂度的 RSA 密码系统，同时也观察到了不良设计的密钥生成算法易受到的一些攻击。接下来我们将要讨论基于离散对数问题复杂度的一些密码系统，这一章首先讨论离散对数问题。离散对数问题 设 \(b \in G = (\mathbb{Z}/m\math">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-08-离散对数问题">
+<meta name="twitter:description" content="离散对数问题  群 群元素的阶 循环群（循环子群） 阶的基本性质  阶的基本性质的证明  对数表的上限（阶的上限）   上一章里我们讨论了基于素因数分解复杂度的 RSA 密码系统，同时也观察到了不良设计的密钥生成算法易受到的一些攻击。接下来我们将要讨论基于离散对数问题复杂度的一些密码系统，这一章首先讨论离散对数问题。离散对数问题 设 \(b \in G = (\mathbb{Z}/m\math">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-08-离散对数问题</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-09-Discrete-Log-Cryptosystems/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-07-Public-Key-Cryptosystems-and-RSA-Algorithm/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&text=数论与群论密码学-08-离散对数问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&is_video=false&description=数论与群论密码学-08-离散对数问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-08-离散对数问题&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&name=数论与群论密码学-08-离散对数问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#离散对数问题"><span class="toc-number">1.</span> <span class="toc-text">离散对数问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#群"><span class="toc-number">1.1.</span> <span class="toc-text">群</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#群元素的阶"><span class="toc-number">1.2.</span> <span class="toc-text">群元素的阶</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环群循环子群"><span class="toc-number">1.3.</span> <span class="toc-text">循环群（循环子群）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阶的基本性质"><span class="toc-number">1.4.</span> <span class="toc-text">阶的基本性质</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#阶的基本性质的证明"><span class="toc-number">1.4.1.</span> <span class="toc-text">阶的基本性质的证明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对数表的上限阶的上限"><span class="toc-number">1.5.</span> <span class="toc-text">对数表的上限（阶的上限）</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-08-离散对数问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-06T14:43:20.000Z" itemprop="datePublished">2019-03-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#离散对数问题">离散对数问题</a>
+<ul>
+<li><a href="#群">群</a></li>
+<li><a href="#群元素的阶">群元素的阶</a></li>
+<li><a href="#循环群循环子群">循环群<span style="display:none;">（循环子群）</span></a></li>
+<li><a href="#阶的基本性质">阶的基本性质</a>
+<ul>
+<li><a href="#阶的基本性质的证明">阶的基本性质的证明</a></li>
+</ul></li>
+<li><a href="#对数表的上限阶的上限">对数表的上限（阶的上限）</a></li>
+</ul></li>
+</ul>
+</div><p>上一章里我们讨论了基于素因数分解复杂度的 RSA 密码系统，同时也观察到了不良设计的密钥生成算法易受到的一些攻击。接下来我们将要讨论基于离散对数问题复杂度的一些密码系统，这一章首先讨论离散对数问题。</p><h1 id="离散对数问题">离散对数问题</h1><div class="def">
+<p>设 <span class="math inline">\(b \in G = (\mathbb{Z}/m\mathbb{Z})^\times\)</span>，则记 <span class="math inline">\(&lt;b&gt; = \{b^n: n \in \mathbb{Z}\} = \{1, b, b^2, \cdots, b^{n-1}\}\)</span>，其中根据费马定理，有 <span class="math inline">\(b^n = 1\)</span>。</p>
+<p>称 <span class="math inline">\(&lt;b&gt;\)</span> 为群 <span class="math inline">\(G\)</span> 中由 <span class="math inline">\(b\)</span> 生成的循环子群。对于任意 <span class="math inline">\(y \in &lt;b&gt;\)</span>，称最小使得 <span class="math inline">\(b^n = y\)</span> 的非负整数 <span class="math inline">\(n\)</span> 为以 <span class="math inline">\(b\)</span> 为底的 <span class="math inline">\(y\)</span> 的离散对数，记为 <span class="math inline">\(n = DL_b(y)\)</span>。</p>
+</div><p>离散对数问题即为给定 <span class="math inline">\(y \in &lt;b&gt;\)</span>, <span class="math inline">\(b \in G = (\mathbb{Z}/m\mathbb{Z})^\times\)</span> 求 <span class="math inline">\(DL_b(y)\)</span>.</p><p>注意求解该问题是十分困难的。</p><p>首先，称 <span class="math inline">\(&lt;b&gt;\)</span> 中所有元素及其离散对数的表格为以 <span class="math inline">\(b\)</span> 为底的对数表。显然地，若我们做出对数表，即可解离散对数问题。</p><p>然而，我们应注意到以 <span class="math inline">\(b\)</span> 为底的对数表——等价地——循环子群 <span class="math inline">\(&lt;b&gt;\)</span> 的大小。</p><div class="def">
+<p>称 <span class="math inline">\(b \in G = (\mathbb{Z}/m\mathbb{Z})^\times\)</span> 的阶为使得 <span class="math inline">\(b^n = 1\)</span> 的最小整数 <span class="math inline">\(n \ge 1\)</span>，记作 <span class="math inline">\(|b|\)</span> 或 <span class="math inline">\(ord(b)\)</span>.</p>
+</div><p>我们将在更一般的群代数结构中表述离散对数问题，并且观察到 <span class="math inline">\((\mathbb{Z}/m\mathbb{Z})^\times\)</span> 是一个群。</p><h2 id="群">群</h2><div class="def">
+<p>若集合 <span class="math inline">\(G\)</span> 上有二元运算 <span class="math inline">\(\cdot\)</span>，其满足</p>
+<ol type="1">
+<li><p><span class="math inline">\(\cdot\)</span> 有结合性，即 <span class="math inline">\(x \cdot (y \cdot z) = (x \cdot y) \cdot z\)</span>;</p></li>
+<li><p><span class="math inline">\(\cdot\)</span> 有单位元（幺元），即存在 <span class="math inline">\(e \in G\)</span>，使得对于任何元素 <span class="math inline">\(x \in G\)</span>，皆有 <span class="math inline">\(e \cdot x = x \cdot e = x\)</span>。也记此幺元为 <span class="math inline">\(e_G, 1_G, 1\)</span>.</p>
+<p>某些群论文献会记此幺元为 <span class="math inline">\(0\)</span>。由于其使用加法表示群的二元运算，因此借鉴整数的加法而使用 <span class="math inline">\(0\)</span> 表示幺元是个自然的选择。尤其当该种文献随后引入另一以乘法表示的二元运算时，需要记其幺元为 <span class="math inline">\(1\)</span>.</p></li>
+<li><p><span class="math inline">\(G\)</span> 中每一元素都有唯一 <span class="math inline">\(\cdot\)</span> 下的逆元，即 <span class="math inline">\(\forall x \in G, !\exists y \in G: xy = yx = 1\)</span>。我们记 <span class="math inline">\(y\)</span> 为 <span class="math inline">\(x^{-1}\)</span>.</p></li>
+</ol>
+</div><h2 id="群元素的阶">群元素的阶</h2><div class="def">
+<p>若 <span class="math inline">\(G\)</span> 为群，<span class="math inline">\(x \in G\)</span>，则定义 <span class="math inline">\(ord(x) = min\{n \ge 1: x^n = 1\} \in \mathbb{N} \cup \{\infty\}\)</span>，称之为 <span class="math inline">\(x\)</span> 的阶。</p>
+</div><h2 id="循环群循环子群">循环群<span style="display:none;">（循环子群）</span></h2><div class="thm" data-num="1">
+<p>若 <span class="math inline">\(G\)</span> 为有限基的群，那么每个 <span class="math inline">\(b \in G\)</span> 都有有限的阶（<span class="math inline">\(ord(b) \ne \infty\)</span>）。并且，若 <span class="math inline">\(&lt;b&gt; = \{b^k: k \in \mathbb{Z}\}\)</span> 是 <span class="math inline">\(b\)</span> 生成的循环子群，那么有 <span class="math inline">\(&lt;b&gt; = \{b^0, b^1, \cdots, b^{n-1}\}\)</span>，其中 <span class="math inline">\(n = ord(b)\)</span> 并且前记元素相异。因此 <span class="math inline">\(\big| &lt;b&gt; \big| = n = ord(b)\)</span>。</p>
+</div><p>因此，若 <span class="math inline">\(G = (\mathbb{Z}/m\mathbb{Z})^\times\)</span>，那么对于任何 <span class="math inline">\(b \in G\)</span>，其对数表的大小为 <span class="math inline">\(ord(b)\)</span>.</p><div class="proof" name="定理1">
+<p>设 <span class="math inline">\(b \in G\)</span>，由于 <span class="math inline">\(G\)</span> 为群而对乘法封闭，则 <span class="math inline">\(b^0, b^1, \cdots b^n, \cdots \in G\)</span>。由于 <span class="math inline">\(G\)</span> 有限，前记元素必定有重复。因此对于某些 <span class="math inline">\(0 \le k &lt; n\)</span>，有 <span class="math inline">\(b^n = b^k\)</span>。由于 <span class="math inline">\(G\)</span> 可逆（并记 <span class="math inline">\((b^k)^{-1}\)</span> 为 <span class="math inline">\(b^{-k}\)</span>），有</p>
+<p><span class="math display">\[
+b^n b^{-k} = b^k b^{-k}\\
+b^{n-k} = 1
+\]</span></p>
+<p>因此 <span class="math inline">\(ord(b) \le n-k\)</span> 且有限。</p>
+<p>显然有 <span class="math inline">\(S = \{b^0, b^1, \cdots b^{n-1}\} \subseteq &lt;b&gt;\)</span>。为了证明另一个方向的包含关系，设 <span class="math inline">\(b^k \in &lt;b&gt;, k \in \mathbb{Z}\)</span>。记 <span class="math inline">\(k = qn+r, 0 \le r &lt; n\)</span>，其中 <span class="math inline">\(n = ord(b)\)</span>。因此 <span class="math inline">\(b^n = 1\)</span>，于是有</p>
+<p><span class="math display">\[
+b^k = b^{qn+r} = b^{qn}b^r = (b^n)^qb^r = 1^qb^r = b^r \in S = \{b^0, b^1, \cdots, b^{n-1}\}\]</span></p>
+<p>因此有 <span class="math inline">\(&lt;b&gt; \subseteq S\)</span>.</p>
+<p>最后，证明 <span class="math inline">\(b^0, b^1, \cdots, b^{n-1}\)</span> 相异。如果此不为真，则存在 <span class="math inline">\(0 \le m &lt; k \le n-1\)</span> 使得 <span class="math inline">\(b^m = b^k\)</span>. 于是有</p>
+<p><span class="math display">\[
+b^mb^{-m} = b^kb^{-m}\\
+1 = b^{k-m}
+\]</span></p>
+<p>然而有 <span class="math inline">\(1 \le k-m &lt; n\)</span>，与 <span class="math inline">\(n\)</span> 的最小性相矛盾，因此有 <span class="math inline">\(S\)</span> 的元素两两相异。</p>
+</div><p>那么给定 <span class="math inline">\(b \in G\)</span>，其阶的大小可能是什么？</p><h2 id="阶的基本性质">阶的基本性质</h2><div class="thm" data-num="2" name="阶的基本性质">
+<p>设 <span class="math inline">\(G\)</span> 为基有限的阿贝尔群， <span class="math inline">\(x, y \in G\)</span>, <span class="math inline">\(n, m \in \mathbb{Z}\)</span>。有<br>
+P0. <span class="math inline">\(ord(x) \le \infty\)</span><br>
+P1. <span class="math inline">\(x^n = 1 \iff ord(x) \mid n\)</span><br>
+P1&apos;. <span class="math inline">\(x^n = x^m \iff n \equiv m \pmod{ord(x)}\)</span><br>
+P2. <span class="math inline">\(ord(x^n) = \frac{d}{(n, d)}\)</span>，其中 <span class="math inline">\(d = ord(x)\)</span>, <span class="math inline">\((n, d) = gcd(n, d)\)</span><br>
+P3. <span class="math inline">\(ord(x) \mid \#G\)</span><br>
+P4. <span class="math inline">\(ord(xy) \mid lcm(ord(x), ord(y))\)</span>。更多地，当 <span class="math inline">\(gcd(ord(x), ord(y)) = 1\)</span> 时，两式相等。<br>
+P5. 若 <span class="math inline">\(G = G_1 \times \cdots \times G_r\)</span> 是一个乘积群，则 <span class="math inline">\(ord((x_1, \cdots, x_r)) = lem(ord(x_1), \cdots, ord(x_r))\)</span></p>
+<p>以上除 P4 以外的所有性质即使当 <span class="math inline">\(G\)</span> 为非阿贝尔群时都成立。</p>
+</div><div class="cor" name="费马/欧拉">
+<p>若 <span class="math inline">\(\big| G \big| = n\)</span>，则对于所有 <span class="math inline">\(x \in G\)</span> 皆有 <span class="math inline">\(x^n = 1\)</span>。</p>
+</div><div class="proof">
+<p>根据 P3，有 <span class="math inline">\(ord(x) \mid n\)</span>。根据 P1 有 <span class="math inline">\(x^n = 1\)</span>.</p>
+</div><div class="ex">
+<p><span class="math inline">\((\mathbb{Z}/11\mathbb{Z})^\times\)</span> 中 <span class="math inline">\(b = 2\)</span> 的对数表的大小</p>
+<p>由于对于任何 <span class="math inline">\(b \in G = (\mathbb{Z}/11\mathbb{Z})^\times = \{1, \cdots, 10\}\)</span> 有 <span class="math inline">\(ord(b) \mid 10\)</span>，因此 <span class="math inline">\(ord(b) \in \{1, 2, 5, 10\}\)</span>.</p>
+<p>于是根据</p>
+<p><span class="math display">\[
+b^2 \equiv 4 \not \equiv 1 \pmod{11} \implies ord(b) \ne 2, 1\\
+b^5 \equiv 32 \equiv 10 \not \equiv 1 \pmod{11} \implies ord(b) \ne 5
+\]</span></p>
+<p>有 <span class="math inline">\(ord(b) = 10\)</span>。因此 <span class="math inline">\(b\)</span> 的对数表的大小是 10.</p>
+<p>更多地，由于 <span class="math inline">\(\big| G \big| = 10 = ord(b) \stackrel{\text{Thm1}}{=} \big| &lt;b&gt; \big|\)</span>，因此有 <span class="math inline">\(G = &lt;b&gt;\)</span>.</p>
+<p>这样一来，群 <span class="math inline">\(G\)</span> 中的任何元素皆可表示为 <span class="math inline">\(b^n\)</span>, <span class="math inline">\(0 \le n &lt; 11\)</span>。于是可以根据 P2 求出任意元素的阶。列如，有 <span class="math inline">\(8 = 2^3 = b^3\)</span>，则 <span class="math inline">\(ord(8) = \frac{10}{(3, 10)} = 10\)</span>.</p>
+</div><p>若 <span class="math inline">\(G = (\mathbb{Z}/m\mathbb{Z})^\times\)</span> 且 <span class="math inline">\(m\)</span> 为合数，我们可以利用 P5 轻松地计算 <span class="math inline">\(G\)</span> 中各元素的阶。</p><div class="ex">
+<p><span class="math inline">\((\mathbb{Z}/15\mathbb{Z})^\times\)</span> 中 <span class="math inline">\(b = 7\)</span> 的对数表的大小</p>
+<p>根据中国剩余定理第一版，有</p>
+<p><span class="math display">\[
+\psi : (\mathbb{Z}/15\mathbb{Z})^\times \xrightarrow{\sim} (\mathbb{Z}/3\mathbb{Z})^\times \times (\mathbb{Z}/5\mathbb{Z})^\times\\
+\begin{aligned}
+\psi(7 \bmod 15) &amp;= ((7 \bmod 3), (7 \bmod 5))\\
+&amp;= (1, 2)
+\end{aligned}
+\]</span></p>
+<p>因此</p>
+<p><span class="math display">\[
+\begin{aligned}
+ord(7 \bmod 15) &amp;= ord(\psi(7))\\
+&amp;= ord((1, 2))\\
+&amp;\stackrel{\text{P5}}{=} lam(\underbrace{ord(1 \bmod 3)}_{=1}, \underbrace{ord(2 \bmod 5)}_{=4})\\
+&amp;= 4
+\end{aligned}
+\]</span></p>
+</div><h3 id="阶的基本性质的证明">阶的基本性质的证明</h3><div class="proof" name="Thm2">
+<p>给定 <span class="math inline">\(G\)</span> 为一有限群</p>
+<ul>
+<li><p>P0. <span class="math inline">\(ord(x) &lt; \infty\)</span> 为定理 1 的直接推论。</p></li>
+<li><p>P1. <span class="math inline">\(x^n = 1 \iff ord(x) \mid n\)</span></p>
+<p>(<span class="math inline">\(\Leftarrow\)</span>) 若 <span class="math inline">\(ord(x) \mid n\)</span>，则有 <span class="math inline">\(n = k \cdot ord(x), k\in\mathbb{Z}\)</span>。那么 <span class="math inline">\(x^n = x^{k \cdot ord(x)} = (x^{ord(x)})^k = 1^k = 1\)</span>.</p>
+<p>(<span class="math inline">\(\Rightarrow\)</span>) 若 <span class="math inline">\(x^n = 1\)</span>，则记 <span class="math inline">\(n = qd + r, 0 \le r &lt; d\)</span>，其中 <span class="math inline">\(d = ord(x)\)</span>, 那么有</p>
+<p><span class="math display">\[
+\begin{aligned}
+1 = x^n = x^{qd + r}
+&amp;= x^{qd} \cdot x^r\\
+&amp;= (x^d)^q \cdot x^r\\&amp;= 1^q \cdot x^r\\
+1 &amp;= x^r
+\end{aligned}
+\]</span></p>
+<p>根据 <span class="math inline">\(d\)</span> 的最小性，有 <span class="math inline">\(r = 0\)</span>.</p>
+<p>于是有 <span class="math inline">\(n = qd\)</span>，则 <span class="math inline">\(ord(x) d \mid n\)</span>.</p></li>
+<li><p>P1&apos;. <span class="math inline">\(x^n = x^m \iff n \equiv m \pmod{ord(x)}\)</span></p>
+<p>记 <span class="math inline">\(d = ord(x)\)</span>。有</p>
+<p><span class="math display">\[
+\begin{aligned}
+x^n = x^m
+&amp;\iff x^{n-m} = x^{m-m} = 1\\
+&amp;\stackrel{\text{P1}}{\iff} d \mid n-m\\
+&amp;\iff n \equiv m \pmod d
+\end{aligned}
+\]</span></p></li>
+<li><p>P2. <span class="math inline">\(ord(x^n) = \frac{d}{(n, d)}\)</span>，其中 <span class="math inline">\(d = ord(x)\)</span>, <span class="math inline">\((n, d) = gcd(n, d)\)</span></p>
+<p>首先注意到由于 <span class="math inline">\(gcd(d, n) \mid n\)</span>，有 <span class="math inline">\(\frac{n}{(d, n)}\in\mathbb{Z}\)</span>。于是</p>
+<p><span class="math display">\[(x^n)^{\frac{d}{(d, n)}} = x^{\frac{n \cdot d}{(d, n)}} = (x^d)^{\frac{n}{(d, n)}} = 1^{\frac{n}{(d, n)}} = 1\]</span></p>
+<p>因此根据 P1 有 <span class="math inline">\(d&apos; = ord(x^n) \mid \frac{d}{(d, n)} = k\)</span>.</p>
+<p>特别地，有 <span class="math inline">\(d&apos; \le k\)</span>.</p>
+<p>接下来证明 <span class="math inline">\(d&apos; \ge k\)</span>.</p>
+<p>考虑 <span class="math inline">\(x^{d&apos;n} = (x^n)^{d&apos;} = 1\)</span>，因此在 <span class="math inline">\(x\)</span> 上使用 P1，有 <span class="math display">\[
+d \mid d&apos;n\\
+\frac{d}{(d, n)} \mid \frac{d&apos;n}{(d, n)}
+\]</span></p>
+<p>因为 <span class="math inline">\(gcd(\frac{d}{(d, n)}, \frac{n}{(d, n)}) = 1\)</span>，根据欧几里得定理有 <span class="math inline">\(k = \frac{d}{(d, n)} \mid d&apos;\)</span>。于是有 <span class="math inline">\(k \le d&apos;\)</span>.</p>
+<p>于是有 <span class="math inline">\(k = d&apos;\)</span>.</p></li>
+<li><p>P3. <span class="math inline">\(ord(x) \mid \#G\)</span></p>
+<p>这里我们只给出 <span class="math inline">\(G\)</span> 为交换群时的证明。</p>
+<p>记 <span class="math inline">\(G = \{x_1, \cdots, x_n\}\)</span>，其中 <span class="math inline">\(n = \#G\)</span>. 设 <span class="math inline">\(x \in G\)</span>，那么有 <span class="math inline">\(\{xx_1, \cdots, xx_n\} = G\)</span>。于是有 <span class="math display">\[
+\begin{aligned}
+x_0 = x_1 \cdot\ldots\cdot x_n
+&amp;= (xx_1)\cdots(xx_n)\\
+&amp;\text{$G$ 为阿贝尔群}\\
+&amp;= x^n (x_1 \cdot\ldots\cdot x_n)\\
+&amp;= x^nx_0
+\end{aligned}
+\]</span></p>
+<p>因此上式两边同乘 <span class="math inline">\(x_0^{-1}\)</span>，可得 <span class="math inline">\(1 = x^n\)</span>。根据 P1 于是有 <span class="math inline">\(ord(x) \mid n\)</span>.</p></li>
+<li><p>P4. <span class="math inline">\(ord(x_1x_2) \mid lcm(ord(x_1), ord(x_2))\)</span>。更多地，当 <span class="math inline">\(gcd(ord(x_1), ord(x_2)) = 1\)</span> 时，两式相等。</p>
+<p>该性质仅在 <span class="math inline">\(G\)</span> 为交换群时成立。</p>
+<p>由于 <span class="math inline">\(G\)</span> 是交换群，有 <span class="math inline">\((x_1x_2)^n = x_1^nx_2^n, n \in \mathbb{Z}\)</span>.</p>
+<p>因此设 <span class="math inline">\(d_i = ord(x_i), \lambda = lcm(d_1, d_2)\)</span>. 于是有 <span class="math inline">\(d_{\{1, 2\}} \mid \lambda\)</span>.</p>
+<p>根据 P1 有 <span class="math inline">\(x_i^\lambda = 1\)</span>，因此 <span class="math inline">\((x_1x_2)^\lambda = x_1^\lambda x_2^\lambda = 1\)</span>.</p>
+<p>根据 P1 有 <span class="math inline">\(ord(x_1x_2) \mid \lambda\)</span>，因此第一个断言得证。</p>
+<p>若有 <span class="math inline">\(gcd(d_1, d_2) = 1\)</span>，则 <span class="math inline">\((x_1x_2)^{d_1} = x_1^{d_1}x_2^{d^1} = x_2^{d_1}\)</span>。</p>
+<p>根据 P2 有 <span class="math inline">\(ord(x_2^{d_1}) = \frac{d_2}{(d_1, d_2)} = d_2\)</span>，因此 <span class="math inline">\(ord((x_1x_2)^{d_1}) = d_2\)</span>。</p>
+<p>根据 P2 有 <span class="math inline">\(d_2 \mid ord(x_1x_2)\)</span>。类似地，有 <span class="math inline">\(ord((x_1x_2)^{d_2}) = d_1\)</span> 且 <span class="math inline">\(d_1 \mid ord(x_1x_2)\)</span>。</p>
+<p>于是 <span class="math inline">\(\lambda = lcm(d_1, d_2) \mid (ord(x_1x_2))\)</span>。</p>
+<p>而前证 <span class="math inline">\(ord(x_1x_2) \mid \lambda\)</span>，因此 <span class="math inline">\(ord(x_1x_2) = lcm(ord(x_1), ord(x_2))\)</span></p></li>
+<li><p>P5. 若 <span class="math inline">\(G = G_1 \times \cdots \times G_r\)</span> 是一个乘积群，则 <span class="math inline">\(ord((x_1, \cdots, x_r)) = lem(ord(x_1), \cdots, ord(x_r))\)</span></p>
+<p>根据群 <span class="math inline">\(G\)</span> 中乘法的定义，对于任何 <span class="math inline">\(n \in \mathbb{Z}\)</span>，有 <span class="math inline">\((x_1, \cdots, x_r)^n = (x_1^n, \cdots, x_r^n)\)</span>。</p>
+<p>因此有</p>
+<p><span class="math display">\[
+\begin{aligned}
+(x_1, \cdots, x_r)^n = 1
+&amp;\iff x_{\{1, \cdots, r\}}^n = 1\\
+&amp;\stackrel{\text{P1}}{\iff} ord(x_{\{1, \cdots, r\}}) \mid n\\
+&amp;\iff lcm(ord(x_1), \cdots, ord(x_r)) \mid n
+\end{aligned}
+\]</span></p>
+<p>那么满足 <span class="math inline">\((x_1, \cdots, x_r)^n = 1\)</span> 的最小的正整数 <span class="math inline">\(n = lcm(ord(x_1), \cdots, ord(x_r))\)</span>，因此 <span class="math inline">\(ord((x_1, \cdots, x_r)) = lcm(ord(x_1), \cdots, ord(x_r))\)</span>.</p></li>
+</ul>
+</div><h2 id="对数表的上限阶的上限">对数表的上限（阶的上限）</h2><p>那么，对于任意 <span class="math inline">\(b \in (\mathbb{Z}/m\mathbb{Z})^\times\)</span>，以 <span class="math inline">\(b\)</span> 为底的对数表，等价地， <span class="math inline">\(ord(b)\)</span> 的上限几何？目前我们仅知道， <span class="math inline">\(ord(b) \mid \phi(m)\)</span>.</p><div class="def">
+<p>群 <span class="math inline">\(G\)</span> 被称为循环群，若 <span class="math inline">\(\exists x \in G, G = &lt;x&gt;\)</span>。由于 <span class="math inline">\(G\)</span> 中任意元素皆可表达为这样的 <span class="math inline">\(x\)</span> 的次方，我们称这样的 <span class="math inline">\(x\)</span> 称为 <span class="math inline">\(G\)</span> 的生成元。</p>
+</div><p>注意：<br>
+1. 若 <span class="math inline">\(G\)</span> 为有限群且 <span class="math inline">\(x \in G\)</span>，那么有 <span class="math display">\[G = &lt;x&gt; \iff \big| G \big| = \big| &lt;x&gt; \big| \stackrel{\text{Thm1}}{=} ord(x)\]</span> 2. 若 <span class="math inline">\(G\)</span> 是 <span class="math inline">\(n\)</span> 阶循环群，那么 <span class="math inline">\(G\)</span> 有 <span class="math inline">\(\phi(n)\)</span> 个生成元。</p><div class="proof" name="上注第 2 点">
+<p>若 <span class="math inline">\(G = &lt;x&gt;\)</span>，则 <span class="math display">\[
+\begin{aligned}
+G &amp;\stackrel{\text{Thm1}}{=} \{1, x, \cdots, x^{n-1}\}\\
+&amp;= \{x^k : 0 \le k \le m-1\}
+\end{aligned}
+\]</span></p>
+<p>那么 <span class="math inline">\(x\)</span> 是生成元 <span class="math inline">\(\stackrel{\text{上注1}}{\iff} ord(x^k) = \big| G \big|\)</span>.</p>
+<p>根据 P2， <span class="math inline">\(ord(x^k) = \frac{n}{(k, n)} = 1 \iff gcd(k , n) = 1\)</span>.</p>
+<p>因此，<span class="math inline">\(G\)</span> 的生成元的集合为 <span class="math inline">\(\{ x^k : 0 \le k \le m-1, gcd(m, k) = 1\}\)</span>，且生成元的数量为 <span class="math inline">\(\phi(n)\)</span>.</p>
+</div><div class="thm" data-num="3">
+<p>若 <span class="math inline">\(p\)</span> 为素数，那么 <span class="math inline">\((\mathbb{Z}/p\mathbb{Z})^\times\)</span> 是一个循环群，并且有 <span class="math inline">\(\phi(p-1)\)</span> 个生成元。</p>
+</div><p>该定理的证明使用了计数的论证方法，因此不是建设性的。另外其也使用了当且仅当 <span class="math inline">\(p\)</span> 为素数时 <span class="math inline">\(\mathbb{F}_p := \mathbb{Z}/p\mathbb{Z}\)</span> 为一个域的性质（加法乘法皆有逆元）。</p><div class="cor">
+<p>若 <span class="math inline">\(p\)</span> 为素数，那么 <span class="math inline">\((\mathbb{Z}/p\mathbb{Z})^\times\)</span> 中有阶为 <span class="math inline">\(n\)</span> 的元素，当且仅当 <span class="math inline">\(n \mid p-1\)</span>.</p>
+</div><div class="proof">
+<p>(<span class="math inline">\(\Leftarrow\)</span>): 若 <span class="math inline">\(ord(x) = n\)</span>，则根据 P3 有 <span class="math inline">\(n \mid \#(\mathbb{Z}/p\mathbb{Z})^\times = \phi(p) = p-1\)</span>.</p>
+<p>(<span class="math inline">\(\Rightarrow\)</span>): 若 <span class="math inline">\(n \mid p-1\)</span>，则 $ 。根据定理 3，有 <span class="math inline">\(\exists x_0 \in (\mathbb{Z}/p\mathbb{Z})^\times, ord(x_0) = p-1\)</span>。那么 <span class="math inline">\(x = x_0^{\frac{p-1}{n}}\)</span> 的阶为 <span class="math inline">\(n\)</span>:</p>
+<p><span class="math display">\[ord(x^{\frac{p-1}{n}}) = \frac{p-1}{\frac{p-1}{n}, p-1)} = \frac{p-1}{\frac{p-1}{n}} = n\]</span></p>
+</div><p>注意，该从理给出了关于当 <span class="math inline">\(m=p\)</span> 为素数时对数表大小的问题的解答。当 <span class="math inline">\(m\)</span> 不为素数的情况比较复杂，然而我们并不需要。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#离散对数问题"><span class="toc-number">1.</span> <span class="toc-text">离散对数问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#群"><span class="toc-number">1.1.</span> <span class="toc-text">群</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#群元素的阶"><span class="toc-number">1.2.</span> <span class="toc-text">群元素的阶</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环群循环子群"><span class="toc-number">1.3.</span> <span class="toc-text">循环群（循环子群）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阶的基本性质"><span class="toc-number">1.4.</span> <span class="toc-text">阶的基本性质</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#阶的基本性质的证明"><span class="toc-number">1.4.1.</span> <span class="toc-text">阶的基本性质的证明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对数表的上限阶的上限"><span class="toc-number">1.5.</span> <span class="toc-text">对数表的上限（阶的上限）</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&text=数论与群论密码学-08-离散对数问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&is_video=false&description=数论与群论密码学-08-离散对数问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-08-离散对数问题&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&title=数论与群论密码学-08-离散对数问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-08-Discrete-Log-Problem/&name=数论与群论密码学-08-离散对数问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

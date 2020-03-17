@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="h1 Heading A level-one header with a link and emphasis  h2 Heading  h3 Heading   Setext-style level-one header  Setext-style level-two header  Block quotations Fenced code blocks Line blocks Lists">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown Test">
+<meta property="og:url" content="https://richardyan.site/markdown-test/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="h1 Heading A level-one header with a link and emphasis  h2 Heading  h3 Heading   Setext-style level-one header  Setext-style level-two header  Block quotations Fenced code blocks Line blocks Lists">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon.ico">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+<meta property="og:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.585Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Markdown Test">
+<meta name="twitter:description" content="h1 Heading A level-one header with a link and emphasis  h2 Heading  h3 Heading   Setext-style level-one header  Setext-style level-two header  Block quotations Fenced code blocks Line blocks Lists">
+<meta name="twitter:image" content="https://richardyan.site/images/fgl-favicon-192x192.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Markdown Test</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/MathJax-Test/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/markdown-test/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/markdown-test/&text=Markdown Test"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/markdown-test/&is_video=false&description=Markdown Test"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Markdown Test&body=Check out this article: https://richardyan.site/markdown-test/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/markdown-test/&name=Markdown Test&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#h1-heading"><span class="toc-number">1.</span> <span class="toc-text">h1 Heading</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#a-level-one-header-with-a-link-and-emphasis"><span class="toc-number">2.</span> <span class="toc-text">A level-one header with a link and emphasis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#h2-heading"><span class="toc-number">2.1.</span> <span class="toc-text">h2 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h3-heading"><span class="toc-number">2.1.1.</span> <span class="toc-text">h3 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#h4-heading"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">h4 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#h5-heading"><span class="toc-number">2.1.1.1.1.</span> <span class="toc-text">h5 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#h6-heading"><span class="toc-number">2.1.1.1.1.1.</span> <span class="toc-text">h6 Heading</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#setext-style-level-one-header"><span class="toc-number">3.</span> <span class="toc-text">Setext-style level-one header</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#setext-style-level-two-header"><span class="toc-number">3.1.</span> <span class="toc-text">Setext-style level-two header</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#block-quotations"><span class="toc-number">4.</span> <span class="toc-text">Block quotations</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#fenced-code-blocks"><span class="toc-number">5.</span> <span class="toc-text">Fenced code blocks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#line-blocks"><span class="toc-number">6.</span> <span class="toc-text">Line blocks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lists"><span class="toc-number">7.</span> <span class="toc-text">Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bullet-lists"><span class="toc-number">7.1.</span> <span class="toc-text">Bullet lists</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#block-content-in-list-items"><span class="toc-number">7.1.1.</span> <span class="toc-text">Block content in list items</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ordered-lists"><span class="toc-number">7.2.</span> <span class="toc-text">Ordered lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#definition-lists"><span class="toc-number">7.3.</span> <span class="toc-text">Definition lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#numbered-example-lists"><span class="toc-number">7.4.</span> <span class="toc-text">Numbered example lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#compact-and-loose-lists"><span class="toc-number">7.5.</span> <span class="toc-text">Compact and loose lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ending-a-list"><span class="toc-number">7.6.</span> <span class="toc-text">Ending a list</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#horizontal-rules"><span class="toc-number">8.</span> <span class="toc-text">Horizontal rules</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tables"><span class="toc-number">9.</span> <span class="toc-text">Tables</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-table_captions"><span class="toc-number">9.1.</span> <span class="toc-text">Extension: table_captions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-simple_tables"><span class="toc-number">9.2.</span> <span class="toc-text">Extension: simple_tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-multiline_tables"><span class="toc-number">9.3.</span> <span class="toc-text">Extension: multiline_tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-grid_tables"><span class="toc-number">9.4.</span> <span class="toc-text">Extension: grid_tables</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#grid-table-limitations"><span class="toc-number">9.4.1.</span> <span class="toc-text">Grid Table Limitations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-pipe_tables"><span class="toc-number">9.5.</span> <span class="toc-text">Extension: pipe_tables</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#inline-formatting"><span class="toc-number">10.</span> <span class="toc-text">Inline formatting</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#emphasis"><span class="toc-number">10.1.</span> <span class="toc-text">Emphasis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-intraword_underscores"><span class="toc-number">10.2.</span> <span class="toc-text">Extension: intraword_underscores</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strikeout"><span class="toc-number">10.3.</span> <span class="toc-text">Strikeout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#superscripts-and-subscripts"><span class="toc-number">10.4.</span> <span class="toc-text">Superscripts and subscripts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#verbatim"><span class="toc-number">10.5.</span> <span class="toc-text">Verbatim</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#extension-inline_code_attributes"><span class="toc-number">10.5.1.</span> <span class="toc-text">Extension: inline_code_attributes</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#small-caps"><span class="toc-number">10.6.</span> <span class="toc-text">Small caps</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#latex-macros"><span class="toc-number">11.</span> <span class="toc-text">LaTeX macros</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#links"><span class="toc-number">12.</span> <span class="toc-text">Links</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#automatic-links"><span class="toc-number">12.1.</span> <span class="toc-text">Automatic links</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inline-links"><span class="toc-number">12.2.</span> <span class="toc-text">Inline links</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reference-links"><span class="toc-number">12.3.</span> <span class="toc-text">Reference links</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#extension-shortcut_reference_links"><span class="toc-number">12.3.1.</span> <span class="toc-text">Extension: shortcut_reference_links</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#internal-links"><span class="toc-number">12.3.2.</span> <span class="toc-text">Internal links</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#images"><span class="toc-number">13.</span> <span class="toc-text">Images</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-implicit_figures"><span class="toc-number">13.1.</span> <span class="toc-text">Extension: implicit_figures</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-link_attributes"><span class="toc-number">13.2.</span> <span class="toc-text">Extension: link_attributes</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#spans"><span class="toc-number">14.</span> <span class="toc-text">Spans</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#footnotes"><span class="toc-number">15.</span> <span class="toc-text">Footnotes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-inline_notes"><span class="toc-number">15.1.</span> <span class="toc-text">Extension: inline_notes</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#typography"><span class="toc-number">16.</span> <span class="toc-text">Typography</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Markdown Test
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-03T23:07:10.000Z" itemprop="datePublished">2019-01-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#h1-heading">h1 Heading</a></li>
+<li><a href="#a-level-one-header-with-a-link-and-emphasis">A level-one header with a <span>link</span> and <em>emphasis</em></a>
+<ul>
+<li><a href="#h2-heading">h2 Heading</a>
+<ul>
+<li><a href="#h3-heading">h3 Heading</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#setext-style-level-one-header">Setext-style level-one header</a>
+<ul>
+<li><a href="#setext-style-level-two-header">Setext-style level-two header</a></li>
+</ul></li>
+<li><a href="#block-quotations">Block quotations</a></li>
+<li><a href="#fenced-code-blocks">Fenced code blocks</a></li>
+<li><a href="#line-blocks">Line blocks</a></li>
+<li><a href="#lists">Lists</a>
+<ul>
+<li><a href="#bullet-lists">Bullet lists</a>
+<ul>
+<li><a href="#block-content-in-list-items">Block content in list items</a></li>
+</ul></li>
+<li><a href="#ordered-lists">Ordered lists</a></li>
+<li><a href="#definition-lists">Definition lists</a></li>
+<li><a href="#numbered-example-lists">Numbered example lists</a></li>
+<li><a href="#compact-and-loose-lists">Compact and loose lists</a></li>
+<li><a href="#ending-a-list">Ending a list</a></li>
+</ul></li>
+<li><a href="#horizontal-rules">Horizontal rules</a></li>
+<li><a href="#tables">Tables</a>
+<ul>
+<li><a href="#extension-table_captions">Extension: table_captions</a></li>
+<li><a href="#extension-simple_tables">Extension: simple_tables</a></li>
+<li><a href="#extension-multiline_tables">Extension: multiline_tables</a></li>
+<li><a href="#extension-grid_tables">Extension: grid_tables</a>
+<ul>
+<li><a href="#grid-table-limitations">Grid Table Limitations</a></li>
+</ul></li>
+<li><a href="#extension-pipe_tables">Extension: pipe_tables</a></li>
+</ul></li>
+<li><a href="#inline-formatting">Inline formatting</a>
+<ul>
+<li><a href="#emphasis">Emphasis</a></li>
+<li><a href="#extension-intraword_underscores">Extension: intraword_underscores</a></li>
+<li><a href="#strikeout">Strikeout</a></li>
+<li><a href="#superscripts-and-subscripts">Superscripts and subscripts</a></li>
+<li><a href="#verbatim">Verbatim</a>
+<ul>
+<li><a href="#extension-inline_code_attributes">Extension: inline_code_attributes</a></li>
+</ul></li>
+<li><a href="#small-caps">Small caps</a></li>
+</ul></li>
+<li><a href="#latex-macros">LaTeX macros</a></li>
+<li><a href="#links">Links</a>
+<ul>
+<li><a href="#automatic-links">Automatic links</a></li>
+<li><a href="#inline-links">Inline links</a></li>
+<li><a href="#reference-links">Reference links</a>
+<ul>
+<li><a href="#extension-shortcut_reference_links">Extension: shortcut_reference_links</a></li>
+<li><a href="#internal-links">Internal links</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#images">Images</a>
+<ul>
+<li><a href="#extension-implicit_figures">Extension: implicit_figures</a></li>
+<li><a href="#extension-link_attributes">Extension: link_attributes</a></li>
+</ul></li>
+<li><a href="#spans">Spans</a></li>
+<li><a href="#footnotes">Footnotes</a>
+<ul>
+<li><a href="#extension-inline_notes">Extension: inline_notes</a></li>
+</ul></li>
+<li><a href="#typography">Typography</a></li>
+</ul>
+</div><h1 id="h1-heading">h1 Heading</h1><h1 id="a-level-one-header-with-a-link-and-emphasis">A level-one header with a <a href="/url">link</a> and <em>emphasis</em></h1><h2 id="h2-heading">h2 Heading</h2><h3 id="h3-heading">h3 Heading</h3><h4 id="h4-heading">h4 Heading</h4><h5 id="h5-heading">h5 Heading</h5><h6 id="h6-heading">h6 Heading</h6><h1 id="setext-style-level-one-header">Setext-style level-one header</h1><h2 id="setext-style-level-two-header">Setext-style level-two header</h2><h1 id="block-quotations">Block quotations</h1><blockquote>
+<p>This is a block quote. This paragraph has two lines.</p>
+<ol type="1">
+<li>This is a list inside a block quote.</li>
+<li>Second item.</li>
+</ol>
+</blockquote><p>A “lazy” form, which requires the &gt; character only on the first line of each block, is also allowed:</p><blockquote>
+<p>This is a block quote. This paragraph has two lines.</p>
+</blockquote><blockquote>
+<ol type="1">
+<li>This is a list inside a block quote.</li>
+<li>Second item.</li>
+</ol>
+</blockquote><p>Among the block elements that can be contained in a block quote are other block quotes. That is, block quotes can be nested:</p><blockquote>
+<p>This is a block quote.</p>
+<blockquote>
+<p>A block quote within a block quote.</p>
+</blockquote>
+</blockquote><h1 id="fenced-code-blocks">Fenced code blocks</h1><p>Extension: backtick_code_blocks</p><figure class="highlight haskell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-title">qsort</span> []     = []</span><br><span class="line"><span class="hljs-title">qsort</span> (x:xs) = qsort (filter (&lt; x) xs) ++ [x] ++</span><br><span class="line">               qsort (filter (&gt;= x) xs)</span><br></pre></td></tr></tbody></table></figure><h1 id="line-blocks">Line blocks</h1><p>Extension: line_blocks</p><p>A line block is a sequence of lines beginning with a vertical bar (|) followed by a space. The division into lines will be preserved in the output, as will any leading spaces; otherwise, the lines will be formatted as Markdown. This is useful for verse and addresses:</p><div class="line-block">The limerick packs laughs anatomical<br>
+In space that is quite economical.<br>
+   But the good ones I&apos;ve seen<br>
+   So seldom are clean<br>
+And the clean ones so seldom are comical<br>
+<br>
+200 Main St.<br>
+Berkeley, CA 94718</div><p>The lines can be hard-wrapped if needed, but the continuation line must begin with a space.</p><div class="line-block">The Right Honorable Most Venerable and Righteous Samuel L. Constable, Jr.<br>
+200 Main St.<br>
+Berkeley, CA 94718</div><p>This syntax is borrowed from reStructuredText.</p><h1 id="lists">Lists</h1><h2 id="bullet-lists">Bullet lists</h2><p>A bullet list is a list of bulleted list items. A bulleted list item begins with a bullet (*, +, or -). Here is a simple example:</p><ul>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ul><p>This will produce a “compact” list. If you want a “loose” list, in which each item is formatted as a paragraph, put spaces between the items:</p><ul>
+<li><p>one</p></li>
+<li><p>two</p></li>
+<li><p>three</p></li>
+</ul><p>The bullets need not be flush with the left margin; they may be indented one, two, or three spaces. The bullet must be followed by whitespace.</p><p>List items look best if subsequent lines are flush with the first line (after the bullet):</p><ul>
+<li>here is my first list item.</li>
+<li>and my second.</li>
+</ul><p>But Markdown also allows a “lazy” format:</p><ul>
+<li>here is my first list item.</li>
+<li>and my second.</li>
+</ul><h3 id="block-content-in-list-items">Block content in list items</h3><p>A list item may contain multiple paragraphs and other block-level content. However, subsequent paragraphs must be preceded by a blank line and indented to line up with the first non-space content after the list marker.</p><ul>
+<li><p>First paragraph.</p>
+<p>Continued.</p></li>
+<li><p>Second paragraph. With a code block, which must be indented eight spaces:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{ code }</span><br></pre></td></tr></tbody></table></figure></li>
+</ul><p>Exception: if the list marker is followed by an indented code block, which must begin 5 spaces after the list marker, then subsequent paragraphs must begin two columns after the last character of the list marker:</p><ul>
+<li><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code</span><br></pre></td></tr></tbody></table></figure>
+continuation paragraph</li>
+</ul><p>List items may include other lists. In this case the preceding blank line is optional. The nested list must be indented to line up with the first non-space character after the list marker of the containing list item.</p><ul>
+<li>fruits
+<ul>
+<li>apples
+<ul>
+<li>macintosh</li>
+<li>red delicious</li>
+</ul></li>
+<li>pears</li>
+<li>peaches</li>
+</ul></li>
+<li>vegetables
+<ul>
+<li>broccoli</li>
+<li>chard</li>
+</ul></li>
+</ul><p>As noted above, Markdown allows you to write list items “lazily,” instead of indenting continuation lines. However, if there are multiple paragraphs or other blocks in a list item, the first line of each must be indented.</p><ul>
+<li><p>A lazy, lazy, list item.</p></li>
+<li><p>Another one; this looks bad but is legal.</p>
+<p>Second paragraph of second list item.</p></li>
+</ul><h2 id="ordered-lists">Ordered lists</h2><p>Ordered lists work just like bulleted lists, except that the items begin with enumerators rather than bullets.</p><p>In standard Markdown, enumerators are decimal numbers followed by a period and a space. The numbers themselves are ignored, so there is no difference between this list:</p><ol type="1">
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol><p>and this one:</p><ol start="5" type="1">
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol><p>Extension: fancy_lists</p><p>Unlike standard Markdown, pandoc allows ordered list items to be marked with uppercase and lowercase letters and roman numerals, in addition to Arabic numerals. List markers may be enclosed in parentheses or followed by a single right-parentheses or period. They must be separated from the text that follows by at least one space, and, if the list marker is a capital letter with a period, by at least two spaces.2</p><p>The fancy_lists extension also allows ‘#’ to be used as an ordered list marker in place of a numeral:</p><ol>
+<li>one</li>
+<li>two</li>
+</ol><p>Extension: startnum</p><p>Pandoc also pays attention to the type of list marker used, and to the starting number, and both of these are preserved where possible in the output format. Thus, the following yields a list with numbers followed by a single parenthesis, starting with 9, and a sublist with lowercase roman numerals:</p><ol start="9" type="1">
+<li>Ninth</li>
+<li>Tenth</li>
+<li>Eleventh
+<ol type="i">
+<li>subone</li>
+<li>subtwo</li>
+<li>subthree</li>
+</ol></li>
+</ol><p>Pandoc will start a new list each time a different type of list marker is used. So, the following will create three lists:</p><ol start="2" type="1">
+<li>Two</li>
+<li>Three</li>
+</ol><ol type="1">
+<li>Four</li>
+</ol><ul>
+<li>Five</li>
+</ul><p>If default list markers are desired, use #.:</p><ol>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol><h2 id="definition-lists">Definition lists</h2><p>Extension: definition_lists Pandoc supports definition lists, using the syntax of PHP Markdown Extra with some extensions.3</p><dl>
+<dt>Term 1</dt>
+<dd><p>Definition 1</p>
+</dd>
+<dt>Term 2 with <em>inline markup</em></dt>
+<dd><p>Definition 2</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{ some code, part of Definition 2 }</span><br></pre></td></tr></tbody></table></figure>
+<p>Third paragraph of definition 2.</p>
+</dd>
+</dl><p>Each term must fit on one line, which may optionally be followed by a blank line, and must be followed by one or more definitions. A definition begins with a colon or tilde, which may be indented one or two spaces.</p><p>A term may have multiple definitions, and each definition may consist of one or more block elements (paragraph, code block, list, etc.), each indented four spaces or one tab stop. The body of the definition (including the first line, aside from the colon or tilde) should be indented four spaces. However, as with other Markdown lists, you can “lazily” omit indentation except at the beginning of a paragraph or other block element:</p><dl>
+<dt>Term 1</dt>
+<dd><p>Definition with lazy continuation.</p>
+<p>Second paragraph of the definition.</p>
+</dd>
+</dl><p>If you leave space before the definition (as in the example above), the text of the definition will be treated as a paragraph. In some output formats, this will mean greater spacing between term/definition pairs. For a more compact definition list, omit the space before the definition:</p><dl>
+<dt>Term 1</dt>
+<dd>Definition 1
+</dd>
+<dt>Term 2</dt>
+<dd>Definition 2a
+</dd>
+<dd>Definition 2b
+</dd>
+</dl><p>Note that space between items in a definition list is required. (A variant that loosens this requirement, but disallows “lazy” hard wrapping, can be activated with compact_definition_lists: see Non-pandoc extensions, below.)</p><h2 id="numbered-example-lists">Numbered example lists</h2><p>Extension: example_lists</p><p>The special list marker @ can be used for sequentially numbered examples. The first list item with a @ marker will be numbered ‘1’, the next ‘2’, and so on, throughout the document. The numbered examples need not occur in a single list; each new list using @ will take up where the last stopped. So, for example:</p><ol class="example" type="1">
+<li>My first example will be numbered (1).</li>
+<li>My second example will be numbered (2).</li>
+</ol><p>Explanation of examples.</p><ol start="3" class="example" type="1">
+<li><p>My third example will be numbered (3). Numbered examples can be labeled and referred to elsewhere in the document:</p></li>
+<li><p>This is a good example.</p></li>
+</ol><p>As (4) illustrates, ...</p><p>The label can be any string of alphanumeric characters, underscores, or hyphens.</p><h2 id="compact-and-loose-lists">Compact and loose lists</h2><p>Pandoc behaves differently from Markdown.pl on some “edge cases” involving lists. Consider this source:</p><ul>
+<li>First</li>
+<li>Second:
+<ul>
+<li>Fee</li>
+<li>Fie</li>
+<li>Foe</li>
+</ul></li>
+<li>Third</li>
+</ul><p>Pandoc transforms this into a “compact list” (with no &lt;p&gt; tags around “First”, “Second”, or “Third”), while Markdown puts &lt;p&gt; tags around “Second” and “Third” (but not “First”), because of the blank space around “Third”. Pandoc follows a simple rule: if the text is followed by a blank line, it is treated as a paragraph. Since “Second” is followed by a list, and not a blank line, it isn’t treated as a paragraph. The fact that the list is followed by a blank line is irrelevant. (Note: Pandoc works this way even when the markdown_strict format is specified. This behavior is consistent with the official Markdown syntax description, even though it is different from that of Markdown.pl.)</p><h2 id="ending-a-list">Ending a list</h2><p>What if you want to put an indented code block after a list?</p><ul>
+<li><p>item one</p></li>
+<li><p>item two</p>
+<p>{ my code block }</p></li>
+</ul><p>Trouble! Here pandoc (like other Markdown implementations) will treat { my code block } as the second paragraph of item two, and not as a code block.</p><p>To “cut off” the list after item two, you can insert some non-indented content, like an HTML comment, which won’t produce visible output in any format:</p><ul>
+<li>item one</li>
+<li>item two</li>
+</ul><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{ my code block }</span><br></pre></td></tr></tbody></table></figure><p>You can use the same trick if you want two consecutive lists instead of one big list:</p><ol type="1">
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol><ol type="1">
+<li>uno</li>
+<li>dos</li>
+<li>tres</li>
+</ol><h1 id="horizontal-rules">Horizontal rules</h1><p>A line containing a row of three or more *, -, or _ characters (optionally separated by spaces) produces a horizontal rule:</p><hr><hr><h1 id="tables">Tables</h1><p>Four kinds of tables may be used. The first three kinds presuppose the use of a fixed-width font, such as Courier. The fourth kind can be used with proportionally spaced fonts, as it does not require lining up columns.</p><h2 id="extension-table_captions">Extension: table_captions</h2><p>A caption may optionally be provided with all 4 kinds of tables (as illustrated in the examples below). A caption is a paragraph beginning with the string Table: (or just :), which will be stripped off. It may appear either before or after the table.</p><h2 id="extension-simple_tables">Extension: simple_tables</h2><p>Simple tables look like this:</p><table>
+<caption>Demonstration of simple table syntax.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Right</th>
+<th style="text-align: left;">Left</th>
+<th style="text-align: center;">Center</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">12</td>
+<td style="text-align: center;">12</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">123</td>
+<td style="text-align: left;">123</td>
+<td style="text-align: center;">123</td>
+<td>123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;">1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table><p>The headers and table rows must each fit on one line. Column alignments are determined by the position of the header text relative to the dashed line below it:4</p><p>If the dashed line is flush with the header text on the right side but extends beyond it on the left, the column is right-aligned.</p><p>If the dashed line is flush with the header text on the left side but extends beyond it on the right, the column is left-aligned.</p><p>If the dashed line extends beyond the header text on both sides, the column is centered.</p><p>If the dashed line is flush with the header text on both sides, the default alignment is used (in most cases, this will be left).</p><p>The table must end with a blank line, or a line of dashes followed by a blank line.</p><p>The column headers may be omitted, provided a dashed line is used to end the table. For example:</p><table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">12</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">123</td>
+<td style="text-align: left;">123</td>
+<td style="text-align: center;">123</td>
+<td style="text-align: right;">123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table><p>When headers are omitted, column alignments are determined on the basis of the first line of the table body. So, in the tables above, the columns would be right, left, center, and right aligned, respectively.</p><h2 id="extension-multiline_tables">Extension: multiline_tables</h2><p>Multiline tables allow headers and table rows to span multiple lines of text (but cells that span multiple columns or rows of the table are not supported). Here is an example:</p><table style="width:86%;">
+<caption>Here&apos;s the caption. It, too, may span multiple lines.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 22%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Centered Header</th>
+<th>Default Aligned</th>
+<th style="text-align: right;">Right Aligned</th>
+<th style="text-align: left;">Left Aligned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">First</td>
+<td>row</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: left;">Example of a row that spans multiple lines.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Second</td>
+<td>row</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: left;">Here&apos;s another one. Note the blank line between rows.</td>
+</tr>
+</tbody>
+</table><p>These work like simple tables, but with the following differences:</p><p>They must begin with a row of dashes, before the header text (unless the headers are omitted).</p><p>They must end with a row of dashes, then a blank line.</p><p>The rows must be separated by blank lines.</p><p>In multiline tables, the table parser pays attention to the widths of the columns, and the writers try to reproduce these relative widths in the output. So, if you find that one of the columns is too narrow in the output, try widening it in the Markdown source.</p><p>Headers may be omitted in multiline tables as well as simple tables:</p><table style="width:86%;">
+<caption>Here&apos;s a multiline table without headers.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 22%">
+<col style="width: 36%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">First</td>
+<td style="text-align: left;">row</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: left;">Example of a row that spans multiple lines.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Second</td>
+<td style="text-align: left;">row</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: left;">Here&apos;s another one. Note the blank line between rows.</td>
+</tr>
+</tbody>
+</table><p>It is possible for a multiline table to have just one row, but the row should be followed by a blank line (and then the row of dashes that ends the table), or the table may be interpreted as a simple table.</p><h2 id="extension-grid_tables">Extension: grid_tables</h2><p>Grid tables look like this:</p><table style="width:74%;">
+<caption>Sample grid table.</caption>
+<colgroup>
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fruit</th>
+<th>Price</th>
+<th>Advantages</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bananas</td>
+<td>$1.34</td>
+<td><ul>
+<li>built-in wrapper</li>
+<li>bright color</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>Oranges</td>
+<td>$2.10</td>
+<td><ul>
+<li>cures scurvy</li>
+<li>tasty</li>
+</ul></td>
+</tr>
+</tbody>
+</table><p>The row of =s separates the header from the table body, and can be omitted for a headerless table. The cells of grid tables may contain arbitrary block elements (multiple paragraphs, code blocks, lists, etc.). Cells that span multiple columns or rows are not supported. Grid tables can be created easily using Emacs table mode.</p><p>Alignments can be specified as with pipe tables, by putting colons at the boundaries of the separator line after the header:</p><table style="width:74%;">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Right</th>
+<th style="text-align: left;">Left</th>
+<th style="text-align: center;">Centered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Bananas</td>
+<td style="text-align: left;">$1.34</td>
+<td style="text-align: center;">built-in wrapper</td>
+</tr>
+</tbody>
+</table><p>For headerless tables, the colons go on the top line instead:</p><table style="width:74%;">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 29%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Right</td>
+<td style="text-align: left;">Left</td>
+<td style="text-align: center;">Centered</td>
+</tr>
+</tbody>
+</table><h3 id="grid-table-limitations">Grid Table Limitations</h3><p>Pandoc does not support grid tables with row spans or column spans. This means that neither variable numbers of columns across rows nor variable numbers of rows across columns are supported by Pandoc. All grid tables must have the same number of columns in each row, and the same number of rows in each column. For example, the Docutils sample grid tables will not render as expected with Pandoc.</p><h2 id="extension-pipe_tables">Extension: pipe_tables</h2><p>Pipe tables look like this:</p><table>
+<caption>Demonstration of pipe table syntax.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Right</th>
+<th style="text-align: left;">Left</th>
+<th>Default</th>
+<th style="text-align: center;">Center</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">12</td>
+<td>12</td>
+<td style="text-align: center;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">123</td>
+<td style="text-align: left;">123</td>
+<td>123</td>
+<td style="text-align: center;">123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">1</td>
+<td>1</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table><p>The syntax is identical to PHP Markdown Extra tables. The beginning and ending pipe characters are optional, but pipes are required between all columns. The colons indicate column alignment as shown. The header cannot be omitted. To simulate a headerless table, include a header with blank cells.</p><p>Since the pipes indicate column boundaries, columns need not be vertically aligned, as they are in the above example. So, this is a perfectly legal (though ugly) pipe table:</p><table>
+<thead>
+<tr class="header">
+<th>fruit</th>
+<th style="text-align: right;">price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>apple</td>
+<td style="text-align: right;">2.05</td>
+</tr>
+<tr class="even">
+<td>pear</td>
+<td style="text-align: right;">1.37</td>
+</tr>
+<tr class="odd">
+<td>orange</td>
+<td style="text-align: right;">3.09</td>
+</tr>
+</tbody>
+</table><p>The cells of pipe tables cannot contain block elements like paragraphs and lists, and cannot span multiple lines. If a pipe table contains a row whose printable content is wider than the column width (see --columns), then the cell contents will wrap, with the relative cell widths determined by the widths of the separator lines. (In this case, the table will take up the full text width.) If no lines are wider than column width, then cell contents will not be wrapped, and the cells will be sized to their contents.</p><p>Note: pandoc also recognizes pipe tables of the following form, as can be produced by Emacs’ orgtbl-mode:</p><table>
+<thead>
+<tr class="header">
+<th>One</th>
+<th>Two</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>my</td>
+<td>table</td>
+</tr>
+<tr class="even">
+<td>is</td>
+<td>nice</td>
+</tr>
+</tbody>
+</table><p>The difference is that + is used instead of |. Other orgtbl features are not supported. In particular, to get non-default column alignment, you’ll need to add colons as above.</p><h1 id="inline-formatting">Inline formatting</h1><h2 id="emphasis">Emphasis</h2><p>To emphasize some text, surround it with *s or _, like this:</p><p>This text is <em>emphasized with underscores</em>, and this is <em>emphasized with asterisks</em>. Double * or _ produces strong emphasis:</p><p>This is <strong>strong emphasis</strong> and <strong>with underscores</strong>. A * or _ character surrounded by spaces, or backslash-escaped, will not trigger emphasis:</p><p>This is * not emphasized *, and *neither is this*.</p><h2 id="extension-intraword_underscores">Extension: intraword_underscores</h2><p>Because _ is sometimes used inside words and identifiers, pandoc does not interpret a _ surrounded by alphanumeric characters as an emphasis marker. If you want to emphasize just part of a word, use *:</p><p>feas<em>ible</em>, not feas<em>able</em>.</p><h2 id="strikeout">Strikeout</h2><p>Extension: strikeout</p><p>To strikeout a section of text with a horizontal line, begin and end it with ~~. Thus, for example,</p><p>This <del>is deleted text.</del></p><h2 id="superscripts-and-subscripts">Superscripts and subscripts</h2><p>Extension: superscript, subscript</p><p>Superscripts may be written by surrounding the superscripted text by ^ characters; subscripts may be written by surrounding the subscripted text by ~ characters. Thus, for example,</p><p>H<sub>2</sub>O is a liquid. 2<sup>10</sup> is 1024.</p><p>If the superscripted or subscripted text contains spaces, these spaces must be escaped with backslashes. (This is to prevent accidental superscripting and subscripting through the ordinary use of ~ and ^.) Thus, if you want the letter P with ‘a cat’ in subscripts, use P<sub>a cat</sub>, not P~a cat~.</p><h2 id="verbatim">Verbatim</h2><p>To make a short span of text verbatim, put it inside backticks:</p><p>What is the difference between <code>&gt;&gt;=</code> and <code>&gt;&gt;</code>?</p><p>If the verbatim text includes a backtick, use double backticks:</p><p>Here is a literal backtick <code>`</code>.</p><p>(The spaces after the opening backticks and before the closing backticks will be ignored.)</p><p>The general rule is that a verbatim span starts with a string of consecutive backticks (optionally followed by a space) and ends with a string of the same number of backticks (optionally preceded by a space).</p><p>Note that backslash-escapes (and other Markdown constructs) do not work in verbatim contexts:</p><p>This is a backslash followed by an asterisk: <code>\*</code>.</p><h3 id="extension-inline_code_attributes">Extension: inline_code_attributes</h3><p>Attributes can be attached to verbatim text, just as with fenced code blocks:</p><p><code class="haskell">&lt;$&gt;</code></p><h2 id="small-caps">Small caps</h2><p>To write small caps, use the smallcaps class:</p><p><span class="smallcaps">Small caps</span></p><p>Or, without the bracketed_spans extension:</p><p><span class="smallcaps">Small caps</span></p><p>For compatibility with other Markdown flavors, CSS is also supported:</p><p><span class="smallcaps">Small caps</span></p><p>This will work in all output formats that support small caps.</p><h1 id="latex-macros">LaTeX macros</h1><p>Extension: latex_macros</p><p>For output formats other than LaTeX, pandoc will parse LaTeX \newcommand and \renewcommand definitions and apply the resulting macros to all LaTeX math. So, for example, the following will work in all output formats, not just LaTeX:</p><p><span class="math inline">\(\langle a, b, c \rangle\)</span></p><p>In LaTeX output, the \newcommand definition will simply be passed unchanged to the output.</p><h1 id="links">Links</h1><p>Markdown allows links to be specified in several ways.</p><h2 id="automatic-links">Automatic links</h2><p>If you enclose a URL or email address in pointy brackets, it will become a link:</p><p><a href="http://google.com" class="uri" target="_blank" rel="noopener">http://google.com</a></p><p><a href="mailto:sam@green.eggs.ham" class="email" target="_blank" rel="noopener">sam@green.eggs.ham</a></p><h2 id="inline-links">Inline links</h2><p>An inline link consists of the link text in square brackets, followed by the URL in parentheses. (Optionally, the URL can be followed by a link title, in quotes.)</p><p>This is an <a href="/url">inline link</a>, and here&apos;s <a href="http://fsf.org" title="click here for a good time!" target="_blank" rel="noopener">one with a title</a>.</p><p>There can be no space between the bracketed part and the parenthesized part. The link text can contain formatting (such as emphasis), but the title cannot.</p><p>Email addresses in inline links are not autodetected, so they have to be prefixed with mailto:</p><p><a href="mailto:sam@green.eggs.ham" target="_blank" rel="noopener">Write me!</a></p><h2 id="reference-links">Reference links</h2><p>An explicit reference link has two parts, the link itself and the link definition, which may occur elsewhere in the document (either before or after the link).</p><p>The link consists of link text in square brackets, followed by a label in square brackets. (There cannot be space between the two unless the spaced_reference_links extension is enabled.) The link definition consists of the bracketed label, followed by a colon and a space, followed by the URL, and optionally (after a space) a link title either in quotes or in parentheses. The label must not be parseable as a citation (assuming the citations extension is enabled): citations take precedence over link labels.</p><p>Here are some examples:</p><figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="hljs-symbol">my label 1</span>]: <span class="hljs-link">/foo/bar.html  &quot;My title, optional&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="hljs-symbol">my label 2</span>]: <span class="hljs-link">/foo</span></span><br><span class="line"></span><br><span class="line">[<span class="hljs-symbol">my label 3</span>]: <span class="hljs-link">http://fsf.org (The free software foundation)</span></span><br><span class="line"></span><br><span class="line">[<span class="hljs-symbol">my label 4</span>]: <span class="hljs-link">/bar#special  &apos;A title in single quotes&apos;</span></span><br></pre></td></tr></tbody></table></figure><p>The URL may optionally be surrounded by angle brackets:</p><figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="hljs-symbol">my label 5</span>]: <span class="hljs-link">&lt;http://foo.bar.baz&gt;</span></span><br></pre></td></tr></tbody></table></figure><p>The title may go on the next line:</p><figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="hljs-symbol">my label 6</span>]: <span class="hljs-link">http://fsf.org</span></span><br><span class="line">  &quot;The free software foundation&quot;</span><br></pre></td></tr></tbody></table></figure><p>Note that link labels are not case sensitive. So, this will work:</p><p>Here is <a href="/bar/baz">my link</a></p><p>In an implicit reference link, the second pair of brackets is empty:</p><p>See <a href="http://foo.bar.baz" target="_blank" rel="noopener">my website 2</a>.</p><p>Note: In Markdown.pl and most other Markdown implementations, reference link definitions cannot occur in nested constructions such as list items or block quotes. Pandoc lifts this arbitrary seeming restriction. So the following is fine in pandoc, though not in most other implementations:</p><blockquote>
+<p>My block <a href="/foo">quote</a>.</p>
+</blockquote><h3 id="extension-shortcut_reference_links">Extension: shortcut_reference_links</h3><p>In a shortcut reference link, the second pair of brackets may be omitted entirely:</p><p>See <a href="http://foo.bar.baz" target="_blank" rel="noopener">my website</a>.</p><h3 id="internal-links">Internal links</h3><p>To link to another section of the same document, use the automatically generated identifier (see Header identifiers). For example:</p><p>See the <a href="#introduction">Introduction</a>.</p><p>or</p><p>See the <a href="#introduction">Introduction</a>.</p><p>Internal links are currently supported for HTML formats (including HTML slide shows and EPUB), LaTeX, and ConTeXt.</p><h1 id="images">Images</h1><p>A link immediately preceded by a ! will be treated as an image. The link text will be used as the image’s alt text:</p><figure>
+<img src="/images/fgl-favicon-192x192.png" title="Logo of this site" alt><figcaption>logo</figcaption>
+</figure><figure>
+<img src="/images/fgl-favicon-192x192.png" alt><figcaption>logo</figcaption>
+</figure><h2 id="extension-implicit_figures">Extension: implicit_figures</h2><p>An image with nonempty alt text, occurring by itself in a paragraph, will be rendered as a figure with a caption. The image’s alt text will be used as the caption.</p><figure>
+<img src="/images/fgl-favicon-192x192.png" alt><figcaption>Logo of this site</figcaption>
+</figure><p>How this is rendered depends on the output format. Some output formats (e.g. RTF) do not yet support figures. In those formats, you’ll just get an image in a paragraph by itself, with no caption.</p><p>If you just want a regular inline image, just make sure it is not the only thing in the paragraph. One way to do this is to insert a nonbreaking space after the image:</p><p><img src="/images/fgl-favicon.ico" alt="This image won&apos;t be a figure"> </p><p>Note that in reveal.js slide shows, an image in a paragraph by itself that has the stretch class will fill the screen, and the caption and figure tags will be omitted.</p><h2 id="extension-link_attributes">Extension: link_attributes</h2><p>Attributes can be set on links and images:</p><p>An inline <img src="/images/fgl-favicon-192x192.png" id="id" class="class" width="30" height="20" alt="logo">  and a reference <img src="/images/fgl-favicon-192x192.png" title="optional title" id="id" class="class" data-key="val" data-key2="val 2" alt="logo2"> with attributes.</p><p>(This syntax is compatible with PHP Markdown Extra when only #id and .class are used.)</p><p>For HTML and EPUB, all attributes except width and height (but including srcset and sizes) are passed through as is. The other writers ignore attributes that are not supported by their output format.</p><p>The width and height attributes on images are treated specially. When used without a unit, the unit is assumed to be pixels. However, any of the following unit identifiers can be used: px, cm, mm, in, inch and %. There must not be any spaces between the number and the unit. For example:</p><p><img src="/images/fgl-favicon-192x192.png" style="width:50.0%"></p><p>Dimensions are converted to inches for output in page-based formats like LaTeX. Dimensions are converted to pixels for output in HTML-like formats. Use the --dpi option to specify the number of pixels per inch. The default is 96dpi. The % unit is generally relative to some available space. For example the above example will render to</p><p><code>&lt;img href=&quot;file.jpg&quot; style=&quot;width: 50%;&quot; /&gt;</code> (HTML),</p><p><code>\includegraphics[width=0.5\textwidth]{file.jpg}</code> (LaTeX), or</p><p><code>\externalfigure[file.jpg][width=0.5\textwidth]</code> (ConTeXt).</p><p>, or both (HTML). When no width or height attributes are specified, the fallback is to look at the image resolution and the dpi metadata embedded in the image file.</p><h1 id="spans">Spans</h1><p>Extension: bracketed_spans</p><p>A bracketed sequence of inlines, as one would use to begin a link, will be treated as a span with attributes if it is followed immediately by attributes:</p><p><span class="class" data-key="val">This is <em>some text</em></span></p><h1 id="footnotes">Footnotes</h1><p>Extension: footnotes</p><p>Pandoc’s Markdown allows footnotes, using the following syntax:</p><p>Here is a footnote reference,<a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a> and another.<a href="#fn2-1" class="footnote-ref" id="fnref2-1" role="doc-noteref"><sup>2</sup></a></p><p>This paragraph won&apos;t be part of the note, because it isn&apos;t indented.</p><p>The identifiers in footnote references may not contain spaces, tabs, or newlines. These identifiers are used only to correlate the footnote reference with the note itself; in the output, footnotes will be numbered sequentially.</p><p>The footnotes themselves need not be placed at the end of the document. They may appear anywhere except inside other block elements (lists, block quotes, tables, etc.). Each footnote should be separated from surrounding content (including other footnotes) by blank lines.</p><h2 id="extension-inline_notes">Extension: inline_notes</h2><p>Inline footnotes are also allowed (though, unlike regular notes, they cannot contain multiple paragraphs). The syntax is as follows:</p><p>Here is an inline note.<a href="#fn3-1" class="footnote-ref" id="fnref3-1" role="doc-noteref"><sup>3</sup></a> Inline and regular footnotes may be mixed freely.</p><h1 id="typography">Typography</h1><p>Extension: smart</p><p>Interpret straight quotes as curly quotes, --- as em-dashes, -- as en-dashes, and ... as ellipses. Nonbreaking spaces are inserted after certain abbreviations, such as “Mr.” This option currently affects the input formats markdown, commonmark, latex, mediawiki, org, rst, and twiki, and the output formats markdown, latex, and context.</p><p>Note: If you are writing Markdown, then the smart extension has the reverse effect: what would have been curly quotes comes out straight.</p><p>In LaTeX, smart means to use the standard TeX ligatures for quotation marks (`<code>and &apos;&apos; for double quotes,</code> and &apos; for single quotes) and dashes (-- for en-dash and --- for em-dash). If smart is disabled, then in reading LaTeX pandoc will parse these characters literally. In writing LaTeX, enabling smart tells pandoc to use the ligatures when possible; if smart is disabled pandoc will use unicode quotation mark and dash characters.</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>Here is the footnote.</p>
+</div><div class="tippy-tooltip" id="tooltip2-1" style="display: none">
+<p>Here&apos;s one with multiple blocks.</p>
+<p>Subsequent paragraphs are indented to show that they belong to the previous footnote.</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{ some.code }</span><br></pre></td></tr></tbody></table></figure>
+<p>The whole paragraph can be indented, or just the first line. In this way, multi-paragraph footnotes work like multi-paragraph list items.</p>
+</div><div class="tippy-tooltip" id="tooltip3-1" style="display: none">
+<p>Inlines notes are easier to write, since you don&apos;t have to pick an identifier and move down to type the note.</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+
+
+<li id="fn1-1" role="doc-endnote"><p>Here is the footnote.<a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li><li id="fn2-1" role="doc-endnote"><p>Here&apos;s one with multiple blocks.</p>
+<p>Subsequent paragraphs are indented to show that they belong to the previous footnote.</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{ some.code }</span><br></pre></td></tr></tbody></table></figure>
+<p>The whole paragraph can be indented, or just the first line. In this way, multi-paragraph footnotes work like multi-paragraph list items.<a href="#fnref2-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li><li id="fn3-1" role="doc-endnote"><p>Inlines notes are easier to write, since you don&apos;t have to pick an identifier and move down to type the note.<a href="#fnref3-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#h1-heading"><span class="toc-number">1.</span> <span class="toc-text">h1 Heading</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#a-level-one-header-with-a-link-and-emphasis"><span class="toc-number">2.</span> <span class="toc-text">A level-one header with a link and emphasis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#h2-heading"><span class="toc-number">2.1.</span> <span class="toc-text">h2 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h3-heading"><span class="toc-number">2.1.1.</span> <span class="toc-text">h3 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#h4-heading"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">h4 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#h5-heading"><span class="toc-number">2.1.1.1.1.</span> <span class="toc-text">h5 Heading</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#h6-heading"><span class="toc-number">2.1.1.1.1.1.</span> <span class="toc-text">h6 Heading</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#setext-style-level-one-header"><span class="toc-number">3.</span> <span class="toc-text">Setext-style level-one header</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#setext-style-level-two-header"><span class="toc-number">3.1.</span> <span class="toc-text">Setext-style level-two header</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#block-quotations"><span class="toc-number">4.</span> <span class="toc-text">Block quotations</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#fenced-code-blocks"><span class="toc-number">5.</span> <span class="toc-text">Fenced code blocks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#line-blocks"><span class="toc-number">6.</span> <span class="toc-text">Line blocks</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lists"><span class="toc-number">7.</span> <span class="toc-text">Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bullet-lists"><span class="toc-number">7.1.</span> <span class="toc-text">Bullet lists</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#block-content-in-list-items"><span class="toc-number">7.1.1.</span> <span class="toc-text">Block content in list items</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ordered-lists"><span class="toc-number">7.2.</span> <span class="toc-text">Ordered lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#definition-lists"><span class="toc-number">7.3.</span> <span class="toc-text">Definition lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#numbered-example-lists"><span class="toc-number">7.4.</span> <span class="toc-text">Numbered example lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#compact-and-loose-lists"><span class="toc-number">7.5.</span> <span class="toc-text">Compact and loose lists</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ending-a-list"><span class="toc-number">7.6.</span> <span class="toc-text">Ending a list</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#horizontal-rules"><span class="toc-number">8.</span> <span class="toc-text">Horizontal rules</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tables"><span class="toc-number">9.</span> <span class="toc-text">Tables</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-table_captions"><span class="toc-number">9.1.</span> <span class="toc-text">Extension: table_captions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-simple_tables"><span class="toc-number">9.2.</span> <span class="toc-text">Extension: simple_tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-multiline_tables"><span class="toc-number">9.3.</span> <span class="toc-text">Extension: multiline_tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-grid_tables"><span class="toc-number">9.4.</span> <span class="toc-text">Extension: grid_tables</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#grid-table-limitations"><span class="toc-number">9.4.1.</span> <span class="toc-text">Grid Table Limitations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-pipe_tables"><span class="toc-number">9.5.</span> <span class="toc-text">Extension: pipe_tables</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#inline-formatting"><span class="toc-number">10.</span> <span class="toc-text">Inline formatting</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#emphasis"><span class="toc-number">10.1.</span> <span class="toc-text">Emphasis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-intraword_underscores"><span class="toc-number">10.2.</span> <span class="toc-text">Extension: intraword_underscores</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strikeout"><span class="toc-number">10.3.</span> <span class="toc-text">Strikeout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#superscripts-and-subscripts"><span class="toc-number">10.4.</span> <span class="toc-text">Superscripts and subscripts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#verbatim"><span class="toc-number">10.5.</span> <span class="toc-text">Verbatim</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#extension-inline_code_attributes"><span class="toc-number">10.5.1.</span> <span class="toc-text">Extension: inline_code_attributes</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#small-caps"><span class="toc-number">10.6.</span> <span class="toc-text">Small caps</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#latex-macros"><span class="toc-number">11.</span> <span class="toc-text">LaTeX macros</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#links"><span class="toc-number">12.</span> <span class="toc-text">Links</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#automatic-links"><span class="toc-number">12.1.</span> <span class="toc-text">Automatic links</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inline-links"><span class="toc-number">12.2.</span> <span class="toc-text">Inline links</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reference-links"><span class="toc-number">12.3.</span> <span class="toc-text">Reference links</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#extension-shortcut_reference_links"><span class="toc-number">12.3.1.</span> <span class="toc-text">Extension: shortcut_reference_links</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#internal-links"><span class="toc-number">12.3.2.</span> <span class="toc-text">Internal links</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#images"><span class="toc-number">13.</span> <span class="toc-text">Images</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-implicit_figures"><span class="toc-number">13.1.</span> <span class="toc-text">Extension: implicit_figures</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-link_attributes"><span class="toc-number">13.2.</span> <span class="toc-text">Extension: link_attributes</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#spans"><span class="toc-number">14.</span> <span class="toc-text">Spans</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#footnotes"><span class="toc-number">15.</span> <span class="toc-text">Footnotes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#extension-inline_notes"><span class="toc-number">15.1.</span> <span class="toc-text">Extension: inline_notes</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#typography"><span class="toc-number">16.</span> <span class="toc-text">Typography</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/markdown-test/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/markdown-test/&text=Markdown Test"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/markdown-test/&is_video=false&description=Markdown Test"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Markdown Test&body=Check out this article: https://richardyan.site/markdown-test/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/markdown-test/&title=Markdown Test"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/markdown-test/&name=Markdown Test&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

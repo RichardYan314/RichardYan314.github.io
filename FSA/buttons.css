@@ -1,0 +1,121 @@
+.row:after {
+    clear: both;
+}
+
+.row:after, .row:before {
+    display: table;
+    content: " ";
+}
+
+.col-xs-1 {
+    width: 8.33333333%;
+}
+.col-xs-1{
+    float: left;
+}
+.col-xs-offset-4 {
+    margin-left: 33.33333333%;
+}
+.col-xs-2 {
+    width: 16.66666667%;
+}
+.col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    float: left;
+}
+.col-xs-1 {
+    width: 8.33333333%;
+}
+.col-xs-1 {
+    float: left;
+}
+.col-xs-1 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('/lib/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot');
+  src: url('/lib/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+       url('/lib/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff') format('woff'),
+       url('/lib/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+       url('/lib/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* reset */
+.btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+.btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+.glyphicon-fast-backward:before {
+    content: "\e070";
+}
+
+/* step */
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+.glyphicon-step-forward:before {
+    content: "\e077";
+}
+
+/* run */
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.glyphicon-play:before {
+    content: "\e072";
+}
+
+/* pause */
+/* .btn-default */
+.glyphicon-pause:before {
+    content: "\e073";
+}

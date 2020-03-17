@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="椭圆曲线 \(E(F)\) 上的 Diffie-Hellman 秘钥交换 \(E(\mathbb{F}_p)\) 中表示文本的方法  方法 1 方法 2 方法 3 (Koblitz)  椭圆曲线上的 ElGamel 加密算法 椭圆曲线上的 ECDSA 数字签名 曲线和点的选择  方法 1：随机选择（固定 \(p\) 与 \(\mathbb{F}_p\)） 方法 2：选择 \(P \in E(\">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-16-椭圆曲线密码系统">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="椭圆曲线 \(E(F)\) 上的 Diffie-Hellman 秘钥交换 \(E(\mathbb{F}_p)\) 中表示文本的方法  方法 1 方法 2 方法 3 (Koblitz)  椭圆曲线上的 ElGamel 加密算法 椭圆曲线上的 ECDSA 数字签名 曲线和点的选择  方法 1：随机选择（固定 \(p\) 与 \(\mathbb{F}_p\)） 方法 2：选择 \(P \in E(\">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.577Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-16-椭圆曲线密码系统">
+<meta name="twitter:description" content="椭圆曲线 \(E(F)\) 上的 Diffie-Hellman 秘钥交换 \(E(\mathbb{F}_p)\) 中表示文本的方法  方法 1 方法 2 方法 3 (Koblitz)  椭圆曲线上的 ElGamel 加密算法 椭圆曲线上的 ECDSA 数字签名 曲线和点的选择  方法 1：随机选择（固定 \(p\) 与 \(\mathbb{F}_p\)） 方法 2：选择 \(P \in E(\">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-16-椭圆曲线密码系统</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-17-Elliptic-Curve-Factorization/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/SCP-reading-list/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&text=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&is_video=false&description=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-16-椭圆曲线密码系统&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&name=数论与群论密码学-16-椭圆曲线密码系统&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#椭圆曲线-ef-上的-diffie-hellman-秘钥交换"><span class="toc-number">1.</span> <span class="toc-text">椭圆曲线 \(E(F)\) 上的 Diffie-Hellman 秘钥交换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#emathbbf_p-中表示文本的方法"><span class="toc-number">2.</span> <span class="toc-text">\(E(\mathbb{F}_p)\) 中表示文本的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-1"><span class="toc-number">2.1.</span> <span class="toc-text">方法 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-2"><span class="toc-number">2.2.</span> <span class="toc-text">方法 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-3-koblitz"><span class="toc-number">2.3.</span> <span class="toc-text">方法 3 (Koblitz)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#椭圆曲线上的-elgamel-加密算法"><span class="toc-number">3.</span> <span class="toc-text">椭圆曲线上的 ElGamel 加密算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#椭圆曲线上的-ecdsa-数字签名"><span class="toc-number">4.</span> <span class="toc-text">椭圆曲线上的 ECDSA 数字签名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#曲线和点的选择"><span class="toc-number">5.</span> <span class="toc-text">曲线和点的选择</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-1随机选择固定-p-与-mathbbf_p"><span class="toc-number">5.1.</span> <span class="toc-text">方法 1：随机选择（固定 \(p\) 与 \(\mathbb{F}_p\)）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-2选择-p-in-emathbbq-并-reduce-bmod-p"><span class="toc-number">5.2.</span> <span class="toc-text">方法 2：选择 \(P \in E(\mathbb{Q})\) 并 reduce \(\!\!\!\bmod p\)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-3koblitz-曲线"><span class="toc-number">5.3.</span> <span class="toc-text">方法 3：Koblitz 曲线</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-16-椭圆曲线密码系统
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-06T18:18:30.000Z" itemprop="datePublished">2019-05-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#椭圆曲线-ef-上的-diffie-hellman-秘钥交换">椭圆曲线 <span class="math inline">\(E(F)\)</span> 上的 Diffie-Hellman 秘钥交换</a></li>
+<li><a href="#emathbbf_p-中表示文本的方法"><span class="math inline">\(E(\mathbb{F}_p)\)</span> 中表示文本的方法</a>
+<ul>
+<li><a href="#方法-1">方法 1</a></li>
+<li><a href="#方法-2">方法 2</a></li>
+<li><a href="#方法-3-koblitz">方法 3 (Koblitz)</a></li>
+</ul></li>
+<li><a href="#椭圆曲线上的-elgamel-加密算法">椭圆曲线上的 ElGamel 加密算法</a></li>
+<li><a href="#椭圆曲线上的-ecdsa-数字签名">椭圆曲线上的 ECDSA 数字签名</a></li>
+<li><a href="#曲线和点的选择">曲线和点的选择</a>
+<ul>
+<li><a href="#方法-1随机选择固定-p-与-mathbbf_p">方法 1：随机选择（固定 <span class="math inline">\(p\)</span> 与 <span class="math inline">\(\mathbb{F}_p\)</span>）</a></li>
+<li><a href="#方法-2选择-p-in-emathbbq-并-reduce-bmod-p">方法 2：选择 <span class="math inline">\(P \in E(\mathbb{Q})\)</span> 并 reduce <span class="math inline">\(\!\!\!\bmod p\)</span></a></li>
+<li><a href="#方法-3koblitz-曲线">方法 3：Koblitz 曲线</a></li>
+</ul></li>
+</ul>
+</div><p>设 <span class="math inline">\(E/F\)</span> 为一椭圆曲线，其中为了简化讨论，仅考虑 <span class="math inline">\(F := \mathbb{F}_p\)</span>, <span class="math inline">\(p \ge 5\)</span> 为素数的情况。</p><p>如前文所述，<span class="math inline">\(E(F)\)</span> 为交换群，其阶 <span class="math inline">\(N_{E/F} = \big| E(F) \big|\)</span> 根据哈赛定理有 <span class="math inline">\(N_{E/F} \approx p\)</span>.</p><p>根据定义，我们注意到 <span class="math inline">\(E(F)\)</span> 中的群运算是十分高效的：</p><p><span class="math display">\[
+\mathsf{Time}(P + Q) = \Theta(\log^2 p)
+\]</span></p><div class="proof">
+<p><span class="math inline">\(\mathbb{F}_p\)</span> 中的加法，乘法及逆运算皆需进行 <span class="math inline">\(\Theta(\log^2 p)\)</span> 次为运算。而求 <span class="math inline">\(P\)</span> 与 <span class="math inline">\(Q\)</span> 的和的公式需要进行至多 20 次上述运算，因此总共需要 <span class="math inline">\(\Theta(\log^2 p)\)</span> 次位运算。</p>
+</div><p>由于 <span class="math inline">\(E(F)\)</span> 上的群运算是以加法表示的，因此关于它的离散对数问题叙述为：</p><div class="def">
+<p>给定 <span class="math inline">\(P \in E(F)\)</span> 及 <span class="math inline">\(Q \in &lt;P&gt; = \{kP : k \in \mathbb{Z}\}\)</span>，求满足 <span class="math inline">\(Q = xP\)</span> 的 <span class="math inline">\(x\)</span>，记这样的 <span class="math inline">\(x\)</span> 为 <span class="math inline">\(x := DL_P(Q)\)</span>.</p>
+</div><h1 id="椭圆曲线-ef-上的-diffie-hellman-秘钥交换">椭圆曲线 <span class="math inline">\(E(F)\)</span> 上的 Diffie-Hellman 秘钥交换</h1><p>公开确定椭圆曲线 <span class="math inline">\(E/F\)</span> 及其上一点 <span class="math inline">\(P \in E(F)\)</span>，通信双方 A, B 进行如下操作：</p><p>A: 随机选取数 <span class="math inline">\(k_A \in \mathbb{N}\)</span>，计算 <span class="math inline">\(P_A = k_AP\)</span> 并将 <span class="math inline">\(P_A\)</span> 发送给 B.<br>
+B: 随机选取数 <span class="math inline">\(k_B \in \mathbb{N}\)</span>，计算 <span class="math inline">\(P_B = k_BP\)</span> 并将 <span class="math inline">\(P_B\)</span> 发送给 A.</p><p>如此一来有秘钥 <span class="math inline">\(S_{AB} = k_BP_A = k_AP_B = k_Ak_BP\)</span> 仅为 A, B 所知。</p><h1 id="emathbbf_p-中表示文本的方法"><span class="math inline">\(E(\mathbb{F}_p)\)</span> 中表示文本的方法</h1><p>如先前的做法，将明文分段并将每段通过如 ASCII 之类的方法编码为 <span class="math inline">\(m \in \mathbb{N}\)</span>。通过选择分段的大小和素数 <span class="math inline">\(p\)</span> 使得 <span class="math inline">\(m &lt; p\)</span>，于是有 <span class="math inline">\(m \in \mathbb{F}_p\)</span>。因此在 <span class="math inline">\(E(\mathbb{F}_p)\)</span> 中表示 <span class="math inline">\(m \in \mathbb{N}\)</span> 等价于选取一个代表该消息段的点 <span class="math inline">\(P_m \in E(\mathbb{F}_p)\)</span>.</p><p>我们来逐一考察以下方法。</p><h2 id="方法-1">方法 1</h2><p>固定点 <span class="math inline">\(P \in E(\mathbb{F}_p)\)</span> 并取 <span class="math inline">\(P_m := mP\)</span> 来表示 <span class="math inline">\(m\)</span>.</p><p>该方法并不实际。因为从点 <span class="math inline">\(P_m\)</span> 恢复出 <span class="math inline">\(m\)</span> 等价于求解一个离散对数问题。</p><h2 id="方法-2">方法 2</h2><p>同前，视 <span class="math inline">\(m \in \mathbb{F}_p\)</span> 并找到满足 <span class="math inline">\(P_m = (m, y) \in E(\mathbb{F}_p\)</span> 的 <span class="math inline">\(y \in \mathbb{F}_p\)</span>.</p><p>因为 <span class="math inline">\(E\)</span> 由 <span class="math inline">\(y^2 = f(x)\)</span> 定义，该方法要求 <span class="math inline">\(f(m) \in \mathbb{F}_p^2\)</span>，即其为一平方。因此给定一 <span class="math inline">\(m\)</span> 我们有大约 50% 的概率找不到与之对应的点 <span class="math inline">\(P_m\)</span>.</p><h2 id="方法-3-koblitz">方法 3 (Koblitz)</h2><p>根据可接受的失败概率 <span class="math inline">\(\frac{1}{2^\kappa}\)</span> 固定 <span class="math inline">\(\kappa \in \mathbb{N}\)</span>.<br>
+设 <span class="math inline">\(M = \lfloor \frac{p}{\kappa} \rfloor\)</span>，假设 <span class="math inline">\(m &lt; M\)</span>.<br>
+逐项考察 <span class="math inline">\(x_j = j + mk\)</span>, 其中 <span class="math inline">\(j = 1, \cdots, \kappa\)</span>，<br>
+使用雅克比符号，可以高效地找出最先满足 <span class="math inline">\(f(x_j) \in \mathbb{F}_p^2\)</span> 的项。<br>
+然后通过模平方根算法计算满足 <span class="math inline">\(y^2 = f(x_j)\)</span> 的 <span class="math inline">\(y\)</span> 并且取 <span class="math inline">\(P_m = (x_j, y)\)</span>.</p><p>给定 <span class="math inline">\(P_m = (x, y)\)</span>，可通过 <span class="math inline">\(m = \lfloor \frac{x-1}{\kappa} \rfloor = \mathsf{quot}(x-1, \kappa)\)</span> 还原出 <span class="math inline">\(m\)</span>.</p><p>注意，由于</p><p><span class="math display">\[
+\mathsf{Prob}\left(f(x_j) \in \mathbb{F}_p^2\right)
+=\mathsf{Prob}\left(\left(\frac{f(x_j)}{p}\right) = 1\right)
+\approx \frac{N_{E/F}}{2} \cdot \frac{1}{p} \approx \frac{1}{2}
+\]</span></p><p>其中最后一步的依据为哈赛定理。因此该方法失败的概率为 <span class="math inline">\(\frac{1}{2^\kappa}\)</span>.</p><h1 id="椭圆曲线上的-elgamel-加密算法">椭圆曲线上的 ElGamel 加密算法</h1><p>考虑 <span class="math inline">\(E/\mathbb{F}_p\)</span>，取点 <span class="math inline">\(P \in E(\mathbb{F}_p)\)</span> 为一高阶元素，其中要求 <span class="math inline">\(P\)</span> 的阶对于 SPH 攻击来说是安全的。</p><p>此时 ElGamel 密码系统的协议如下：</p><p>A 秘密选择数 <span class="math inline">\(k_A\)</span> 并计算 <span class="math inline">\(P_a = k_AP\)</span>，于是有 A 的公钥 <span class="math inline">\((p, P, P_A)\)</span>。<br>
+若 B 要将消息 <span class="math inline">\(m\)</span> 发送至 A, B 依前文所述方法将 <span class="math inline">\(m\)</span> 嵌入在 <span class="math inline">\(E(\mathbb{F}_p)\)</span> 中，得到点 <span class="math inline">\(P_m \in E(\mathbb{F}_p)\)</span>.<br>
+B 随机选择数 <span class="math inline">\(l\)</span>，计算 <span class="math inline">\((P_1, P_2) = (lP, P_m + lP_A)\)</span> 并将之发送给 A.<br>
+于是 A 可通过计算 <span class="math inline">\(P_m = P_2 - k_AP_1\)</span> 得信息 <span class="math inline">\(m\)</span>.</p><h1 id="椭圆曲线上的-ecdsa-数字签名">椭圆曲线上的 ECDSA 数字签名</h1><p>取椭圆曲线 <span class="math inline">\(E/\mathbb{F}_p\)</span>，其中 <span class="math inline">\(p\)</span> 为素数。取点 <span class="math inline">\(P \in E/\mathbb{F}_p\)</span>，使得 <span class="math inline">\(ord(P) = q\)</span> 为素数，且 <span class="math inline">\(q \approx p\)</span> （<span class="math inline">\(q\)</span> 几乎和 <span class="math inline">\(p\)</span> 一样大）。</p><p><span class="math inline">\(\newcommand{\rem}{\mathsf{rem}}\)</span></p><p>用户 A 选择数 <span class="math inline">\(x = x_A\)</span> 作为秘钥，并计算 <span class="math inline">\(Q_A := x_AP\)</span> 作为公钥。于是有为消息 <span class="math inline">\(m\)</span> 签名的协议：<br>
+1. 随机选取数 <span class="math inline">\(k\)</span> 使得 <span class="math inline">\(1 &lt; k &lt; q\)</span><br>
+2. 计算 <span class="math inline">\((x_1, y_1) := kP\)</span>, <span class="math inline">\(r := \rem(x_1, q)\)</span><br>
+3. 若 <span class="math inline">\(r = 0\)</span> 则重新选取 <span class="math inline">\(k\)</span><br>
+4. 计算 <span class="math inline">\(s := \rem((H(m) + x_Ar)/k, q)\)</span>，其中 <span class="math inline">\(H(m)\)</span> 为 <span class="math inline">\(m\)</span> 的哈希值。<br>
+5. 若 <span class="math inline">\(s = 0\)</span> 则重新选取 <span class="math inline">\(k\)</span><br>
+6. 于是 <span class="math inline">\((r, s)\)</span> 为签名。</p><p>收到消息的用户通过如下方法验证消息 <span class="math inline">\(m&apos;\)</span> 确实由 A 所签名：<br>
+1. 从受信第三方获取 A 的公钥 <span class="math inline">\(Q_A\)</span><br>
+2. 验证有 <span class="math inline">\(1 &lt; r\)</span>, <span class="math inline">\(s &lt; q\)</span><br>
+3. 计算 <span class="math inline">\(w := \rem(1/s, q)\)</span><br>
+4. 计算 <span class="math inline">\(u_1 := \rem(H(m&apos;)w, q)\)</span>, <span class="math inline">\(u_2 = \rem(rw, q)\)</span><br>
+5. 计算 <span class="math inline">\((x_0, y_0) := u_1P + u_2Q_A\)</span>, <span class="math inline">\(v = \rem(x_0, q)\)</span><br>
+6. 验证有 <span class="math inline">\(v = r\)</span>.</p><p>该协议确保了有：<br>
+1. <span class="math inline">\(Q = xP\)</span><br>
+2. <span class="math inline">\(r \equiv x_1 \pmod q\)</span> 且 <span class="math inline">\(0 &lt; r &lt; q\)</span><br>
+3. <span class="math inline">\(sk \equiv H(m) + xr \pmod q\)</span><br>
+4. <span class="math inline">\(sw \equiv 1 \pmod q\)</span><br>
+5. <span class="math inline">\(u_1 \equiv H(m&apos;)w \pmod q\)</span><br>
+6. <span class="math inline">\(u_2 \equiv rw \pmod q\)</span><br>
+7. <span class="math inline">\(u_1P + u_2Q = (x_0, y_0)\)</span><br>
+8. <span class="math inline">\(v \equiv x_0 \pmod q\)</span></p><p>若确实有 <span class="math inline">\(m&apos; = m\)</span>，则</p><p><span class="math display">\[
+u_1P + u_2Q
+\stackrel{1}{=} u_1P + u_2xP
+= (u_1 + u_2x)P
+\stackrel{\text{5, 6 且 $ord(P) = q$}}{=} (H(m&apos;)w + rwx)P
+\stackrel{m&apos; = m}{=} (H(m)w + rwx)P
+\stackrel{\text{3 且 $ord(P) = q$}}{=} w(sk)P
+\stackrel{4}{=} kP
+= (x_1, y_1)
+\]</span></p><p>于是</p><p><span class="math display">\[
+\begin{aligned}
+(x_0, y_0) = (x_1, y_1)
+&amp;\implies \rem(x_0, q) = rem(x_1, q) \\
+&amp;\iff v = r
+\end{aligned}
+\]</span></p><h1 id="曲线和点的选择">曲线和点的选择</h1><h2 id="方法-1随机选择固定-p-与-mathbbf_p">方法 1：随机选择（固定 <span class="math inline">\(p\)</span> 与 <span class="math inline">\(\mathbb{F}_p\)</span>）</h2><ol type="1">
+<li><p>随机选择 <span class="math inline">\(x, y \in \mathbb{F}_p\)</span> 并取点 <span class="math inline">\(P = (x, y)\)</span>。随机选择 <span class="math inline">\(a \in \mathbb{F}_p\)</span> 并计算 <span class="math inline">\(b = y^2 - (x^3 + ax)\)</span>，即先选择点再选择穿过该点的曲线。</p></li>
+<li><p>验证有 <span class="math inline">\(\Delta_{E_{a, b}} = 4a^3 + 27b^2 \ne 0\)</span> （在 <span class="math inline">\(\mathbb{F}_p\)</span> 中）若有，则取 <span class="math inline">\(E = E_{a, b}\)</span>, <span class="math inline">\(P \in E_{a, b}(\mathbb{F}_p)\)</span>。否则返回第 1 步。</p></li>
+</ol><p>该方法要求计算并验证点 <span class="math inline">\(P\)</span> 的阶能使得所得密码系统对于攻击来说是安全的。即要求 <span class="math inline">\(ord(P)\)</span> 有足够大的素因数。因此需要：<br>
+1. 计算群的基 <span class="math inline">\(\big| E(\mathbb{F}_p) \big| = N_{E/\mathbb{F}_p}\)</span>。可使用 Schoof/Elkies/Atkin 方法。<br>
+2. 计算 <span class="math inline">\(N_{E/\mathbb{F}_p}\)</span> 的素因式分解。由于安全的椭圆曲线密码系统所需的秘钥大小（约 160 位）远比 RSA 所需的（约 2048 位）小得多，这是可能做到的。</p><h2 id="方法-2选择-p-in-emathbbq-并-reduce-bmod-p">方法 2：选择 <span class="math inline">\(P \in E(\mathbb{Q})\)</span> 并 reduce <span class="math inline">\(\!\!\!\bmod p\)</span></h2><p>该方法要求使用有理数上的椭圆曲线 <span class="math inline">\(E/\mathbb{Q}\)</span>:<br>
+1. 随机选取整数 <span class="math inline">\(a, b\)</span><br>
+2. 随机选取点 <span class="math inline">\(P = (x, y) \in E(\mathbb{Q})\)</span>，并通过 Nagell/Luts 或者 Mazur 定理验证有 <span class="math inline">\(ord(P) = \infty\)</span>。若无则重复第 1 步。<br>
+3. 随机选择满足 <span class="math inline">\(\Delta_E \not\equiv 0 \pmod p\)</span> （即 <span class="math inline">\(p \not\mid \Delta_E\)</span>）的素数 <span class="math inline">\(p\)</span>。取 <span class="math inline">\(\overline{E} = E \bmod p\)</span>，因此有 <span class="math inline">\(\overline{E}/\mathbb{F}_p : y^2 \equiv f(x) \pmod p\)</span>。记 <span class="math inline">\(\overline{P} := (x, y) \pmod p\)</span>，因此有 <span class="math inline">\(\overline{P} \in \overline{E}(\mathbb{F}_p)\)</span>。<br>
+4. 验证 <span class="math inline">\((\overline{E}, \overline{P})\)</span> 是密码学上安全的。否则重复第 3 步。</p><p>第 4 步所遇到的问题与方法 1 中的相同。不过对于某些被称作 CM-曲线 的椭圆曲线 <span class="math inline">\(E/\mathbb{Q}\)</span> 来说有个关于 <span class="math inline">\(p\)</span> 的求 <span class="math inline">\(\big| \overline{E}(\mathbb{F}_p) \big|\)</span> 的公式。</p><p>另外有猜想认为存在无数个素数 <span class="math inline">\(p\)</span> 使得 <span class="math inline">\(\overline{P}\)</span> 是 <span class="math inline">\(\overline{E}(\mathbb{F}_p)\)</span> 的生成元。该猜想于广义黎曼猜想下成立。</p><h2 id="方法-3koblitz-曲线">方法 3：Koblitz 曲线</h2><ol type="1">
+<li>选择 <span class="math inline">\(p\)</span> 为一个小素数并得到 <span class="math inline">\(E/\mathbb{F}_p\)</span>，并用朴素的方法计算 <span class="math inline">\(N = \big| E(\mathbb{F}_p) \big|\)</span>.<br>
+</li>
+<li>选取使得 <span class="math inline">\(q = p^r\)</span> 足够大的数 <span class="math inline">\(f\)</span>。于是可根据 Artin/Schmidt/Hasse 公式求得 <span class="math inline">\(\big| E(\mathbb{F}_q) \big|\)</span>:</li>
+</ol><p><span class="math display">\[
+\big| E(\mathbb{F}_p) \big| = \big| \alpha^r - 1 \big|^2
+\]</span></p><p>其中 <span class="math inline">\(\frac{1}{a}\)</span> 为 <span class="math inline">\(pT^2 - aT + 1\)</span> 的根，<span class="math inline">\(a = p + 1 - N\)</span>.</p><p>其依据为哈赛的发现：</p><p><span class="math display">\[
+pT^2 - aT + 1 = (\alpha T - 1)(\overline{\alpha}T - 1)
+\]</span></p><p>另外也可以使用如下关于 <span class="math inline">\(a_n := a_{E/\mathbb{F}_{p^n}} = 1 + p^n - \big| E(\mathbb{F}_{p^n}) \big|\)</span> 的二阶递归关系：</p><p><span class="math display">\[
+a_{n+2} = aa_{n+1} - qa_n
+\]</span></p><p>其中 <span class="math inline">\(a_0 = 2, a_1 = a\)</span>.</p><p>在使用 Koblitz 的编码消息的方法时，该方法会使得找到合适的点 <span class="math inline">\(P \in E(\mathbb{F}_q)\)</span> 不那么容易。</p><p>另外 2000 年左右 Frey 发现的 Weil descent 攻击使得选取 <span class="math inline">\(r\)</span> 时有额外的要求。最理想的方法是选取 <span class="math inline">\(r\)</span> 为素数。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#椭圆曲线-ef-上的-diffie-hellman-秘钥交换"><span class="toc-number">1.</span> <span class="toc-text">椭圆曲线 \(E(F)\) 上的 Diffie-Hellman 秘钥交换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#emathbbf_p-中表示文本的方法"><span class="toc-number">2.</span> <span class="toc-text">\(E(\mathbb{F}_p)\) 中表示文本的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-1"><span class="toc-number">2.1.</span> <span class="toc-text">方法 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-2"><span class="toc-number">2.2.</span> <span class="toc-text">方法 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-3-koblitz"><span class="toc-number">2.3.</span> <span class="toc-text">方法 3 (Koblitz)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#椭圆曲线上的-elgamel-加密算法"><span class="toc-number">3.</span> <span class="toc-text">椭圆曲线上的 ElGamel 加密算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#椭圆曲线上的-ecdsa-数字签名"><span class="toc-number">4.</span> <span class="toc-text">椭圆曲线上的 ECDSA 数字签名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#曲线和点的选择"><span class="toc-number">5.</span> <span class="toc-text">曲线和点的选择</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-1随机选择固定-p-与-mathbbf_p"><span class="toc-number">5.1.</span> <span class="toc-text">方法 1：随机选择（固定 \(p\) 与 \(\mathbb{F}_p\)）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-2选择-p-in-emathbbq-并-reduce-bmod-p"><span class="toc-number">5.2.</span> <span class="toc-text">方法 2：选择 \(P \in E(\mathbb{Q})\) 并 reduce \(\!\!\!\bmod p\)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法-3koblitz-曲线"><span class="toc-number">5.3.</span> <span class="toc-text">方法 3：Koblitz 曲线</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&text=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&is_video=false&description=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-16-椭圆曲线密码系统&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&title=数论与群论密码学-16-椭圆曲线密码系统"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-16-Elliptic-Curve-Cryptosystems/&name=数论与群论密码学-16-椭圆曲线密码系统&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

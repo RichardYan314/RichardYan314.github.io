@@ -1,0 +1,36 @@
+blockquote {
+  margin: 1rem 10px;
+  padding: 0.5em 10px;
+  background: inherit;
+  color: #ccffb6;
+  quotes: "\201C" "\201D" "\2018" "\2019";
+  font-weight: bold;
+}
+blockquote p {
+  margin: 0;
+}
+blockquote:before {
+  margin-right: 0.25em;
+  color: #ccffb6;
+  content: "\201C";
+  vertical-align: -0.4em;
+  font-size: 2em;
+  line-height: 0.1em;
+}
+blockquote footer {
+  margin: line-height 0;
+  color: #666;
+  font-size: 11px;
+}
+blockquote footer a {
+  background-image: linear-gradient(transparent, transparent 5px, #666 5px, #666);
+  color: #666;
+}
+blockquote footer a:hover {
+  background-image: linear-gradient(transparent, transparent 4px, #858585 4px, #858585);
+  color: #858585;
+}
+blockquote footer cite:not(:empty):before {
+  padding: 0 0.5em;
+  content: "—";
+}

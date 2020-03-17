@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="字母表，字符串，语言 字符串集合上的运算 语言上的运算  \(\newcommand{\card}[1]{\big| #1 \big|}\)字母表，字符串，语言 取一非空有限集合，记为 \(\Sigma\)，称集合中的元素为字符，称 \(\Sigma\) 为字母表，或符号集。我们用一个手写/计算机字符表达 \(\Sigma\) 中的某一元素，如 \(\Sigma = \{a, b, c, \d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机理论-01-语言">
+<meta property="og:url" content="https://richardyan.site/Formal-Language-and-Automata-01-Languages/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="字母表，字符串，语言 字符串集合上的运算 语言上的运算  \(\newcommand{\card}[1]{\big| #1 \big|}\)字母表，字符串，语言 取一非空有限集合，记为 \(\Sigma\)，称集合中的元素为字符，称 \(\Sigma\) 为字母表，或符号集。我们用一个手写/计算机字符表达 \(\Sigma\) 中的某一元素，如 \(\Sigma = \{a, b, c, \d">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.564Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="形式语言与自动机理论-01-语言">
+<meta name="twitter:description" content="字母表，字符串，语言 字符串集合上的运算 语言上的运算  \(\newcommand{\card}[1]{\big| #1 \big|}\)字母表，字符串，语言 取一非空有限集合，记为 \(\Sigma\)，称集合中的元素为字符，称 \(\Sigma\) 为字母表，或符号集。我们用一个手写/计算机字符表达 \(\Sigma\) 中的某一元素，如 \(\Sigma = \{a, b, c, \d">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>形式语言与自动机理论-01-语言</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Formal-Language-and-Automata-02-Regular-Languages-and-Regular-Expressions/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-19-Schoof-s-Algorithm/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-01-Languages/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&text=形式语言与自动机理论-01-语言"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&is_video=false&description=形式语言与自动机理论-01-语言"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-01-语言&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-01-Languages/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&name=形式语言与自动机理论-01-语言&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#字母表字符串语言"><span class="toc-number">1.</span> <span class="toc-text">字母表，字符串，语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#字符串集合上的运算"><span class="toc-number">2.</span> <span class="toc-text">字符串集合上的运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#语言上的运算"><span class="toc-number">3.</span> <span class="toc-text">语言上的运算</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        形式语言与自动机理论-01-语言
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-08T21:14:21.000Z" itemprop="datePublished">2019-05-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#字母表字符串语言">字母表，字符串，语言</a></li>
+<li><a href="#字符串集合上的运算">字符串集合上的运算</a></li>
+<li><a href="#语言上的运算">语言上的运算</a></li>
+</ul>
+</div><p><span class="math inline">\(\newcommand{\card}[1]{\big| #1 \big|}\)</span></p><h1 id="字母表字符串语言">字母表，字符串，语言</h1><div class="def" name="字母表">
+<p>取一非空有限集合，记为 <span class="math inline">\(\Sigma\)</span>，称集合中的元素为字符，称 <span class="math inline">\(\Sigma\)</span> 为字母表，或符号集。我们用一个手写/计算机字符表达 <span class="math inline">\(\Sigma\)</span> 中的某一元素，如 <span class="math inline">\(\Sigma = \{a, b, c, \dots\}\)</span>, <span class="math inline">\(\Sigma = \{\alpha, \beta, \gamma, \dots\}\)</span>。</p>
+</div><p>约定：为了避免当后文引入更多定义时造成冲突，我们在形式上避免用多于一个字符的序列来表达 <span class="math inline">\(\Sigma\)</span> 中的元素，如 <span class="math inline">\(\Sigma = \{letter1, letter2\, \dots\}\)</span>。在英文字母，希腊字母不足够使用时，也使用形如 <span class="math inline">\(a_i, a^\bullet\)</span> 等记号表示字符。</p><div class="def" name="字符串">
+<p>由 <span class="math inline">\(\Sigma\)</span> 中元素（可重复）组成的任意有限长有序集组成的集合称为字符串。特别地，记号 <span class="math inline">\(\varepsilon\)</span> 表示长度为 0 的字符串。</p>
+<p>不失一般性地，假设 <span class="math inline">\(\varepsilon \not\in \Sigma\)</span>。</p>
+</div><p>注：上述“不失一般性地”短语可理解为，由于我们并非在讨论某个具体的语言，而仅仅是抽象地讨论“语言”这个概念，因此仅需分别为字母表里的各个符号选择逐不相同的记号，因此我们仅需避开使用 <span class="math inline">\(\varepsilon\)</span> 表示 <span class="math inline">\(\Sigma\)</span> 中的某一字符。</p><p>注意，由于我们是在讨论抽象的概念，因此某个语言中的字符串对人类来说并不一定具有某种含义。仅在讨论某些具体的语言（字符串集合）时，该语言中的字符串才会具备可被解读的意义。</p><p>约定：在不产生歧义的情况下，我们记字符串 <span class="math inline">\((\sigma_1, \sigma_2, \dots, \sigma_n)\)</span> 为 <span class="math inline">\(\sigma_1\sigma_2\dots\sigma_n\)</span>。</p><p>约定：除非是在讨论某一具体字母表及其上的语言，我们使用希腊字母表示字符，拉丁字母表示字符串。</p><div class="def">
+<p>记号 <span class="math inline">\(\card{s}\)</span> 表示 <span class="math inline">\(s\)</span> 的长度，因此有</p>
+<ol type="1">
+<li><p><span class="math inline">\(\card\varepsilon = 0\)</span>.</p></li>
+<li><p>若我们稍微滥用一下符号，同时记 <span class="math inline">\(\Sigma\)</span> 为由字母表 <span class="math inline">\(\Sigma\)</span> 组成的所有长度为 1 的字符串的集合，那么有 <span class="math inline">\(\forall s \in \Sigma, \card{s} = 1\)</span>.</p></li>
+</ol>
+</div><div class="def" name="语言">
+<p>称由 <span class="math inline">\(\Sigma\)</span> 组成的某些字符串集合为定义于 <span class="math inline">\(\Sigma\)</span> 上的语言。</p>
+<p>记不包含任何字符串的语言为 <span class="math inline">\(\emptyset = \{\}\)</span>.</p>
+</div><p>注意，空语言不等于语言 <span class="math inline">\(\{\varepsilon\}\)</span>，由于后者至少含有一个字符串。</p><p>例如，定义在英文字母表 <span class="math inline">\(\Sigma = \{a, b, \dots, z\}\)</span> 上的语言 <span class="math inline">\(L = \{\varepsilon, a, b, \dots, aa, ab, \dots, zzzz\dots\}\)</span> 包含所有由英文字母排列组合得到的字符串，其因此包含字符串 <span class="math inline">\(xyxxy\)</span>。然而该字符串并没有任何意义，该语言也并不是任何一门人类使用的语言。有定义在同样字母表上的英文语言为 <span class="math inline">\(L\)</span> 的子集。</p><p>本系列文章不打算讨论人类使用的自然语言，因为很难具体定义英文语言的集合，即给定一个字符串，我们并不一定可以轻而易举地决定该字符串是否在英文语言中。然而对于编程语言这一类的形式语言来说，我们总是有严格的界限判定由某一字母表组成的给定字符串是否在定义在该字母表上的语言中。当然我们将要在可计算理论部分中看到，有严格的界限并不一定意味着存在具体的一系列可被执行的判定步骤。<a href="#fn1-1" class="footnote-ref" id="fnref1-1" role="doc-noteref"><sup>1</sup></a></p><h1 id="字符串集合上的运算">字符串集合上的运算</h1><p>我们定义一系列在字符串集合上的运算。</p><div class="def" name="串联">
+<p>二元运算 <span class="math inline">\(s_1 \cdot s_2\)</span> 为字符串 <span class="math inline">\(s_1\)</span> 与 <span class="math inline">\(s_2\)</span> 的串联。即 <span class="math inline">\(s_1 \cdot s_2\)</span> 的结果为先按顺序写下 <span class="math inline">\(s_1\)</span> 中的符号，紧接着按顺序写下 <span class="math inline">\(s_2\)</span> 中的符号。</p>
+</div><p>观察表达式 <span class="math inline">\(ab\)</span>，我们既可以将其理解为一个长度为 2 的字符串，又可以明显看出他可能是由长度皆为 1 的两个字符串 <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> 串联得到。因此我们有理由在方便的时候记 <span class="math inline">\(s_1s_2 = s_1 \cdot s_2\)</span>.</p><p>于是有关于串联的性质如下：</p><div class="property">
+<ol type="1">
+<li><p><span class="math inline">\(\varepsilon\)</span> 为串联运算的运算幺元（单位元）。</p>
+<p>即 <span class="math inline">\(\varepsilon s = s \varepsilon\)</span>.</p>
+<p>由于我们以类似数的乘法的记号表示串联，于是可以认为空字符串 <span class="math inline">\(\varepsilon\)</span> 具有类似于数 1 在乘法中的性质，因此称这样的元素其为幺元。</p></li>
+<li><p>串联运算是结合的。</p>
+<p>即 <span class="math inline">\((xy)z = x(yz)\)</span>.</p>
+<p>因此我们不必使用括号来表达数个串联运算之间的运算顺序。</p></li>
+</ol>
+<p>因此有字母表 <span class="math inline">\(\Sigma\)</span> 及定义其上的运算 <span class="math inline">\(\cdot_\Sigma\)</span> 构成幺半群 <span class="math inline">\((\Sigma, \cdot_\Sigma)\)</span>。在无歧义的情况下我们记 <span class="math inline">\(\cdot = \cdot_\Sigma\)</span>。注意串联运算不可逆，即除非 <span class="math inline">\(s = \varepsilon\)</span>，否则不存在 <span class="math inline">\(t\)</span> 使得 <span class="math inline">\(ts = st = \varepsilon\)</span>.</p>
+</div><div class="def" name="幂">
+<p>记 <span class="math inline">\(s\)</span> 为一字符串， <span class="math inline">\(n \in \mathbb{N}\)</span>，定义 <span class="math inline">\(s^n\)</span> 为 <span class="math inline">\(n\)</span> 个 <span class="math inline">\(s\)</span> 串联。形式化地，有如下归纳定义：</p>
+<p><span class="math display">\[
+s^n =
+\begin{cases}
+\varepsilon, &amp;n = 0\\
+ss^{n-1}, &amp;\text{否则}
+\end{cases}
+\]</span></p>
+</div><p>为了方便讨论，我们另做出如下定义：</p><div class="def" name="前缀，后缀，中缀">
+<p>若可以将 <span class="math inline">\(s\)</span> 写为 <span class="math inline">\(xy\)</span> 的形式，则称 <span class="math inline">\(x\)</span> 为 <span class="math inline">\(s\)</span> 的前缀， <span class="math inline">\(y\)</span> 为 <span class="math inline">\(s\)</span> 的后缀。</p>
+<p>若可以将 <span class="math inline">\(s\)</span> 写为 <span class="math inline">\(xyz\)</span> 的形式，则称 <span class="math inline">\(y\)</span> 是 <span class="math inline">\(s\)</span> 的子字符串或者中缀。</p>
+<p>另一种定义前缀的方法为，若存在 <span class="math inline">\(y\)</span> 使得 <span class="math inline">\(xy = s\)</span>，则称 <span class="math inline">\(x\)</span> 为 <span class="math inline">\(s\)</span> 的前缀。而后缀和中缀也可以用类似的方法定义。</p>
+</div><p>有以下关于前缀，后缀，中缀的性质：</p><div class="property">
+<p><span class="math inline">\(s\)</span> 及 <span class="math inline">\(\varepsilon\)</span> 是 <span class="math inline">\(s\)</span> 的前缀，后缀，中缀。</p>
+</div><h1 id="语言上的运算">语言上的运算</h1><div class="def" name="并">
+<p>若 <span class="math inline">\(L_1\)</span>, <span class="math inline">\(L_2\)</span> 皆定义在字母表 <span class="math inline">\(\Sigma\)</span> 上，定义 <span class="math inline">\(L_1 + L2\)</span> 由两语言中所有字符串组成的语言，即若视语言为集合，则 <span class="math inline">\(L1 + L2\)</span> 仅仅是我们用来表达 <span class="math inline">\(L_1 \cup L_2\)</span> 的方法。</p>
+<p>我们可以将该运算进行拓展。若 <span class="math inline">\(L_1\)</span> 为定义在 <span class="math inline">\(\Sigma_1\)</span> 上的语言，<span class="math inline">\(L_2\)</span> 为定义在 <span class="math inline">\(\Sigma_2\)</span> 上的语言，则有 <span class="math inline">\(L_1 + L_2\)</span> 为定义在 <span class="math inline">\(\Sigma_1 \cup \Sigma_2\)</span> 上的语言。</p>
+</div><p>类似地可以使用集合论定义语言上的交与补运算。其中用来定义补运算的全集将是稍后将要定义的记作 <span class="math inline">\(\Sigma^*\)</span> 的语言。</p><div class="property">
+<p>并运算构成幺半群，幺元为 <span class="math inline">\(\emptyset\)</span>.</p>
+<p>交运算构成幺半群，幺元为 <span class="math inline">\(\Sigma^*\)</span>.</p>
+</div><p>我们将串联运算拓展至语言上：</p><div class="def" name="串联">
+<p>定义 <span class="math inline">\(L_1 \cdot L_2 ：= \{s_1s_2 | s_1 \in L_1, s_2 \in L_2\}\)</span>。同样有 <span class="math inline">\(L_1L_2 := L_1 \cdot L_2\)</span>.</p>
+</div><div class="property">
+<p>定义在语言上的串联运算同样构成幺半群，其运算幺元为 <span class="math inline">\(\{\varepsilon\}\)</span> 。</p>
+<p>注意语言上的串联运算的幺元并非 <span class="math inline">\(\emptyset = \{\}\)</span>，由于有 <span class="math inline">\(\emptyset L = L \emptyset = \emptyset \ne L\)</span>.</p>
+</div><p>类似地，可以将幂运算拓展至语言上。</p><p>根据对串联的定义可知，串联运算是封闭的，即任意两个语言的串联仍然是语言。因此可得知幂运算也是封闭的。因此我们可以定义所谓的封闭运算如下：</p><div class="def" name="封闭">
+<p><span class="math display">\[
+\begin{aligned}
+L^* 
+&amp;= L^0 \cup L^1 \cup L^2 \cup \dots\\
+&amp;= \bigcup_{n \in \mathbb{N}} L^n
+\end{aligned}
+\]</span></p>
+<p>其中有 <span class="math inline">\(L^0 = \{\varepsilon\}\)</span></p>
+</div><p>少见地也有定义如下定义</p><div class="def">
+<p><span class="math display">\[
+L^+ = \bigcup_{n \in \mathbb{N}^+} L^n
+\]</span></p>
+</div><p>因此 <span class="math inline">\(L^* = L^0 \cup L^+ = \{\varepsilon\} \cup L^+\)</span>.</p><p>特别地，有 <span class="math inline">\(\emptyset^* = \{\varepsilon\}\)</span>.</p><p>特别地，有 <span class="math inline">\(\Sigma^*\)</span> 为任何定义在 <span class="math inline">\(\Sigma\)</span> 上的语言的超集。事实上，该集合为定义在 <span class="math inline">\(\Sigma\)</span> 上的字符串的集合。</p><div class="tippy-tooltip" id="tooltip1-1" style="display: none">
+<p>在不追求严谨的现在，我们可以称这样的步骤为算法</p>
+</div><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div><section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+
+<li id="fn1-1" role="doc-endnote"><p>在不追求严谨的现在，我们可以称这样的步骤为算法<a href="#fnref1-1" class="footnote-back" role="doc-backlink">↩︎</a></p></li></ol>
+</section>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#字母表字符串语言"><span class="toc-number">1.</span> <span class="toc-text">字母表，字符串，语言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#字符串集合上的运算"><span class="toc-number">2.</span> <span class="toc-text">字符串集合上的运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#语言上的运算"><span class="toc-number">3.</span> <span class="toc-text">语言上的运算</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Formal-Language-and-Automata-01-Languages/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&text=形式语言与自动机理论-01-语言"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&is_video=false&description=形式语言与自动机理论-01-语言"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=形式语言与自动机理论-01-语言&body=Check out this article: https://richardyan.site/Formal-Language-and-Automata-01-Languages/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&title=形式语言与自动机理论-01-语言"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Formal-Language-and-Automata-01-Languages/&name=形式语言与自动机理论-01-语言&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="同余 模算术 式 \(a x \equiv b \pmod m\) 的解 整数模 m 乘法群 （整数模 n 乘法群） 欧拉 \(\phi\) 函数 欧拉定理（费马-欧拉定理） 费马小定理  同余若 \(a, b \in \mathbb{Z}\) 且 \(m \in \mathbb{Z}+\), 且有 \(rem(a, m) = rem(b, m)\)，则称数 \(a\) 与 \(b\) 对于模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数论与群论密码学-03-模算术">
+<meta property="og:url" content="https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/index.html">
+<meta property="og:site_name" content="未来ガジェット研究所">
+<meta property="og:description" content="同余 模算术 式 \(a x \equiv b \pmod m\) 的解 整数模 m 乘法群 （整数模 n 乘法群） 欧拉 \(\phi\) 函数 欧拉定理（费马-欧拉定理） 费马小定理  同余若 \(a, b \in \mathbb{Z}\) 且 \(m \in \mathbb{Z}+\), 且有 \(rem(a, m) = rem(b, m)\)，则称数 \(a\) 与 \(b\) 对于模">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-09-04T23:57:06.570Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数论与群论密码学-03-模算术">
+<meta name="twitter:description" content="同余 模算术 式 \(a x \equiv b \pmod m\) 的解 整数模 m 乘法群 （整数模 n 乘法群） 欧拉 \(\phi\) 函数 欧拉定理（费马-欧拉定理） 费马小定理  同余若 \(a, b \in \mathbb{Z}\) 且 \(m \in \mathbb{Z}+\), 且有 \(rem(a, m) = rem(b, m)\)，则称数 \(a\) 与 \(b\) 对于模">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/fgl-favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/fgl-favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/fgl-apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>数论与群论密码学-03-模算术</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        "HTML-CSS": {
+          preferredFont: "TeX",
+          availableFonts: ["STIX","TeX"],
+          linebreaks: { automatic:true },
+          EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: {
+          inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+          processEscapes: true,
+          ignoreClass: "tex2jax_ignore|dno",
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {
+          noUndefined: {
+            attributes: {
+              mathcolor: "red",
+              mathbackground: "#FFEEEE",
+              mathsize: "90%" } },
+          Macros: { href: "{}" },
+          /* https://github.com/mathjax/MathJax/issues/1081 */
+          /* https://github.com/mathjax/MathJax-docs/wiki/Beveled-fraction-like-sfrac,-nicefrac-bfrac */
+          Augment: {
+            Definitions: {macros: {xfrac: 'XFrac'}},
+            Parse: {prototype: {
+              XFrac: function (name) {
+                var num = this.ParseArg(name);
+                var den = this.ParseArg(name);
+                this.Push(MathJax.ElementJax.mml.mfrac(num,den).With({bevelled: true}));
+              }
+            }}
+          }},
+        messageStyle: "none" });
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-04-Chinese-Remainder-Theorem/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/Number-Theory-and-Group-based-Cryptography-02-Greatest-Common-Divisor-and-the-Euclidean-Algorithm/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&text=数论与群论密码学-03-模算术"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&is_video=false&description=数论与群论密码学-03-模算术"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-03-模算术&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&name=数论与群论密码学-03-模算术&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#同余"><span class="toc-number">1.</span> <span class="toc-text">同余</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模算术"><span class="toc-number">2.</span> <span class="toc-text">模算术</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#式-a-x-equiv-b-pmod-m-的解"><span class="toc-number">3.</span> <span class="toc-text">式 \(a x \equiv b \pmod m\) 的解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#整数模-m-乘法群-整数模-n-乘法群"><span class="toc-number">4.</span> <span class="toc-text">整数模 m 乘法群 （整数模 n 乘法群）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#欧拉-phi-函数"><span class="toc-number">5.</span> <span class="toc-text">欧拉 \(\phi\) 函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#欧拉定理费马-欧拉定理"><span class="toc-number">6.</span> <span class="toc-text">欧拉定理（费马-欧拉定理）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#费马小定理"><span class="toc-number">7.</span> <span class="toc-text">费马小定理</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        数论与群论密码学-03-模算术
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">未来ガジェット研究所</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-02-15T15:37:06.000Z" itemprop="datePublished">2019-02-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div class="fnScope" scope="1"><div id="TOC">
+<ul>
+<li><a href="#同余">同余</a></li>
+<li><a href="#模算术">模算术</a></li>
+<li><a href="#式-a-x-equiv-b-pmod-m-的解">式 <span class="math inline">\(a x \equiv b \pmod m\)</span> 的解</a></li>
+<li><a href="#整数模-m-乘法群-整数模-n-乘法群">整数模 m 乘法群 <span style="display:none;">（整数模 n 乘法群）</span></a></li>
+<li><a href="#欧拉-phi-函数">欧拉 <span class="math inline">\(\phi\)</span> 函数</a></li>
+<li><a href="#欧拉定理费马-欧拉定理">欧拉定理（费马-欧拉定理）</a></li>
+<li><a href="#费马小定理">费马小定理</a></li>
+</ul>
+</div><h1 id="同余">同余</h1><p>若 <span class="math inline">\(a, b \in \mathbb{Z}\)</span> 且 <span class="math inline">\(m \in \mathbb{Z}+\)</span>, 且有 <span class="math inline">\(rem(a, m) = rem(b, m)\)</span>，则称数 <span class="math inline">\(a\)</span> 与 <span class="math inline">\(b\)</span> 对于模 <span class="math inline">\(m\)</span> 同余。记为 <span class="math display">\[a \equiv b \pmod m\]</span></p><p>易证，</p><p><span class="math display">\[
+a \equiv b \pmod m \iff m \mid a-b 
+\]</span></p><p>同时，有</p><p><span class="math display">\[
+\begin{aligned}
+a \equiv a&apos; \pmod m,~b \equiv b&apos; \pmod m &amp;\implies a \pm b \equiv a&apos; \pm b&apos; \pmod m\\
+&quot; &amp;\implies ab \equiv a&apos;b&apos; \pmod m
+\end{aligned}
+\]</span></p><p>可证，同余关系符合自反性，对称性，传递性，因此为等价关系。据此，可将整数集 <span class="math inline">\(\mathbb{Z}\)</span> 划分为非空，互不相交（相互排斥），且覆盖 <span class="math inline">\(\mathbb{Z}\)</span>（全无遗漏）的子集。</p><p>由此，定义 <span class="math inline">\(\mathbb{Z}/m\mathbb{Z} := \text{模 $m$ 余数的集合} = \{[0], [1], \cdots, [m-1]\}\)</span>。出于简便，从每一等价类中选取 <span class="math inline">\(0 \le a &lt; m\)</span> 作为代表，即将前述集合记为 <span class="math inline">\(\{0, 1, \cdots, m-1\}\)</span>. 称该集合为 <strong>整数模 <span class="math inline">\(m\)</span> 环</strong> 或 <strong>模 <span class="math inline">\(m\)</span> 即约剩余类</strong>，后文使用前一种名称。</p><p>在有必要时通过下标指定等价类的模，如 <span class="math inline">\(\left[a\right]_m\)</span>.</p><h1 id="模算术">模算术</h1><p>定义</p><p><span class="math display">\[
+[a] \pm [b] = [rem(a \pm b, m)]\\
+[a][b] = [rem(ab, m)]
+\]</span></p><p>如此则有 <span class="math inline">\(\mathbb{Z}/m\mathbb{Z}\)</span> 上的加法/乘法运算。因此 <span class="math inline">\(\mathbb{Z}/m\mathbb{Z}\)</span> 构成一个代数环。</p><p>根据 <span class="math inline">\(\mathbb{Z}\)</span> 中各运算的复杂度，可得 <span class="math inline">\(\mathbb{Z}/m\mathbb{Z}\)</span> 中计算加法复杂度为 <span class="math inline">\(\Theta(log(m))\)</span>，乘法为 <span class="math inline">\(\Theta(log^2(m))\)</span>。</p><p>定义除法运算 <span class="math inline">\(\left[a\right]/\left[b\right] =: x\)</span> 为满足下式的元素：</p><p><span class="math display">\[a x \equiv b \pmod m\]</span></p><h1 id="式-a-x-equiv-b-pmod-m-的解">式 <span class="math inline">\(a x \equiv b \pmod m\)</span> 的解</h1><div class="thm" data-num="5">
+<ol type="a">
+<li><p>上式有解当且仅当 <span class="math display">\[gcd(a, m) \mid b\]</span></p></li>
+<li><p>若 <span class="math inline">\(g = gcd(a, m) \mid b\)</span>，那么上式有确切 <span class="math inline">\(g\)</span> 个模 <span class="math inline">\(m\)</span> 下截然不同的解，这些解由下式给出：</p>
+<p><span class="math display">\[
+ x \equiv \frac{b}{g} x_0 + \frac{m}{g} t \pmod m,~ t = 0, \cdots g-1
+ \]</span></p>
+<p>其中 <span class="math inline">\(x_0\)</span> 是 <span class="math inline">\(a x_0 \equiv g \pmod m\)</span> 的任意一个解。</p></li>
+</ol>
+</div><p>该定理可由以下事实注意到：</p><p><span class="math display">\[
+\begin{aligned}
+ax \equiv b \pmod m &amp;\iff m \mid ax-b\\
+&amp;\iff \exists y \in \mathbb{Z}, ax-b=my\\
+&amp;\iff \exists y \in \mathbb{Z}, ax-my=b
+\end{aligned}
+\]</span></p><div class="cor" data-num="1">
+<p>定理 5 中的解可由 <span class="math inline">\(\Theta(log^2(m))\)</span> 位操作求出。</p>
+</div><div class="cor" data-num="2">
+<p>元素 <span class="math inline">\([a] \in \mathbb{Z}/m\mathbb{Z}\)</span> 有逆当且仅当 <span class="math inline">\(gcd(a, m) = 1\)</span></p>
+</div><div class="proof">
+<p><span class="math display">\[
+\begin{aligned}
+\left[a\right]^{-1}~\text{存在} &amp;\iff [a]x \equiv 1 \pmod m~\text{有解}\\
+&amp;根据定理 5 \\
+&amp;\iff gcd(a, m) \mid 1\\
+&amp;\iff gcd(a, m) = 1
+\end{aligned}
+\]</span></p>
+</div><h1 id="整数模-m-乘法群-整数模-n-乘法群">整数模 m 乘法群 <span style="display:none;">（整数模 n 乘法群）</span></h1><p>我们记 <span class="math inline">\(\mathbb{Z}/m\mathbb{Z}\)</span> 中可逆元素的集合为：</p><p><span class="math display">\[
+(\mathbb{Z}/m\mathbb{Z})^\times := \{[a] \in \mathbb{Z}/m\mathbb{Z} : gcd(a, m) = 1\}
+\]</span></p><p>又记该集合的势为：</p><p><span class="math display">\[
+\phi(m) := \big|(\mathbb{Z}/m\mathbb{Z})^\times\big| := \big| \{1 \le a\le m: gcd(a, m) = 1\} \big|
+\]</span></p><p>该函数被称为欧拉 <span class="math inline">\(\phi\)</span> 函数。随后我们会证明，该函数不可在多项式时间内求解。</p><p>注：<br>
+1). <span class="math inline">\((\mathbb{Z}/m\mathbb{Z})^\times\)</span> 在乘法下构成一个群，即其在乘法及乘法逆下封闭。<br>
+2). 对于任何环 <span class="math inline">\(R\)</span>，集合 <span class="math inline">\(R^\times := \{a\in R : ax=1~\text{在}~R~\text{中有唯一解}\}\)</span> 被称作 <span class="math inline">\(R\)</span> 的可逆元群。</p><h1 id="欧拉-phi-函数">欧拉 <span class="math inline">\(\phi\)</span> 函数</h1><p>根据定义，若 <span class="math inline">\(m=p\)</span> 是素数，则 <span class="math inline">\((\mathbb{Z}/m\mathbb{Z})^\times = \{[1], \cdots ,[p-1]\}\)</span>，因此 <span class="math inline">\(\phi(p) = p-1\)</span></p><p>若 <span class="math inline">\(m = p^r\)</span> 是指数的整数次方，则</p><p><span class="math display">\[
+\require{cancel}
+\begin{aligned}
+(\mathbb{Z}/p^r\mathbb{Z})^\times = \{
+&amp;\bcancel{[0]}, [1], \cdots, [p-1],\\
+&amp;\bcancel{[p]}, [p+1], \cdots, [2p-1],\\
+&amp;\cdots,\\
+&amp;\bcancel{[p^{r-1}]}, [p^{r-1}+1]\cdots, [p^r -1]
+\}
+\end{aligned}
+\]</span></p><p>即排除所有 <span class="math inline">\(p^r\)</span> 以内的 <span class="math inline">\(p\)</span> 的倍数。因此：</p><p><span class="math display">\[\phi(p^r) = p^r - p^{r-1} = p^{r-1}(p-1)\]</span></p><p>更一般地，有以下</p><div class="thm" data-num="6">
+<p>若 <span class="math inline">\(gcd(m, a) = 1\)</span>，则 <span class="math display">\[
+\phi(mn) = \phi(m)\phi(n)
+\tag{1}
+\]</span></p>
+<p>因此，若 <span class="math inline">\(m = p_1^{r_1} \cdots p_t^{r_t}\)</span>，其中 <span class="math inline">\(p_i\)</span> 为不同的素数且 <span class="math inline">\(r_i \ge 1\)</span>，则有</p>
+<p><span class="math display">\[
+\phi(m) = \prod_{i=1}^t p_i^{r_i-1}(p_i-1) = m \prod_{p \mid m} (1 - \frac{1}{p})
+\tag{2}
+\]</span></p>
+<p>注意到虽然这是一个显式的计算欧拉 <span class="math inline">\(\phi\)</span> 函数的公式，由于目前没有人类已知的在多项式时间内计算 <span class="math inline">\(m\)</span> 的素数分解的算法，该公式因此并非是多项式时间可计算的。</p>
+</div><div class="proof">
+<p>我们随后将要看到，式 (1) 是中国剩余定理 (CRT) 的结论。而通过对式 (1) 中的 <span class="math inline">\(t\)</span> 进行数学归纳，可证式 (2) 的第一部分。下面给出第二部分的证明：</p>
+<p><span class="math display">\[
+p_i^{r_i-1}(p_i-1) = p_i(1-\frac{1}{i_i})\\
+\prod_{i=1}^t p_i^{r_i-1}(p_i-1) = \underbrace{\prod_{i=1}^t (p_i^{r_1})}_{m} \prod_{i=1}^t (1-\frac{1}{p_i})
+\]</span></p>
+</div><p>欧拉使用该函数证明了以下定理：</p><h1 id="欧拉定理费马-欧拉定理">欧拉定理（费马-欧拉定理）</h1><div class="thm" data-num="7" name="欧拉-费马">
+<p>若 <span class="math inline">\(gcd(a, m) = 1\)</span>，有 <span class="math inline">\(a^{\phi(m)} \equiv 1 \pmod m\)</span>.</p>
+</div><p>该定理是以下定理的推广，彼为此的直接推论。</p><h1 id="费马小定理">费马小定理</h1><div class="cor" name="费马">
+<p>若 <span class="math inline">\(p\)</span> 为素数，则 <span class="math display">\[
+\forall a \in \mathbb{Z}, a^p \equiv a\pmod p
+\]</span></p>
+</div><div class="proof">
+<p>若 <span class="math inline">\(gcd(a, m) = 1\)</span>，则根据定理 6，有 <span class="math display">\[a^{p-1} \equiv 1 \pmod m\]</span> 因此有 <span class="math display">\[a^p \equiv a \pmod m\]</span> 若 <span class="math inline">\(gcd(a, p) &gt; 1\)</span>，则必然有 <span class="math inline">\(p \mid a\)</span>，那么 <span class="math inline">\(a \equiv 0 \pmod p\)</span>，那么式两边皆于模 <span class="math inline">\(p\)</span> 下同余 0，因此相等。</p>
+</div><p>我们将在随后证明定理 7，作为一个更一般的定理的结论。</p><script src="https://unpkg.com/tippy.js@2.0.2/dist/tippy.all.min.js"></script><script src="/js/attachTooltips.js"></script><link rel="stylesheet" href="/css/tippy.css"><link type="text/css" rel="stylesheet" href="/theorem.css"></div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="toc-footer" onclick="$('#toc-footer').hide()" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#同余"><span class="toc-number">1.</span> <span class="toc-text">同余</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模算术"><span class="toc-number">2.</span> <span class="toc-text">模算术</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#式-a-x-equiv-b-pmod-m-的解"><span class="toc-number">3.</span> <span class="toc-text">式 \(a x \equiv b \pmod m\) 的解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#整数模-m-乘法群-整数模-n-乘法群"><span class="toc-number">4.</span> <span class="toc-text">整数模 m 乘法群 （整数模 n 乘法群）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#欧拉-phi-函数"><span class="toc-number">5.</span> <span class="toc-text">欧拉 \(\phi\) 函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#欧拉定理费马-欧拉定理"><span class="toc-number">6.</span> <span class="toc-text">欧拉定理（费马-欧拉定理）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#费马小定理"><span class="toc-number">7.</span> <span class="toc-text">费马小定理</span></a></li></ol>
+    </div>
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&text=数论与群论密码学-03-模算术"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&is_video=false&description=数论与群论密码学-03-模算术"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数论与群论密码学-03-模算术&body=Check out this article: https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&title=数论与群论密码学-03-模算术"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://richardyan.site/Number-Theory-and-Group-based-Cryptography-03-Modular-Arithmetic/&name=数论与群论密码学-03-模算术&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 Yunshan (Richard) Yan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="https://github.com/RichardYan314">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-88912624-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?a7a6de29af8448091f1f85ba72af0db0";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
